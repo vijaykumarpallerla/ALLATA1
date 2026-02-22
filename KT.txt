@@ -1,0 +1,25 @@
+# ALL AT A1 Job Portal Knowledge Transfer (KT)
+Date: 2026-02-22
+
+## Project Overview
+The ALL AT A1 Job Portal is a frontend web application with a Flask backend designed to aggregate job listings. The theme matches the client's custom logo incorporating 4 distinct colors.
+
+## File Structure & Contents
+- `index.html`: The main structural file for the job portal. Contains the header, search hero, sidebar filters, job listing placeholders, and footer. It has been customized with the "ALL AT A1" branding and an updated "Legal Agreements" navigation link.
+- `styles.css`: The styling file containing all visual designs. It uses CSS variables at the root level corresponding to the extracted 4-color palette from the logo (Blue, Teal, Red/Rust, Yellow/Orange). 
+- `script.js`: Client-side JavaScript containing dummy job data, layout rendering logic, and mock interactivity (e.g., save job, apply button functionalities).
+- `app.py`: A Python Flask local server. It serves the portal files and automatically opens the browser at `http://127.0.0.1:5000/`. It also includes a placeholder endpoint at `/api/jobs` intended for future web scraping uploads using API key authentication.
+- `get_color.py`: A Python development utility script that uses Pillow to isolate and extract the top distinct high-contrast colors from the `Logo.png` file, successfully establishing the 4-color theme mapping.
+- `requirements.txt`: Tracks backend python requirements including `Flask` and `Pillow`.
+- `Logo.png`: The client's brand logo file used in the header and footer branding.
+- `KT.txt`: This documentation file.
+
+## Latest Updates (as of 2026-02-22)
+- Changed the branding from "JobPortal" to "ALL AT A1" across the navigation bar and footer.
+- Applied the 4-color distinct branding to the "ALL AT A1" text.
+- Re-aligned the footer logo block.
+- Removed "Part-time" and "Freelance" job types from the sidebar filter.
+- Removed the entire "Experience Level" section from the sidebar filter.
+- Removed the "Popular Searches" tags below the search bar in the hero section.
+- Replaced the "Companies" link with "Legal Agreements" in the top navigation menu.
+- Pushed the initial version to GitHub repository: `https://github.com/vijaykumarpallerla/ALLATA1`
