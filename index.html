@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALL AT A1 | Job Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">
+                <img src="Logo.png" alt="Portal Logo" class="logo-img">
+                <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
+                        class="color-3">A</span><span class="color-4">1</span></span>
+            </a>
+            <div class="nav-menu">
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#jobs" class="nav-link">Browse Jobs</a>
+                <a href="#companies" class="nav-link">Companies</a>
+            </div>
+            <div class="nav-actions">
+                <button class="btn btn-primary">Post a Job</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero" id="home">
+        <div class="hero-content">
+            <h1>Find the matching job for you with ease</h1>
+            <p>We aggregate job listings from multiple portals to bring you the best opportunities in one place.
+                Discover your next career move today.</p>
+
+            <div class="search-container">
+                <form class="search-form" id="searchForm">
+                    <div class="input-group">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="jobTitle" placeholder="Job title, keywords, or company">
+                    </div>
+                    <div class="input-divider"></div>
+                    <div class="input-group">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <input type="text" id="location" placeholder="City, state, or zip code">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-large">Search Jobs</button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container" id="jobs">
+        <div class="content-wrapper">
+            <!-- Sidebar Filters -->
+            <aside class="sidebar">
+                <div class="filter-card">
+                    <h3>Filters</h3>
+
+                    <div class="filter-group">
+                        <h4>Job Type</h4>
+                        <label class="checkbox-container">Full-time
+                            <input type="checkbox" checked>
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container">Contract
+                            <input type="checkbox">
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+
+                    <div class="filter-group">
+                        <h4>Work Model</h4>
+                        <label class="checkbox-container">Remote
+                            <input type="checkbox" checked>
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container">On-site
+                            <input type="checkbox">
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container">Hybrid
+                            <input type="checkbox">
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Job Listings -->
+            <section class="job-listings">
+                <div class="section-header">
+                    <h2>Recommended Jobs</h2>
+                    <div class="sort-by">
+                        <span>Sort by:</span>
+                        <select>
+                            <option>Most Relevant</option>
+                            <option>Most Recent</option>
+                            <option>Highest Paid</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="jobs-grid" id="jobsGrid">
+                    <!-- Job cards will be populated by JavaScript -->
+                </div>
+
+                <div class="pagination">
+                    <button class="btn-page active">1</button>
+                    <button class="btn-page">2</button>
+                    <button class="btn-page">3</button>
+                    <button class="btn-page"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <a href="#" class="nav-logo">
+                    <img src="Logo.png" alt="Portal Logo" class="logo-img-footer">
+                    <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
+                            class="color-3">A</span><span class="color-4">1</span></span>
+                </a>
+                <p>Bringing jobs from various portals into one centralized platform for your convenience.</p>
+            </div>
+            <div class="footer-col">
+                <h4>For Candidates</h4>
+                <a href="#">Browse Jobs</a>
+                <a href="#">Candidate Dashboard</a>
+                <a href="#">Job Alerts</a>
+                <a href="#">Saved Jobs</a>
+            </div>
+            <div class="footer-col">
+                <h4>For Employers</h4>
+                <a href="#">Post a Job</a>
+                <a href="#">Employer Dashboard</a>
+                <a href="#">Pricing</a>
+            </div>
+            <div class="footer-col">
+                <h4>About Us</h4>
+                <a href="#">Contact Us</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 ALL AT A1. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
