@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | ALL AT A1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .admin-layout {
+            display: flex;
+            min-height: calc(100vh - 80px);
+            /* Subtract footer/header height if any */
+            background-color: var(--bg-main);
+        }
+
+        .admin-sidebar {
+            width: 250px;
+            background-color: var(--bg-card);
+            border-right: 1px solid var(--border-color);
+            padding: 2rem 1rem;
+        }
+
+        .admin-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .admin-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 1rem;
+            color: var(--text-main);
+            text-decoration: none;
+            border-radius: var(--radius-md);
+            transition: all var(--transition-fast);
+            font-weight: 500;
+        }
+
+        .admin-nav-item:hover,
+        .admin-nav-item.active {
+            background-color: rgba(33, 150, 243, 0.1);
+            color: var(--primary-color);
+        }
+
+        .admin-main {
+            flex: 1;
+            padding: 2rem;
+            background-color: var(--bg-main);
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            background-color: var(--bg-card);
+            padding: 1.5rem 2rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+        }
+
+        .admin-header h1 {
+            color: var(--primary-dark);
+            font-size: 1.8rem;
+        }
+
+        .admin-content {
+            background-color: var(--bg-card);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            min-height: 400px;
+            color: var(--text-main);
+        }
+
+        .center-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            height: 100%;
+            min-height: 350px;
+            color: var(--text-muted);
+        }
+
+        /* Message Table Styles */
+        .message-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .message-table th,
+        .message-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .message-table th {
+            background-color: rgba(33, 150, 243, 0.05);
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+
+        .message-table tr:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+
+        .msg-subject {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .msg-body {
+            max-width: 300px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-lg);
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(33, 150, 243, 0.05);
+            border-top-left-radius: var(--radius-lg);
+            border-top-right-radius: var(--radius-lg);
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: var(--primary-dark);
+            font-size: 1.3rem;
+        }
+
+        .close-modal {
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color var(--transition-fast);
+        }
+
+        .close-modal:hover {
+            color: var(--danger-color, #f44336);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+
+        .modal-detail-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .modal-detail-label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.3rem;
+        }
+
+        .modal-detail-value {
+            color: var(--text-main);
+            font-size: 1.05rem;
+            background-color: var(--bg-main);
+            padding: 0.8rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            white-space: pre-wrap;
+        }
+
+        /* Make table rows clickable */
+        .message-table tr {
+            cursor: pointer;
+        }
+
+        /* Action Menu Styles */
+        .action-cell {
+            position: relative;
+            text-align: right;
+            padding-right: 1.5rem !important;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: background-color var(--transition-fast), color var(--transition-fast);
+        }
+
+        .action-btn:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+            color: var(--text-main);
+        }
+
+        .action-dropdown {
+            display: none;
+            position: absolute;
+            right: 2.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: var(--bg-card);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            z-index: 100;
+            min-width: 120px;
+        }
+
+        .action-dropdown.active {
+            display: block;
+        }
+
+        .action-dropdown-item {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: var(--danger-color, #f44336);
+            cursor: pointer;
+            transition: background-color var(--transition-fast);
+            text-align: left;
+        }
+
+        .action-dropdown-item:hover {
+            background-color: rgba(244, 67, 54, 0.1);
+        }
+
+        /* Delete Confirmation Modal Styles */
+        .delete-modal-content {
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .delete-modal-body {
+            padding: 2rem;
+        }
+
+        .delete-modal-icon {
+            font-size: 3rem;
+            color: var(--danger-color, #f44336);
+            margin-bottom: 1rem;
+        }
+
+        .delete-modal-text {
+            font-size: 1.1rem;
+            color: var(--text-main);
+            margin-bottom: 1.5rem;
+        }
+
+        .delete-modal-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .btn-cancel {
+            background-color: transparent;
+            border: 1px solid var(--text-muted);
+            color: var(--text-muted);
+        }
+
+        .btn-cancel:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color, #f44336);
+            border: 1px solid var(--danger-color, #f44336);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar (Simplified for Admin) -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="Logo.png" alt="Portal Logo" class="logo-img">
+                <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
+                        class="color-3">A</span><span class="color-4">1</span> | Admin</span>
+            </a>
+            <div class="nav-actions">
+                <a href="index.html" class="btn btn-primary"
+                    style="background-color: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color);">Back
+                    to Portal</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Admin Layout -->
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="admin-nav">
+                <a href="#" class="admin-nav-item" id="nav-dashboard">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+                <a href="#" class="admin-nav-item">
+                    <i class="fas fa-briefcase"></i> Manage Jobs
+                </a>
+                <a href="#" class="admin-nav-item active" id="nav-messages">
+                    <i class="fas fa-envelope"></i> Messages
+                </a>
+                <a href="#" class="admin-nav-item">
+                    <i class="fas fa-cog"></i> Settings
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="admin-main">
+            <div class="admin-header">
+                <h1 id="admin-page-title">User Messages</h1>
+                <div class="admin-user">
+                    <span style="font-weight: 500; color: var(--text-main);">Admin User</span>
+                </div>
+            </div>
+
+            <!-- Content Area dynamically updated by JS -->
+            <div class="admin-content" id="admin-content-area">
+                <div class="center-placeholder">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--primary-color);"></i>
+                    <p style="margin-top: 1rem;">Fetching messages from Xata Database...</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Message Details Modal -->
+    <div id="messageModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Message Details</h3>
+                <span class="close-modal" id="closeMessageModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="modal-detail-group">
+                    <div class="modal-detail-label">From</div>
+                    <div class="modal-detail-value">
+                        <span id="modal-name" style="font-weight: 600;"></span>
+                        (<a id="modal-email" style="color: var(--primary-color); text-decoration: none;"></a>)
+                    </div>
+                </div>
+                <div class="modal-detail-group">
+                    <div class="modal-detail-label">Date Received</div>
+                    <div class="modal-detail-value" id="modal-date"></div>
+                </div>
+                <div class="modal-detail-group">
+                    <div class="modal-detail-label">Subject</div>
+                    <div class="modal-detail-value" id="modal-subject" style="font-weight: 600;"></div>
+                </div>
+                <div class="modal-detail-group">
+                    <div class="modal-detail-label">Message Body</div>
+                    <div class="modal-detail-value" id="modal-body" style="min-height: 120px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content delete-modal-content">
+            <div class="delete-modal-body">
+                <i class="fas fa-exclamation-circle delete-modal-icon"></i>
+                <div class="delete-modal-text">Are you sure you want to delete this message? This action cannot be
+                    undone.</div>
+                <div class="delete-modal-actions">
+                    <button class="btn btn-cancel" id="cancelDeleteBtn">Cancel</button>
+                    <button class="btn btn-danger" id="confirmDeleteBtn">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let messageToDeleteId = null;
+
+        function toggleDropdown(event, index) {
+            event.stopPropagation();
+
+            // Close all other dropdowns
+            document.querySelectorAll('.action-dropdown').forEach(d => {
+                if (d.id !== `dropdown-${index}`) d.classList.remove('active');
+            });
+
+            const dropdown = document.getElementById(`dropdown-${index}`);
+            dropdown.classList.toggle('active');
+        }
+
+        function openDeleteModal(event, id) {
+            event.stopPropagation();
+            messageToDeleteId = id;
+            document.getElementById('deleteModal').classList.add('active');
+
+            // Close the dropdown
+            document.querySelectorAll('.action-dropdown').forEach(d => d.classList.remove('active'));
+        }
+
+        // Close dropdowns if clicking anywhere outside
+        window.addEventListener('click', (e) => {
+            if (!e.target.closest('.action-cell')) {
+                document.querySelectorAll('.action-dropdown').forEach(d => d.classList.remove('active'));
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const navMessages = document.getElementById('nav-messages');
+            const navDashboard = document.getElementById('nav-dashboard');
+            const contentArea = document.getElementById('admin-content-area');
+            const pageTitle = document.getElementById('admin-page-title');
+            const navItems = document.querySelectorAll('.admin-nav-item');
+
+            // Function to reset active states
+            function resetNav() {
+                navItems.forEach(item => item.classList.remove('active'));
+            }
+
+            // Load Dashboard
+            navDashboard.addEventListener('click', (e) => {
+                e.preventDefault();
+                resetNav();
+                navDashboard.classList.add('active');
+                pageTitle.innerText = "Overview";
+                contentArea.innerHTML = `
+                    <div class="center-placeholder">
+                        <i class="fas fa-chart-line" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
+                        <h2>Dashboard</h2>
+                        <p>Analytics and overview will appear here.</p>
+                    </div>
+                `;
+            });
+
+            // Load Messages from Xata DB
+            navMessages.addEventListener('click', async (e) => {
+                e.preventDefault();
+                resetNav();
+                navMessages.classList.add('active');
+                pageTitle.innerText = "User Messages";
+
+                contentArea.innerHTML = `
+                    <div class="center-placeholder">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--primary-color);"></i>
+                        <p style="margin-top: 1rem;">Fetching messages from Xata Database...</p>
+                    </div>
+                `;
+
+                try {
+                    const response = await fetch('/api/admin/messages');
+                    const data = await response.json();
+
+                    if (data.status === 'success') {
+                        if (data.messages.length === 0) {
+                            contentArea.innerHTML = `
+                                <div class="center-placeholder">
+                                    <i class="fas fa-inbox" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
+                                    <h2>No messages yet</h2>
+                                    <p>When users contact you, their messages will appear here.</p>
+                                </div>
+                            `;
+                            return;
+                        }
+
+                        let tableHTML = `
+                            <table class="message-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Subject</th>
+                                        <th>Message</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                        `;
+
+                        // Store data globally to access on click
+                        window.fetchedMessages = data.messages;
+
+                        data.messages.forEach((msg, index) => {
+                            tableHTML += `
+                                <tr data-index="${index}">
+                                    <td style="white-space: nowrap; color: var(--text-muted); font-size: 0.9rem;">${msg.created_at}</td>
+                                    <td style="font-weight: 500;">${msg.name}</td>
+                                    <td><a href="mailto:${msg.email}" style="color: var(--primary-color); text-decoration: none;" onclick="event.stopPropagation();">${msg.email}</a></td>
+                                    <td class="msg-subject">${msg.subject}</td>
+                                    <td class="msg-body">${msg.body}</td>
+                                    <td class="action-cell" onclick="event.stopPropagation();">
+                                        <button class="action-btn" onclick="toggleDropdown(event, ${index})"><i class="fas fa-ellipsis-v"></i></button>
+                                        <div class="action-dropdown" id="dropdown-${index}">
+                                            <div class="action-dropdown-item" onclick="openDeleteModal(event, ${msg.id})">
+                                                <i class="fas fa-trash"></i> Delete
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            `;
+                        });
+
+                        tableHTML += `
+                                </tbody>
+                            </table>
+                        `;
+
+                        contentArea.innerHTML = tableHTML;
+
+                        // Attach click listeners to rows for Modal
+                        attachRowListeners();
+                    } else {
+                        contentArea.innerHTML = `<p style="color: red;">Error loading messages: ${data.message}</p>`;
+                    }
+                } catch (error) {
+                    contentArea.innerHTML = `<p style="color: red;">Failed to connect to the server.</p>`;
+                    console.error("Error fetching messages:", error);
+                }
+            });
+
+            // --- Modal Logic ---
+            const messageModal = document.getElementById('messageModal');
+            const closeBtn = document.getElementById('closeMessageModal');
+
+            // Close modal when X is clicked
+            closeBtn.addEventListener('click', () => {
+                messageModal.classList.remove('active');
+            });
+
+            // Close modal when clicking completely outside the modal content window
+            window.addEventListener('click', (e) => {
+                if (e.target === messageModal) {
+                    messageModal.classList.remove('active');
+                }
+            });
+
+            function attachRowListeners() {
+                const rows = document.querySelectorAll('.message-table tbody tr');
+                rows.forEach(row => {
+                    row.addEventListener('click', function () {
+                        const index = this.getAttribute('data-index');
+                        const msg = window.fetchedMessages[index];
+
+                        // Populate Modal
+                        document.getElementById('modal-name').innerText = msg.name;
+
+                        const emailEl = document.getElementById('modal-email');
+                        emailEl.innerText = msg.email;
+                        emailEl.href = "mailto:" + msg.email;
+
+                        document.getElementById('modal-date').innerText = msg.created_at;
+                        document.getElementById('modal-subject').innerText = msg.subject;
+
+                        // Use textContent for safety, then apply white-space: pre-wrap in CSS
+                        const bodyEl = document.getElementById('modal-body');
+                        bodyEl.textContent = msg.body;
+
+                        // Show Modal
+                        messageModal.classList.add('active');
+                    });
+                });
+            }
+
+            // --- Delete Confirmation Logic ---
+            const deleteModal = document.getElementById('deleteModal');
+            document.getElementById('cancelDeleteBtn').addEventListener('click', () => {
+                deleteModal.classList.remove('active');
+                messageToDeleteId = null;
+            });
+
+            document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
+                if (!messageToDeleteId) return;
+
+                try {
+                    const response = await fetch(`/api/admin/messages/${messageToDeleteId}`, {
+                        method: 'DELETE'
+                    });
+                    const data = await response.json();
+                    if (data.status === 'success') {
+                        deleteModal.classList.remove('active');
+                        messageToDeleteId = null;
+                        navMessages.click(); // Refresh list automatically
+                    } else {
+                        alert("Error deleting message: " + data.message);
+                    }
+                } catch (e) {
+                    alert("Error communicating with server.");
+                }
+            });
+
+            // Default load
+            navMessages.click();
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | ALL AT A1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Modern Alert Modal */
+        .alert-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .alert-modal.active {
+            display: flex;
+        }
+
+        .alert-content {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-lg);
+            width: 90%;
+            max-width: 450px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .alert-icon {
+            font-size: 3.5rem;
+            color: var(--logo-color-2);
+            /* Green check style */
+            margin-bottom: 1.5rem;
+        }
+
+        .alert-title {
+            color: var(--primary-dark);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .alert-message {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+
+        .alert-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 2.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .alert-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="Logo.png" alt="Portal Logo" class="logo-img">
+                <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
+                        class="color-3">A</span><span class="color-4">1</span></span>
+            </a>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="index.html#jobs" class="nav-link">Browse Jobs</a>
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link">Legal Agreements <i class="fas fa-chevron-down dropdown-icon"></i></a>
+                    <div class="dropdown-content">
+                        <a href="terms.html">Terms and Conditions</a>
+                        <a href="privacy.html">Privacy Policy</a>
+                    </div>
+                </div>
+                <a href="contact.html" class="nav-link active">Contact Us</a>
+            </div>
+            <div class="nav-actions">
+                <button class="btn btn-primary">Post a Job</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container contact-page">
+        <div class="contact-header">
+            <h1>Get in Touch</h1>
+            <p>We'd love to hear from you. Please fill out this form or reach out to us at our support email.</p>
+        </div>
+
+        <div class="contact-container">
+            <!-- Left Side: Email ID -->
+            <div class="contact-left">
+                <div class="contact-info-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3>Email Us</h3>
+                    <p>For any inquiries, support requests, or general information, please email us directly at:</p>
+                    <a href="mailto:allata1@googlegroups.com" class="support-email">allata1@googlegroups.com</a>
+                </div>
+            </div>
+
+            <!-- Right Side: Contact Form -->
+            <div class="contact-right">
+                <form id="contactForm" class="contact-form">
+                    <div class="form-group">
+                        <label for="userName">Your Name</label>
+                        <input type="text" id="userName" class="form-control" placeholder="John Doe" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userEmail">Your Email ID</label>
+                        <input type="email" id="userEmail" class="form-control" placeholder="example@email.com"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userSubject">Subject</label>
+                        <input type="text" id="userSubject" class="form-control" placeholder="How can we help?"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userBody">Message Body</label>
+                        <textarea id="userBody" class="form-control" rows="6" placeholder="Write your message here..."
+                            required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Send Message <i
+                            class="fas fa-paper-plane"></i></button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <a href="index.html" class="nav-logo">
+                    <img src="Logo.png" alt="Portal Logo" class="logo-img-footer">
+                    <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
+                            class="color-3">A</span><span class="color-4">1</span></span>
+                </a>
+                <p>Bringing jobs from various portals into one centralized platform for your convenience.</p>
+            </div>
+            <div class="footer-col">
+                <h4>For Candidates</h4>
+                <a href="index.html#jobs">Browse Jobs</a>
+                <a href="#">Candidate Dashboard</a>
+                <a href="#">Job Alerts</a>
+                <a href="#">Saved Jobs</a>
+            </div>
+            <div class="footer-col">
+                <h4>For Employers</h4>
+                <a href="#">Post a Job</a>
+                <a href="#">Employer Dashboard</a>
+                <a href="#">Pricing</a>
+            </div>
+            <div class="footer-col">
+                <h4>About Us</h4>
+                <a href="contact.html">Contact Us</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Service</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 ALL AT A1. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Success Output Modal -->
+    <div id="successModal" class="alert-modal">
+        <div class="alert-content">
+            <i class="fas fa-check-circle alert-icon"></i>
+            <h3 class="alert-title">Success!</h3>
+            <p class="alert-message" id="successMessageText">Your message has been sent.</p>
+            <button class="alert-btn" id="closeAlertBtn">Awesome</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('contactForm');
+            if (form) {
+                form.addEventListener('submit', async function (e) {
+                    e.preventDefault();
+
+                    const name = document.getElementById('userName').value;
+                    const email = document.getElementById('userEmail').value;
+                    const subject = document.getElementById('userSubject').value;
+                    const body = document.getElementById('userBody').value;
+
+                    const submitBtn = this.querySelector('button[type="submit"]');
+                    const originalText = submitBtn.innerHTML;
+                    submitBtn.innerHTML = 'Sending... <i class="fas fa-spinner fa-spin"></i>';
+                    submitBtn.disabled = true;
+
+                    try {
+                        const response = await fetch('/api/contact', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ name, email, subject, body })
+                        });
+
+                        const result = await response.json();
+                        if (response.ok) {
+                            // Instead of native alert, show modern modal
+                            document.getElementById('successMessageText').innerText = result.message;
+                            document.getElementById('successModal').classList.add('active');
+                            form.reset();
+                        } else {
+                            // If it's an error, we'll gracefully alert it (or you could use the modal for errors too if modified)
+                            alert('Error: ' + result.message);
+                        }
+                    } catch (error) {
+                        console.error('Error submitting form:', error);
+                        alert('An error occurred. Please try again later.');
+                    } finally {
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                    }
+                });
+            }
+
+            // Bind listener to close the new modal
+            const closeBtn = document.getElementById('closeAlertBtn');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => {
+                    document.getElementById('successModal').classList.remove('active');
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

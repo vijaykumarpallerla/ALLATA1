@@ -23,3 +23,14 @@ The ALL AT A1 Job Portal is a frontend web application with a Flask backend desi
 - Removed the "Popular Searches" tags below the search bar in the hero section.
 - Replaced the "Companies" link with "Legal Agreements" in the top navigation menu.
 - Pushed the initial version to GitHub repository: `https://github.com/vijaykumarpallerla/ALLATA1`
+
+## Recent Implementations (Contact & Admin Features)
+- **Contact Form & DB:** Integrated a live `ContactMessage` model (Name, Email, Subject, Body) connected to a remote Xata PostgreSQL Database via `.env`-stored `DATABASE_URL`.
+- **Custom Success Modal:** Replaced the ugly browser `alert()` pop-up on successful contact form submission with a sleek, centered "Success!" modal overlay (`contact.html`). 
+- **Secret Admin Panel:** Created a hidden Admin Panel at `admin.html`. Access it securely using a long, obscure URL secret string.
+- **Environment Security:** Migrated the long admin secret route to the local `.env` file under `ADMIN_PATH` to prevent repo leaks.
+- **Log Masking:** Wrote a custom Werkzeug `logging.Filter` interceptor in `app.py` to automatically detect the `ADMIN_PATH` in console logs and replace it with `0-------------------------------------------------------------0` to prevent shoulder-surfing.
+- **Message Table Retrieval:** Modified the `admin.html` dashboard natively default to the Messages tab, dynamically fetching the live Xata data from the `GET /api/admin/messages` endpoint.
+- **Message Details Overlay:** Made each message table row clickable to open a large UI modal containing the full, extended email text without squishing the table layout.
+- **Delete Record Capability:** Implemented a new `DELETE /api/admin/messages/<id>` backend route (using modernized SQLAlchemy 2.0+ `db.session.get` syntax to clear legacy warnings). Supported it with a three-dots `...` action menu on table rows opening a "Delete" dropdown.
+- **Safe Deletion UI:** Embedded a centered Warning Confirmation Modal ("Are you sure...") before deletion to prevent accidental destructs, actively refreshing the table state upon success.
