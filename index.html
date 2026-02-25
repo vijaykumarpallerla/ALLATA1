@@ -73,7 +73,7 @@
                     <div class="filter-group">
                         <h4>Job Type</h4>
                         <label class="checkbox-container">Full-time
-                            <input type="checkbox" checked>
+                            <input type="checkbox">
                             <span class="checkmark"></span>
                         </label>
                         <label class="checkbox-container">Contract
@@ -85,7 +85,7 @@
                     <div class="filter-group">
                         <h4>Work Model</h4>
                         <label class="checkbox-container">Remote
-                            <input type="checkbox" checked>
+                            <input type="checkbox">
                             <span class="checkmark"></span>
                         </label>
                         <label class="checkbox-container">On-site
@@ -97,6 +97,13 @@
                             <span class="checkmark"></span>
                         </label>
                     </div>
+
+                    <button class="btn btn-primary" id="applyFiltersBtn" style="width: 100%; margin-top: 1rem;">
+                        <i class="fas fa-check"></i> Apply Filters
+                    </button>
+                    <button class="btn btn-outline" id="removeFiltersBtn" style="width: 100%; margin-top: 0.5rem;">
+                        <i class="fas fa-times"></i> Remove Filters
+                    </button>
                 </div>
             </aside>
 
@@ -119,10 +126,7 @@
                 </div>
 
                 <div class="pagination">
-                    <button class="btn-page active">1</button>
-                    <button class="btn-page">2</button>
-                    <button class="btn-page">3</button>
-                    <button class="btn-page"><i class="fas fa-chevron-right"></i></button>
+                    <!-- Pagination will be replaced by the server -->
                 </div>
             </section>
         </div>

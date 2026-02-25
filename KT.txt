@@ -34,3 +34,15 @@ The ALL AT A1 Job Portal is a frontend web application with a Flask backend desi
 - **Message Details Overlay:** Made each message table row clickable to open a large UI modal containing the full, extended email text without squishing the table layout.
 - **Delete Record Capability:** Implemented a new `DELETE /api/admin/messages/<id>` backend route (using modernized SQLAlchemy 2.0+ `db.session.get` syntax to clear legacy warnings). Supported it with a three-dots `...` action menu on table rows opening a "Delete" dropdown.
 - **Safe Deletion UI:** Embedded a centered Warning Confirmation Modal ("Are you sure...") before deletion to prevent accidental destructs, actively refreshing the table state upon success.
+
+## Latest Updates (as of 2026-02-24)
+- **Database Seeding:** Created a `Job` SQLAlchemy model and seeded the Xata database with 10 dummy jobs to migrate away from hardcoded frontend data.
+- **API Key Protection:** Added an `X-API-KEY` header requirement to `/api/jobs` controlled by the `.env` `API_KEY` variable to stop simple unauthorized scraping.
+- **Anti-Scraping Server-Side Rendering (SSR):** Completely removed the `jobs` Javascript scraping loophole. The Flask backend (`app.py`) now reads `index.html`, queries the protected Xata database, filters jobs securely based on URL parameters, and injects the raw HTML directly before sending to the browser.
+- **Clean URL state:** Modified the job filtering system to use clean URL parameters (`?jobtype=Full-time&workmodel=On-site`).
+- **Checkbox Restoration:** Built Javascript logic to automatically read the URL parameters on page load and visually re-check the correct sidebar filters.
+- **Remove Filters:** Added a "Remove Filters" button to the sidebar that clears all URL query strings, actively unchecking all boxes and reloading the full job list.
+- **Upload Key Separation:** Added a dedicated `X-UPLOAD-KEY` requirement for `POST` requests to `/api/jobs` so scraping uploads are completely isolated from standard `GET` requests.
+- **Crash-proof POST insertion:** Designed the `app.py` `/api/jobs` POST logic to safely use `.get()` with `or` operator fallbacks to gracefully insert placeholder text into the Xata database if a scraping script misses a required field or provides an empty string.
+- **Data Initialization Cleanup:** Removed the legacy 10-job dummy data creation script from `app.py` and purged the Xata database, ensuring only original uploaded jobs are rendered.
+- **SSR Pagination Layer:** Replaced static HTML pagination with dynamic Server-Side calculated pagination. Hard-capped the view at 8 jobs per page (`per_page = 8`). Created dynamic `<a class="btn-page">` tags that inject `/?page=2` style URL modifications securely while appending existing `&workmodel` query states.

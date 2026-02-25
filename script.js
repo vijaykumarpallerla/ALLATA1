@@ -1,72 +1,5 @@
-// Dummy job data to display on the portal
-const jobs = [
-    {
-        id: 1,
-        title: "Senior Full Stack Engineer",
-        company: "TechNova Solutions",
-        location: "San Francisco, CA (Hybrid)",
-        type: "Full-time",
-        experience: "Mid-Senior",
-        salary: "$130k - $160k a year",
-        posted: "2 hours ago",
-        description: "We are looking for a Senior Full Stack Engineer to lead the development of our core web application. Experience with React, Node.js, and PostgreSQL is required."
-    },
-    {
-        id: 2,
-        title: "Product Marketing Manager",
-        company: "Global Innovations Inc.",
-        location: "Remote",
-        type: "Full-time",
-        experience: "Mid Level",
-        salary: "$95k - $120k a year",
-        posted: "4 hours ago",
-        description: "Drive the go-to-market strategy for our new suite of enterprise tools. Work closely with product and sales teams to ensure a successful launch."
-    },
-    {
-        id: 3,
-        title: "UX/UI Designer",
-        company: "Creative Form",
-        location: "New York, NY",
-        type: "Contract",
-        experience: "Entry-Mid",
-        salary: "$50 - $75 an hour",
-        posted: "1 day ago",
-        description: "Join our agency to craft beautiful, user-centric interfaces for our diverse client base. Portfolio required."
-    },
-    {
-        id: 4,
-        title: "Data Scientist",
-        company: "DataDrive AI",
-        location: "Seattle, WA (Remote)",
-        type: "Full-time",
-        experience: "Senior",
-        salary: "$140k - $180k a year",
-        posted: "2 days ago",
-        description: "Help us build the next generation of predictive algorithms. Strong background in Python, PyTorch, and large-scale data processing."
-    },
-    {
-        id: 5,
-        title: "DevOps Engineer",
-        company: "CloudScale Systems",
-        location: "Austin, TX",
-        type: "Full-time",
-        experience: "Mid Level",
-        salary: "$110k - $140k a year",
-        posted: "3 days ago",
-        description: "Maintain and scale our AWS infrastructure. Experience with Kubernetes, Terraform, and CI/CD pipelines is essential."
-    },
-    {
-        id: 6,
-        title: "Customer Success Manager",
-        company: "ServicePro",
-        location: "Chicago, IL (Hybrid)",
-        type: "Full-time",
-        experience: "Entry Level",
-        salary: "$65k - $80k a year",
-        posted: "3 days ago",
-        description: "Ensure our enterprise clients get the maximum value from our platform. Excellent communication and problem-solving skills needed."
-    }
-];
+// Global jobs array to be populated from DB
+let jobs = [];
 
 // Reference to DOM container
 const jobsGrid = document.getElementById("jobsGrid");
@@ -119,16 +52,42 @@ function generateJobCard(job) {
 }
 
 // Render jobs
-function renderJobs() {
+function renderJobs(listings = jobs) {
     if (!jobsGrid) return;
 
-    jobsGrid.innerHTML = jobs.map(job => generateJobCard(job)).join('');
+    if (listings.length === 0) {
+        jobsGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--text-muted);"><h3>No jobs match your selected filters.</h3></div>';
+        return;
+    }
+
+    jobsGrid.innerHTML = listings.map(job => generateJobCard(job)).join('');
 }
 
 // Initial render
-document.addEventListener("DOMContentLoaded", () => {
-    renderJobs();
+document.addEventListener("DOMContentLoaded", async () => {
 
+    // Jobs are entirely filtered and rendered server-side now (SSR)
+
+    // Restore checkbox states from URL on page load
+    const params = new URLSearchParams(window.location.search);
+    const activeJobTypes = params.get('jobtype') ? params.get('jobtype').split(',') : [];
+    const activeWorkModels = params.get('workmodel') ? params.get('workmodel').split(',') : [];
+
+    if (activeJobTypes.length > 0 || activeWorkModels.length > 0) {
+        document.querySelectorAll('.filter-group').forEach(group => {
+            const title = group.querySelector('h4').textContent.trim();
+            const checkboxes = group.querySelectorAll('input[type="checkbox"]');
+
+            checkboxes.forEach(cb => {
+                const labelText = cb.parentElement.textContent.trim();
+                if (title === 'Job Type' && activeJobTypes.includes(labelText)) {
+                    cb.checked = true;
+                } else if (title === 'Work Model' && activeWorkModels.includes(labelText)) {
+                    cb.checked = true;
+                }
+            });
+        });
+    }
     // Prevent form submission for demo
     const searchForm = document.getElementById("searchForm");
     if (searchForm) {
@@ -137,7 +96,56 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("This is a demo portal. Search functionality will be implemented soon!");
         });
     }
+
+    // Attach listener to Apply Filters button
+    const applyFiltersBtn = document.getElementById('applyFiltersBtn');
+    if (applyFiltersBtn) {
+        applyFiltersBtn.addEventListener('click', applyFilters);
+    }
+
+    // Attach listener to Remove Filters button
+    const removeFiltersBtn = document.getElementById('removeFiltersBtn');
+    if (removeFiltersBtn) {
+        removeFiltersBtn.addEventListener('click', () => {
+            window.location.href = window.location.pathname + '#jobs';
+        });
+    }
 });
+
+// --- Filter URL & Search Logic ---
+function applyFilters() {
+    const filterGroups = document.querySelectorAll('.filter-group');
+    let jobTypes = [];
+    let workModels = [];
+
+    filterGroups.forEach(group => {
+        const title = group.querySelector('h4').textContent.trim();
+        const checkedBoxes = Array.from(group.querySelectorAll('input[type="checkbox"]:checked'));
+        const values = checkedBoxes.map(cb => cb.parentElement.textContent.trim());
+
+        if (title === 'Job Type') {
+            jobTypes = values;
+        } else if (title === 'Work Model') {
+            workModels = values;
+        }
+    });
+
+    // Format arrays into comma-separated strings
+    const jobTypeStr = jobTypes.join(',');
+    const workModelStr = workModels.join(',');
+
+    // Construct the new URL maintaining the path but appending clean query params
+    const queryParams = new URLSearchParams();
+    if (jobTypeStr) queryParams.set('jobtype', jobTypeStr);
+    if (workModelStr) queryParams.set('workmodel', workModelStr);
+
+    // Convert to query string (handles ? automatically, but we append #jobs)
+    const queryString = queryParams.toString() ? '?' + queryParams.toString() : '';
+    const newUrl = `${window.location.pathname}${queryString}#jobs`;
+
+    // Redirect the browser so the server can generate a secure HTML response
+    window.location.href = newUrl;
+}
 
 // Interactive functions
 window.toggleSave = function (btn) {

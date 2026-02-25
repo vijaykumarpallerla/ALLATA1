@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><!-- JOB_TITLE --> | ALL AT A1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .job-detail-container {
+            max-width: 800px;
+            margin: 4rem auto;
+            padding: 2.5rem;
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .job-detail-header {
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .job-detail-header h1 {
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+            font-size: 2.2rem;
+        }
+
+        .job-detail-company {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .job-detail-badges {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .job-detail-body {
+            line-height: 1.8;
+            color: var(--text-main);
+            margin-bottom: 3rem;
+        }
+
+        .job-detail-body h3 {
+            color: var(--primary-dark);
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .job-detail-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 2px solid var(--border-color);
+            padding-top: 1.5rem;
+        }
+
+        .job-meta-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 2rem 0;
+            background: rgba(0, 0, 0, 0.02);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .job-meta-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .job-meta-list i {
+            color: var(--primary-color);
+            width: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/#home" class="nav-logo">
+                <img src="Logo.png" alt="Portal Logo" class="logo-img">
+                <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
+                        class="color-3">A</span><span class="color-4">1</span></span>
+            </a>
+            <div class="nav-menu">
+                <a href="/#home" class="nav-link">Home</a>
+                <a href="/#jobs" class="nav-link active">Browse Jobs</a>
+                <div class="nav-dropdown">
+                    <a href="/#legal" class="nav-link">Legal Agreements <i
+                            class="fas fa-chevron-down dropdown-icon"></i></a>
+                    <div class="dropdown-content">
+                        <a href="terms.html">Terms and Conditions</a>
+                        <a href="privacy.html">Privacy Policy</a>
+                    </div>
+                </div>
+                <a href="contact.html" class="nav-link">Contact Us</a>
+            </div>
+            <div class="nav-actions">
+                <button class="btn btn-primary">Post a Job</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main style="background-color: var(--bg-body); padding: 1rem;">
+        <div class="job-detail-container">
+            <div class="job-detail-header">
+                <a href="/#jobs"
+                    style="color: var(--primary-color); text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem; font-weight: 500;"><i
+                        class="fas fa-arrow-left"></i> Back to Jobs</a>
+                <h1><!-- JOB_TITLE --></h1>
+                <div class="job-detail-company">
+                    <i class="far fa-building"></i> <!-- JOB_COMPANY -->
+                </div>
+            </div>
+
+            <ul class="job-meta-list">
+                <li><i class="fas fa-map-marker-alt"></i> <strong>Location:</strong> <!-- JOB_LOCATION --></li>
+                <li><i class="fas fa-briefcase"></i> <strong>Job Type:</strong> <!-- JOB_TYPE --></li>
+                <li><i class="fas fa-money-bill-wave"></i> <strong>Salary:</strong> <!-- JOB_SALARY --></li>
+                <li><i class="fas fa-chart-line"></i> <strong>Experience:</strong> <!-- JOB_EXPERIENCE --></li>
+            </ul>
+
+            <div class="job-detail-body">
+                <h3>Job Description & Details</h3>
+                <p>
+                    <!-- JOB_DESCRIPTION -->
+                </p>
+            </div>
+
+            <div class="job-detail-footer">
+                <span style="color: var(--text-muted);"><i class="far fa-clock"></i> Posted <!-- JOB_POSTED --></span>
+                <!-- APPLY_BUTTON -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <a href="/#home" class="nav-logo">
+                    <img src="Logo.png" alt="Portal Logo" class="logo-img-footer">
+                    <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
+                            class="color-3">A</span><span class="color-4">1</span></span>
+                </a>
+                <p>Bringing jobs from various portals into one centralized platform for your convenience.</p>
+            </div>
+            <div class="footer-col">
+                <h4>For Candidates</h4>
+                <a href="/#jobs">Browse Jobs</a>
+                <a href="#">Candidate Dashboard</a>
+                <a href="#">Job Alerts</a>
+                <a href="#">Saved Jobs</a>
+            </div>
+            <div class="footer-col">
+                <h4>For Employers</h4>
+                <a href="#">Post a Job</a>
+                <a href="#">Employer Dashboard</a>
+                <a href="#">Pricing</a>
+            </div>
+            <div class="footer-col">
+                <h4>About Us</h4>
+                <a href="contact.html">Contact Us</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Service</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 ALL AT A1. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

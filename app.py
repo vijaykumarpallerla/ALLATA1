@@ -2,6 +2,8 @@ from flask import Flask, send_file, request, jsonify
 import webbrowser
 import threading
 import os
+import math
+from urllib.parse import urlencode
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
 
@@ -40,18 +42,243 @@ class ContactMessage(db.Model):
     body = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
 
+class Job(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    company = db.Column(db.String(200), nullable=False)
+    location = db.Column(db.String(200), nullable=False)
+    job_type = db.Column(db.String(100), nullable=False)
+    experience = db.Column(db.String(100), nullable=False)
+    salary = db.Column(db.String(100), nullable=False)
+    posted = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    apply_url = db.Column(db.String(500), nullable=True)
+
 with app.app_context():
     db.create_all()
-
 @app.route('/')
 def home():
-    # Serve the main job portal HTML
-    return send_file('index.html')
+    # Read the main job portal HTML
+    try:
+        with open('index.html', 'r', encoding='utf-8') as f:
+            html_content = f.read()
 
-@app.route('/api/jobs')
+        # Parse query parameters for server-side filtering
+        jobtype_query = request.args.get('jobtype', '')
+        workmodel_query = request.args.get('workmodel', '')
+        
+        job_types = []
+        work_models = []
+        
+        if jobtype_query:
+            job_types = [t.strip() for t in jobtype_query.split(',')]
+            
+        if workmodel_query:
+            work_models = [m.strip() for m in workmodel_query.split(',')]
+
+        # Fetch live jobs from the database (newest first!)
+        all_jobs = Job.query.order_by(Job.id.desc()).all()
+        filtered_jobs = []
+        
+        # Apply filters server-side
+        for job in all_jobs:
+            type_match = True
+            if job_types:
+                type_match = job.job_type in job_types
+                
+            model_match = True
+            if work_models:
+                loc = job.location.lower()
+                is_remote = 'remote' in loc
+                is_hybrid = 'hybrid' in loc
+                is_onsite = not is_remote and not is_hybrid
+                
+                model_match = False
+                if 'Remote' in work_models and is_remote: model_match = True
+                if 'Hybrid' in work_models and is_hybrid: model_match = True
+                if 'On-site' in work_models and is_onsite: model_match = True
+                
+            if type_match and model_match:
+                filtered_jobs.append(job)
+
+        # --- Pagination Logic ---
+        per_page = 8
+        total_jobs = len(filtered_jobs)
+        total_pages = math.ceil(total_jobs / per_page)
+        
+        if total_pages == 0:
+            total_pages = 1
+            
+        current_page = request.args.get('page', 1, type=int)
+        
+        if current_page < 1:
+            current_page = 1
+        elif current_page > total_pages:
+            current_page = total_pages
+            
+        start_idx = (current_page - 1) * per_page
+        end_idx = start_idx + per_page
+        
+        paginated_jobs = filtered_jobs[start_idx:end_idx]
+
+        jobs_html = ""
+        
+        for job in paginated_jobs:
+            # Generate initials for logo
+            initials = ''.join(w[0] for w in job.company.split()).upper()[:2]
+            
+            query_str = urlencode({'jobid': job.id, 'jobtitle': job.title})
+            job_url = f"/job?{query_str}"
+            
+            jobs_html += f'''
+            <article class="job-card" onclick="window.location.href='{job_url}'" style="cursor: pointer;">
+                <div class="job-card-header">
+                    <div class="job-company-info">
+                        <div class="company-logo">{initials}</div>
+                        <div class="job-title-container">
+                            <h3>{job.title}</h3>
+                            <span class="company-name">{job.company}</span>
+                        </div>
+                    </div>
+                    <button class="job-save" aria-label="Save job" onclick="event.stopPropagation(); toggleSave(this)">
+                        <i class="far fa-bookmark"></i>
+                    </button>
+                </div>
+                
+                <div class="job-details">
+                    <div class="job-detail-badge">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>{job.location}</span>
+                    </div>
+                    <div class="job-detail-badge">
+                        <i class="fas fa-briefcase"></i>
+                        <span>{job.job_type}</span>
+                    </div>'''
+            
+            if job.salary and job.salary != 'Competitive':
+                jobs_html += f'''
+                    <div class="job-detail-badge">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>{job.salary}</span>
+                    </div>'''
+                    
+            jobs_html += f'''
+                </div>
+                
+                <p class="job-description">
+                    {job.description}
+                </p>
+                
+                <div class="job-footer">
+                    <span class="job-posted-time">Posted {job.posted}</span>'''
+            
+            if getattr(job, 'apply_url', None) and job.apply_url.strip():
+                jobs_html += f'''
+                    <a href="{job.apply_url}" target="_blank" class="btn btn-primary" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;" onclick="event.stopPropagation();">Apply Now</a>'''
+            else:
+                jobs_html += f'''
+                    <button class="btn btn-primary" onclick="event.stopPropagation(); applyJob('{job.title}')">Apply Now</button>'''
+                    
+            jobs_html += f'''
+                </div>
+            </article>
+            '''
+
+        # If there are jobs, inject them into the HTML, otherwise put the empty marker
+        if not jobs_html:
+            jobs_html = '<div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--text-muted);"><h3>No jobs match your selected filters.</h3></div>'
+            
+        # Build pagination HTML dynamically
+        pagination_html = ""
+        if total_jobs > 0:
+            # Construct a base query dictionary excluding 'page' to keep filter params
+            base_args = request.args.to_dict()
+            
+            for p in range(1, total_pages + 1):
+                page_args = base_args.copy()
+                page_args['page'] = p
+                query_string = urlencode(page_args)
+                
+                active_class = ' active' if p == current_page else ''
+                pagination_html += f'<a href="/?{query_string}#jobs" class="btn-page{active_class}" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">{p}</a>\n'
+                
+        # Perform Server-Side Rendering (SSR) by injecting the HTML strings directly
+        html_content = html_content.replace('<!-- Job cards will be populated by JavaScript -->', jobs_html)
+        html_content = html_content.replace('<!-- Pagination will be replaced by the server -->', pagination_html)
+        
+        # We need to return the modified string as proper HTML
+        return html_content
+        
+    except FileNotFoundError:
+        return "index.html not found", 404
+
+# Get API Keys from environment
+API_KEY = os.environ.get('API_KEY')
+UPLOAD_KEY = os.environ.get('UPLOAD_KEY')
+
+@app.route('/api/jobs', methods=['GET', 'POST'])
 def api_jobs():
-    # A placeholder API route where you can later upload your scraped jobs
-    return {"status": "success", "message": "Jobs API is ready to be implemented."}
+    if request.method == 'POST':
+        # Authenticate upload using separate UPLOAD_KEY
+        request_key = request.headers.get('X-UPLOAD-KEY')
+        if not UPLOAD_KEY or request_key != UPLOAD_KEY:
+            return jsonify({"status": "error", "message": "Unauthorized Upload Key"}), 401
+            
+        data = request.json
+        if not data or 'jobs' not in data:
+            return jsonify({"status": "error", "message": "Missing 'jobs' array in JSON payload."}), 400
+            
+        incoming_jobs = data.get('jobs', [])
+        added_count = 0
+        
+        try:
+            for job_data in incoming_jobs:
+                # We use .get() with safe fallback strings so the server NEVER crashes
+                # even if the scraping script misspells a key or forgets one!
+                new_job = Job(
+                    title=job_data.get('title') or 'Unknown Title',
+                    company=job_data.get('company') or 'Unknown Company',
+                    location=job_data.get('location') or 'Location not specified',
+                    job_type=job_data.get('job_type') or job_data.get('type') or 'Full-time',
+                    experience=job_data.get('experience') or 'Not specified',
+                    salary=job_data.get('salary') or 'Competitive',
+                    posted=job_data.get('posted') or 'Just now',
+                    description=job_data.get('description') or 'No description provided.',
+                    apply_url=job_data.get('apply_url') or job_data.get('url') or ''
+                )
+                db.session.add(new_job)
+                added_count += 1
+                
+            db.session.commit()
+            return jsonify({"status": "success", "message": f"Successfully securely uploaded {added_count} jobs!"})
+            
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({"status": "error", "message": f"Database insertion failed: {str(e)}"}), 500
+            
+    # Handle GET request (sending jobs to API users)
+    # Authenticate the request using standard API_KEY
+    request_key = request.headers.get('X-API-KEY')
+    if not API_KEY or request_key != API_KEY:
+        return jsonify({"status": "error", "message": "Unauthorized"}), 401
+        
+    try:
+        # Fetch ordered by newest first
+        jobs = Job.query.order_by(Job.id.desc()).all()
+        jobs_list = [{
+            "id": j.id,
+            "title": j.title,
+            "company": j.company,
+            "location": j.location,
+            "type": j.job_type,  # Mapped for frontend compatibility
+            "experience": j.experience,
+            "salary": j.salary,
+            "posted": j.posted,
+            "description": j.description
+        } for j in jobs]
+        return jsonify({"status": "success", "jobs": jobs_list})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 @app.route('/api/contact', methods=['POST'])
 def api_contact():
@@ -69,6 +296,45 @@ def api_contact():
     except Exception as e:
         db.session.rollback()
         return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route('/job')
+def job_detail():
+    job_id = request.args.get('jobid')
+    
+    if not job_id:
+        return "Missing job ID", 400
+        
+    job = db.session.get(Job, job_id)
+    if not job:
+        return "Job not found", 404
+        
+    try:
+        with open('job_detail.html', 'r', encoding='utf-8') as f:
+            html = f.read()
+            
+        html = html.replace('<!-- JOB_TITLE -->', job.title)
+        html = html.replace('<!-- JOB_COMPANY -->', job.company)
+        html = html.replace('<!-- JOB_LOCATION -->', job.location)
+        html = html.replace('<!-- JOB_TYPE -->', job.job_type)
+        html = html.replace('<!-- JOB_SALARY -->', job.salary if job.salary else "Competitive")
+        html = html.replace('<!-- JOB_EXPERIENCE -->', job.experience)
+        
+        # Replace line breaks with <br> for HTML rendering
+        desc_html = job.description.replace('\n', '<br>')
+        html = html.replace('<!-- JOB_DESCRIPTION -->', desc_html)
+        html = html.replace('<!-- JOB_POSTED -->', job.posted)
+        
+        if getattr(job, 'apply_url', None) and job.apply_url.strip():
+            apply_btn = f'<a href="{job.apply_url}" target="_blank" class="btn btn-primary btn-large" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center; padding: 1rem 3rem; font-size: 1.1rem;">Apply Now &nbsp;<i class="fas fa-external-link-alt" style="font-size: 0.9rem;"></i></a>'
+        else:
+            apply_btn = f'<button class="btn btn-primary btn-large" onclick="applyJob(\'{job.title}\')" style="padding: 1rem 3rem; font-size: 1.1rem;">Apply Now</button>'
+            
+        html = html.replace('<!-- APPLY_BUTTON -->', apply_btn)
+        
+        return html
+        
+    except FileNotFoundError:
+        return "job_detail.html not found", 404
 
 @app.route(f'/{ADMIN_PATH}')
 def admin():
