@@ -56,3 +56,14 @@ The ALL AT A1 Job Portal is a frontend web application with a Flask backend desi
 - **Backend Search Querying:** Modified `app.py`'s SSR loop to parse out `q` and `loc` URL args. Added Python logic to dynamically query the SQLite Job database checking if the search conditions match a job's `title`, `company`, or `experience` (skills), as well as location.
 - **UI Search State Preservation:** Ensured that `script.js` looks for URL `q` and `loc` parameters on page load, persisting the user's search text explicitly in the visual input boxes across reloads.
 - **Fallback DB Path:** Included a `sqlite:///database.db` fallback String for the `SQLALCHEMY_DATABASE_URI` configuration in the event that the hosted environment `DATABASE_URL` is completely missing.
+
+
+## Latest Updates (as of 2026-02-26)
+- **Job Posting Form Polish:** Made 'Company Name', 'Skills Required', and 'Salary Expectation' fields optional in both UI text and HTML `required` attributes. Split 'Job Type' out of 'Remote/Onsite' so users must select both separately when posting.
+- **Smart Email Extraction:** Rewrote the Server-Side Rendering (SSR) in `app.py` to detect if an uploaded job's `apply_url` field contains an `@` symbol. If it does, automatically transforms the 'Apply Now' button into an email action.
+- **Apply Redirection Flow:** Prevented users from applying directly from the `index.html` homepage. Cliking 'Apply Now' on a homepage card now forces a redirect top-down into the dedicated `/job?jobid=` full page view so candidates read the full description before applying.
+- **Interactive Email Reveal & Copy:** When viewing an email-based job internally, clicking 'Apply Now' ceases normal redirection mapping. Instead, it natively vanishes an 'Email ID Found' label, inline reveals the clickable `mailto:` link, and changes the button to 'Copy Email'.
+- **Clipboard API Implementation:** Added asynchronous Javascript `navigator.clipboard.writeText()` logic to the internal 'Copy Email' button so tapping it twice seamlessly copies the email to the user's OS clipboard. Wrapped it in a 2-second timeout to flash a green 'Email id Copied! ✓' success confirmation before reverting.
+- **Search Logic Bugfix:** Debugged `script.js` to ensure the home page search bar actually prevents default submission, constructs the URL parameters correctly (preserving or destroying pagination natively), and executes a proper `window.location.href` redirect to trigger the SSR backend filter.
+- **Footer Updates:** Changed 'Terms & Conditions' to 'Terms of Service' in `index.html` footer.
+
