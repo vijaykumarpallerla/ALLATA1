@@ -46,3 +46,13 @@ The ALL AT A1 Job Portal is a frontend web application with a Flask backend desi
 - **Crash-proof POST insertion:** Designed the `app.py` `/api/jobs` POST logic to safely use `.get()` with `or` operator fallbacks to gracefully insert placeholder text into the Xata database if a scraping script misses a required field or provides an empty string.
 - **Data Initialization Cleanup:** Removed the legacy 10-job dummy data creation script from `app.py` and purged the Xata database, ensuring only original uploaded jobs are rendered.
 - **SSR Pagination Layer:** Replaced static HTML pagination with dynamic Server-Side calculated pagination. Hard-capped the view at 8 jobs per page (`per_page = 8`). Created dynamic `<a class="btn-page">` tags that inject `/?page=2` style URL modifications securely while appending existing `&workmodel` query states.
+
+## Latest Updates (as of 2026-02-25)
+- **Job Posting Form:** Created a new `job.html` page featuring a centered, prominent, required-field heavy form that allows users to rapidly post new jobs to the platform.
+- **Frontend Submission Integration:** Added JavaScript `fetch` handler to the `job.html` form to asynchronously POST the user's data to the backend API without refreshing the browser natively.
+- **Submission UI/UX:** Connected the successful form submissions to the custom modern popup modal logic, disabling the native unstyled alerts. Updated it with a `window.location.replace('/#jobs')` redirect so the user returns to the `index.html` file and immediately triggers a fresh server-side load of their new post.
+- **Database Entry Route:** Formulated a brand new `/api/submit-job` backend Flask endpoint explicitly meant for handling the public UI-generated jobs. It accurately maps the user-provided form details to the database `Job` schema models.
+- **Global Search Functionality:** Activated the search form in the `index.html` hero banner. Connected it via `script.js` to modify the browser's URL with `?q=search&loc=location` query strings, simultaneously resetting the pagination to 1.
+- **Backend Search Querying:** Modified `app.py`'s SSR loop to parse out `q` and `loc` URL args. Added Python logic to dynamically query the SQLite Job database checking if the search conditions match a job's `title`, `company`, or `experience` (skills), as well as location.
+- **UI Search State Preservation:** Ensured that `script.js` looks for URL `q` and `loc` parameters on page load, persisting the user's search text explicitly in the visual input boxes across reloads.
+- **Fallback DB Path:** Included a `sqlite:///database.db` fallback String for the `SQLALCHEMY_DATABASE_URI` configuration in the event that the hosted environment `DATABASE_URL` is completely missing.

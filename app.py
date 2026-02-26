@@ -66,6 +66,8 @@ def home():
         # Parse query parameters for server-side filtering
         jobtype_query = request.args.get('jobtype', '')
         workmodel_query = request.args.get('workmodel', '')
+        search_query = request.args.get('q', '').strip().lower()
+        location_query = request.args.get('loc', '').strip().lower()
         
         job_types = []
         work_models = []
@@ -98,7 +100,20 @@ def home():
                 if 'Hybrid' in work_models and is_hybrid: model_match = True
                 if 'On-site' in work_models and is_onsite: model_match = True
                 
-            if type_match and model_match:
+            search_match = True
+            if search_query:
+                # Search across title, company, and skills (experience)
+                search_match = (
+                    search_query in job.title.lower() or 
+                    search_query in job.company.lower() or 
+                    search_query in job.experience.lower()
+                )
+                
+            loc_match = True
+            if location_query:
+                loc_match = location_query in job.location.lower()
+                
+            if type_match and model_match and search_match and loc_match:
                 filtered_jobs.append(job)
 
         # --- Pagination Logic ---
@@ -173,11 +188,18 @@ def home():
                     <span class="job-posted-time">Posted {job.posted}</span>'''
             
             if getattr(job, 'apply_url', None) and job.apply_url.strip():
-                jobs_html += f'''
-                    <a href="{job.apply_url}" target="_blank" class="btn btn-primary" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;" onclick="event.stopPropagation();">Apply Now</a>'''
+                if '@' in job.apply_url:
+                    jobs_html += f'''
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 0.85rem; color: var(--primary-color); font-weight: 500;">Email ID Found &rarr;</span>
+                        <button type="button" class="btn btn-primary" style="display: inline-flex; align-items: center; justify-content: center;" onclick="event.stopPropagation(); window.location.href='{job_url}'">Apply Now</button>
+                    </div>'''
+                else:
+                    jobs_html += f'''
+                        <button type="button" class="btn btn-primary" style="display: inline-flex; align-items: center; justify-content: center;" onclick="event.stopPropagation(); window.location.href='{job_url}'">Apply Now</button>'''
             else:
                 jobs_html += f'''
-                    <button class="btn btn-primary" onclick="event.stopPropagation(); applyJob('{job.title}')">Apply Now</button>'''
+                    <button type="button" class="btn btn-primary" onclick="event.stopPropagation(); window.location.href='{job_url}'">Apply Now</button>'''
                     
             jobs_html += f'''
                 </div>
@@ -280,6 +302,28 @@ def api_jobs():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
+@app.route('/api/submit-job', methods=['POST'])
+def api_submit_job():
+    data = request.json
+    try:
+        new_job = Job(
+            title=data.get('title', 'Unknown Title'),
+            company=data.get('company', 'Unknown Company'),
+            location=data.get('location', 'Location not specified'),
+            job_type=data.get('job_type', 'Full-time'),
+            experience=data.get('experience', 'Not specified'),  # Maps to skills
+            salary=data.get('salary', 'Competitive'),
+            posted='Just now',
+            description=data.get('description', 'No description provided.'),
+            apply_url=data.get('apply_url', '')
+        )
+        db.session.add(new_job)
+        db.session.commit()
+        return jsonify({"status": "success", "message": f"Job '{new_job.title}' has been successfully submitted!"})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"status": "error", "message": str(e)}), 500
+
 @app.route('/api/contact', methods=['POST'])
 def api_contact():
     data = request.json
@@ -325,7 +369,40 @@ def job_detail():
         html = html.replace('<!-- JOB_POSTED -->', job.posted)
         
         if getattr(job, 'apply_url', None) and job.apply_url.strip():
-            apply_btn = f'<a href="{job.apply_url}" target="_blank" class="btn btn-primary btn-large" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center; padding: 1rem 3rem; font-size: 1.1rem;">Apply Now &nbsp;<i class="fas fa-external-link-alt" style="font-size: 0.9rem;"></i></a>'
+            if '@' in job.apply_url:
+                apply_btn = f'''
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <span id="job-detail-email-found" style="font-size: 1rem; color: var(--primary-color); font-weight: 600;">Email ID Found &rarr;</span>
+                    <button type="button" id="job-detail-apply-btn" class="btn btn-primary btn-large" style="padding: 1rem 3rem; font-size: 1.1rem;" onclick="revealAndCopyEmail('{job.apply_url.strip()}')">Apply Now</button>
+                    <a href="mailto:{job.apply_url.strip()}" id="job-detail-email-reveal" style="display: none; font-size: 1.1rem; font-weight: 600; color: var(--primary-dark); text-decoration: none;"><i class="far fa-envelope"></i> {job.apply_url.strip()}</a>
+                    
+                    <script>
+                    function revealAndCopyEmail(email) {{
+                        const foundText = document.getElementById('job-detail-email-found');
+                        const revealText = document.getElementById('job-detail-email-reveal');
+                        const btn = document.getElementById('job-detail-apply-btn');
+                        
+                        if (foundText.style.display !== 'none') {{
+                            // First tap: Reveal email and change button text
+                            foundText.style.display = 'none';
+                            revealText.style.display = 'inline-block';
+                            btn.innerHTML = 'Copy Email &nbsp;<i class="far fa-copy"></i>';
+                        }} else {{
+                            // Second tap: Copy to clipboard
+                            navigator.clipboard.writeText(email).then(() => {{
+                                btn.innerHTML = 'Email id Copied! <i class="fas fa-check"></i>';
+                                setTimeout(() => {{
+                                    btn.innerHTML = 'Copy Email &nbsp;<i class="far fa-copy"></i>';
+                                }}, 2000);
+                            }}).catch(err => {{
+                                console.error('Failed to copy text: ', err);
+                            }});
+                        }}
+                    }}
+                    </script>
+                </div>'''
+            else:
+                apply_btn = f'<a href="{job.apply_url.strip()}" target="_blank" class="btn btn-primary btn-large" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center; padding: 1rem 3rem; font-size: 1.1rem;">Apply Now &nbsp;<i class="fas fa-external-link-alt" style="font-size: 0.9rem;"></i></a>'
         else:
             apply_btn = f'<button class="btn btn-primary btn-large" onclick="applyJob(\'{job.title}\')" style="padding: 1rem 3rem; font-size: 1.1rem;">Apply Now</button>'
             

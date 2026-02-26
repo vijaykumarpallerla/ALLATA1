@@ -88,12 +88,43 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
         });
     }
-    // Prevent form submission for demo
+    const qParam = params.get('q');
+    const locParam = params.get('loc');
+
+    if (qParam) {
+        document.getElementById('jobTitle').value = qParam;
+    }
+    if (locParam) {
+        document.getElementById('location').value = locParam;
+    }
+
+    // Handle search form submission
     const searchForm = document.getElementById("searchForm");
     if (searchForm) {
         searchForm.addEventListener("submit", (e) => {
             e.preventDefault();
-            alert("This is a demo portal. Search functionality will be implemented soon!");
+            const jobTitle = document.getElementById('jobTitle').value.trim();
+            const location = document.getElementById('location').value.trim();
+
+            const searchParams = new URLSearchParams(window.location.search);
+
+            // Delete old page to reset pagination
+            searchParams.delete('page');
+
+            if (jobTitle) {
+                searchParams.set('q', jobTitle);
+            } else {
+                searchParams.delete('q');
+            }
+
+            if (location) {
+                searchParams.set('loc', location);
+            } else {
+                searchParams.delete('loc');
+            }
+
+            const queryString = searchParams.toString() ? '?' + searchParams.toString() : '';
+            window.location.href = '/' + queryString + '#jobs';
         });
     }
 
