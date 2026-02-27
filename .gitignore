@@ -1,2 +1,8 @@
 .env
 __pycache__/
+
+Content
+Content.txt
+upload_2_jobs.py
+
+database.db

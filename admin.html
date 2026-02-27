@@ -338,15 +338,16 @@
     <!-- Navbar (Simplified for Admin) -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="index.html" class="nav-logo">
-                <img src="Logo.png" alt="Portal Logo" class="logo-img">
+            <a href="/" class="nav-logo">
+                <img src="Logo.png" alt="Portal Logo" class="logo-img" onerror="this.style.display='none'">
                 <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
-                        class="color-3">A</span><span class="color-4">1</span> | Admin</span>
+                        class="color-3">A</span><span class="color-4">1</span></span>
             </a>
             <div class="nav-actions">
-                <a href="index.html" class="btn btn-primary"
-                    style="background-color: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color);">Back
-                    to Portal</a>
+                <a href="/" class="btn btn-primary"
+                    style="display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
+                    <i class="fas fa-home"></i> Return to Main Site
+                </a>
             </div>
         </div>
     </nav>
@@ -359,7 +360,7 @@
                 <a href="#" class="admin-nav-item" id="nav-dashboard">
                     <i class="fas fa-home"></i> Dashboard
                 </a>
-                <a href="#" class="admin-nav-item">
+                <a href="#" class="admin-nav-item" id="nav-jobs">
                     <i class="fas fa-briefcase"></i> Manage Jobs
                 </a>
                 <a href="#" class="admin-nav-item active" id="nav-messages">
@@ -471,8 +472,12 @@
             const navMessages = document.getElementById('nav-messages');
             const navDashboard = document.getElementById('nav-dashboard');
             const contentArea = document.getElementById('admin-content-area');
+            const navJobs = document.getElementById('nav-jobs');
             const pageTitle = document.getElementById('admin-page-title');
             const navItems = document.querySelectorAll('.admin-nav-item');
+
+            let messageToDeleteId = null;
+            let deleteType = null; // 'message' or 'job'
 
             // Function to reset active states
             function resetNav() {
@@ -484,6 +489,7 @@
                 e.preventDefault();
                 resetNav();
                 navDashboard.classList.add('active');
+                localStorage.setItem('activeAdminTab', 'nav-dashboard');
                 pageTitle.innerText = "Overview";
                 contentArea.innerHTML = `
                     <div class="center-placeholder">
@@ -499,6 +505,7 @@
                 e.preventDefault();
                 resetNav();
                 navMessages.classList.add('active');
+                localStorage.setItem('activeAdminTab', 'nav-messages');
                 pageTitle.innerText = "User Messages";
 
                 contentArea.innerHTML = `
@@ -596,6 +603,107 @@
                 }
             });
 
+            // Abstracted Dual-Mode Job Loader (All vs. Algorithm)
+            window.loadManageJobs = async (mode = 'all') => {
+                resetNav();
+                navJobs.classList.add('active');
+                localStorage.setItem('activeAdminTab', mode === 'algo' ? 'nav-jobs-algo' : 'nav-jobs-all');
+
+                const btnStyle = (isActive) => `font-size: 1.1rem; font-weight: 700; border-radius: 6px; padding: 10px 20px; cursor: pointer; border: ${isActive ? 'none' : '1px solid var(--border-color)'}; background: ${isActive ? 'var(--primary-color)' : 'transparent'}; color: ${isActive ? '#fff' : 'var(--text-main)'}; transition: all 0.2s;`;
+
+                pageTitle.innerHTML = `
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <button onclick="window.loadManageJobs('all')" style="${btnStyle(mode === 'all')}" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">ALL JOBS</button>
+                        <button onclick="window.loadManageJobs('algo')" style="${btnStyle(mode === 'algo')}" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'"><i class="fas fa-robot"></i> ALGORITHM JOBS</button>
+                    </div>
+                `;
+
+                contentArea.innerHTML = `
+                    <div class="center-placeholder">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--primary-color);"></i>
+                        <p style="margin-top: 1rem;">Fetching Jobs from Database...</p>
+                    </div>
+                `;
+
+                try {
+                    const response = await fetch('/api/admin/jobs');
+                    const data = await response.json();
+
+                    if (data.status === 'success') {
+                        let jobsToRender = data.jobs;
+                        if (mode === 'algo') {
+                            jobsToRender = jobsToRender.filter(j => j.is_algorithm === true);
+                        }
+
+                        if (jobsToRender.length === 0) {
+                            contentArea.innerHTML = `
+                                <div class="center-placeholder">
+                                    <i class="fas fa-${mode === 'algo' ? 'robot' : 'briefcase'}" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
+                                    <h2>No Jobs Found</h2>
+                                    <p>${mode === 'algo' ? 'No jobs have been posted through the UI to trigger the AI yet.' : 'Your database currently has 0 job postings.'}</p>
+                                </div>
+                            `;
+                            return;
+                        }
+
+                        let tableHTML = `
+                            <table class="message-table" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th>Date Posted</th>
+                                        <th>Title</th>
+                                        <th>Company</th>
+                                        <th>Location</th>
+                                        <th>Type</th>
+                                        <th>Source</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                        `;
+
+                        jobsToRender.forEach((job) => {
+                            let sourceBadge = '';
+                            if (mode === 'all') {
+                                sourceBadge = job.is_algorithm
+                                    ? `<td style="white-space:nowrap;"><span style="background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 600;"><i class="fas fa-robot"></i> Checked</span></td>`
+                                    : `<td style="white-space:nowrap;"><span style="background: rgba(100, 116, 139, 0.1); color: var(--text-muted); padding: 4px 8px; border-radius: 4px; font-size: 0.85rem;"><i class="fas fa-upload"></i> Scraped</span></td>`;
+                            } else {
+                                sourceBadge = `<td style="white-space:nowrap;"><span style="background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 600;"><i class="fas fa-check-circle"></i> Approved</span></td>`;
+                            }
+
+                            tableHTML += `
+                                <tr>
+                                    <td style="color: var(--text-muted); font-size: 0.9rem; white-space:nowrap;">${job.posted}</td>
+                                    <td style="font-weight: 600; color: var(--primary-dark);">${job.title}</td>
+                                    <td>${job.company}</td>
+                                    <td>${job.location}</td>
+                                    <td style="white-space:nowrap;"><span style="background: var(--bg-body); padding: 4px 8px; border-radius: 4px; font-size: 0.85rem;">${job.type}</span></td>
+                                    ${sourceBadge}
+                                    <td class="action-cell">
+                                        <button class="action-btn" style="color: #ef4444;" onclick="openJobDeleteModal(event, ${job.id})"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            `;
+                        });
+
+                        tableHTML += `</tbody></table>`;
+                        contentArea.innerHTML = tableHTML;
+                    } else {
+                        contentArea.innerHTML = `<p style="color: red;">Error loading jobs: ${data.message}</p>`;
+                    }
+                } catch (error) {
+                    contentArea.innerHTML = `<p style="color: red;">Failed to connect to the server.</p>`;
+                    console.error("Error fetching jobs:", error);
+                }
+            };
+
+            // Sidebar Event Listener links directly to 'all' subtab
+            navJobs.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.loadManageJobs('all');
+            });
+
             function attachRowListeners() {
                 const rows = document.querySelectorAll('.message-table tbody tr');
                 rows.forEach(row => {
@@ -623,6 +731,23 @@
                 });
             }
 
+            // Make sure these are globally available for inline onclick attributes
+            window.openDeleteModal = function (event, id) {
+                event.stopPropagation();
+                messageToDeleteId = id;
+                currentDeleteType = 'message';
+                document.getElementById('deleteModal').classList.add('active');
+                document.querySelector('.delete-modal-text').innerText = "Are you sure you want to delete this message? This action is permanent.";
+            }
+
+            window.openJobDeleteModal = function (event, id) {
+                event.stopPropagation();
+                messageToDeleteId = id;
+                currentDeleteType = 'job';
+                document.getElementById('deleteModal').classList.add('active');
+                document.querySelector('.delete-modal-text').innerText = "Are you sure you want to permanently delete this job posting from the site?";
+            }
+
             // --- Delete Confirmation Logic ---
             const deleteModal = document.getElementById('deleteModal');
             document.getElementById('cancelDeleteBtn').addEventListener('click', () => {
@@ -634,24 +759,53 @@
                 if (!messageToDeleteId) return;
 
                 try {
-                    const response = await fetch(`/api/admin/messages/${messageToDeleteId}`, {
-                        method: 'DELETE'
-                    });
+                    let url = currentDeleteType === 'job'
+                        ? `/api/admin/jobs/${messageToDeleteId}`
+                        : `/api/admin/messages/${messageToDeleteId}`;
+
+                    const response = await fetch(url, { method: 'DELETE' });
                     const data = await response.json();
+
                     if (data.status === 'success') {
                         deleteModal.classList.remove('active');
                         messageToDeleteId = null;
-                        navMessages.click(); // Refresh list automatically
+
+                        // Re-trigger the active tab to dynamically refresh the correct view
+                        const lastActiveTab = localStorage.getItem('activeAdminTab');
+                        if (lastActiveTab === 'nav-jobs-algo') {
+                            window.loadManageJobs('algo');
+                        } else if (lastActiveTab === 'nav-jobs-all') {
+                            window.loadManageJobs('all');
+                        } else if (lastActiveTab) {
+                            const tabToClick = document.getElementById(lastActiveTab);
+                            if (tabToClick) tabToClick.click();
+                        } else {
+                            navMessages.click();
+                        }
                     } else {
-                        alert("Error deleting message: " + data.message);
+                        alert("Error deleting item: " + data.message);
                     }
                 } catch (e) {
                     alert("Error communicating with server.");
                 }
             });
 
-            // Default load
-            navMessages.click();
+            // Default load or restore from Local Storage
+            const savedTabId = localStorage.getItem('activeAdminTab');
+            if (savedTabId === 'nav-jobs-algo') {
+                window.loadManageJobs('algo');
+            } else if (savedTabId === 'nav-jobs-all') {
+                window.loadManageJobs('all');
+            } else if (savedTabId) {
+                const tabToLoad = document.getElementById(savedTabId);
+                if (tabToLoad) {
+                    tabToLoad.click();
+                } else {
+                    navMessages.click();
+                }
+            } else {
+                navMessages.click();
+            }
         });
     </script>
 </body>

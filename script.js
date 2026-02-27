@@ -165,8 +165,16 @@ function applyFilters() {
     const jobTypeStr = jobTypes.join(',');
     const workModelStr = workModels.join(',');
 
-    // Construct the new URL maintaining the path but appending clean query params
-    const queryParams = new URLSearchParams();
+    // Construct the new URL maintaining the path but merging with existing query params
+    const queryParams = new URLSearchParams(window.location.search);
+
+    // Clear old filter parameters so unchecking is respected
+    queryParams.delete('jobtype');
+    queryParams.delete('workmodel');
+
+    // Always reset pagination when changing filters
+    queryParams.delete('page');
+
     if (jobTypeStr) queryParams.set('jobtype', jobTypeStr);
     if (workModelStr) queryParams.set('workmodel', workModelStr);
 

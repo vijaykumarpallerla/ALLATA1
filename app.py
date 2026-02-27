@@ -6,10 +6,12 @@ import math
 from urllib.parse import urlencode
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime, timezone, timedelta
 
 load_dotenv()
 
 import logging
+from Algorithm import moderate_job_post
 
 ADMIN_PATH = os.environ.get('ADMIN_PATH', 'admin')
 
@@ -53,8 +55,11 @@ class Job(db.Model):
     posted = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=False)
     apply_url = db.Column(db.String(500), nullable=True)
+    is_algorithm = db.Column(db.Boolean, default=False, nullable=False)
 
 with app.app_context():
+    # Because sqlite is rigid, adding a default False value to existing rows might require dropping the table or setting server_default.
+    # Since it's development, we'll let SQLAlchemy manage it or add a try/except for the migration if Xata handles it.
     db.create_all()
 @app.route('/')
 def home():
@@ -185,7 +190,7 @@ def home():
                 </p>
                 
                 <div class="job-footer">
-                    <span class="job-posted-time">Posted {job.posted}</span>'''
+                    <span class="job-posted-time">Date Posted: {job.posted}</span>'''
             
             if getattr(job, 'apply_url', None) and job.apply_url.strip():
                 if '@' in job.apply_url:
@@ -264,9 +269,10 @@ def api_jobs():
                     job_type=job_data.get('job_type') or job_data.get('type') or 'Full-time',
                     experience=job_data.get('experience') or 'Not specified',
                     salary=job_data.get('salary') or 'Competitive',
-                    posted=job_data.get('posted') or 'Just now',
+                    posted=job_data.get('posted') or datetime.now(timezone(timedelta(hours=-5), 'EST')).strftime("%d/%m/%Y EST"),
                     description=job_data.get('description') or 'No description provided.',
-                    apply_url=job_data.get('apply_url') or job_data.get('url') or ''
+                    apply_url=job_data.get('apply_url') or job_data.get('url') or '',
+                    is_algorithm=False # External uploads bypass algorithm
                 )
                 db.session.add(new_job)
                 added_count += 1
@@ -306,16 +312,33 @@ def api_jobs():
 def api_submit_job():
     data = request.json
     try:
+        title = data.get('title', 'Unknown Title')
+        company = data.get('company', 'Unknown Company')
+        location = data.get('location', 'Location not specified')
+        description = data.get('description', 'No description provided.')
+        
+        # 🛡️ AI CONTENT MODERATION ALGORITHM 🛡️
+        # We pass the raw text to the Algorithm.py script to determine if it is spam or real
+        is_approved = moderate_job_post(title, company, location, description)
+        
+        if not is_approved:
+            print(f"[REJECTED FLAG] User tried to post fake/spam job: {title}")
+            return jsonify({
+                "status": "error", 
+                "message": "Error 403: Your job posting was flagged as invalid or unprofessional by our automated AI system."
+            }), 403
+            
         new_job = Job(
-            title=data.get('title', 'Unknown Title'),
-            company=data.get('company', 'Unknown Company'),
-            location=data.get('location', 'Location not specified'),
+            title=title,
+            company=company,
+            location=location,
             job_type=data.get('job_type', 'Full-time'),
             experience=data.get('experience', 'Not specified'),  # Maps to skills
             salary=data.get('salary', 'Competitive'),
-            posted='Just now',
-            description=data.get('description', 'No description provided.'),
-            apply_url=data.get('apply_url', '')
+            posted=datetime.now(timezone(timedelta(hours=-5), 'EST')).strftime("%d/%m/%Y EST"),
+            description=description,
+            apply_url=data.get('apply_url', ''),
+            is_algorithm=True # Marks that it was passed through Algorithm.py via UI
         )
         db.session.add(new_job)
         db.session.commit()
@@ -447,6 +470,44 @@ def delete_admin_message(msg_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route('/api/admin/jobs', methods=['GET'])
+def get_admin_jobs():
+    try:
+        jobs = Job.query.order_by(Job.id.desc()).all()
+        job_list = [{
+            "id": j.id,
+            "title": j.title,
+            "company": j.company,
+            "location": j.location,
+            "posted": j.posted,
+            "type": j.job_type,
+            "is_algorithm": j.is_algorithm
+        } for j in jobs]
+        return jsonify({"status": "success", "jobs": job_list})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route('/api/admin/jobs/<int:job_id>', methods=['DELETE'])
+def delete_admin_job(job_id):
+    try:
+        job = db.session.get(Job, job_id)
+        if not job:
+            return jsonify({"status": "error", "message": "Job not found"}), 404
+        
+        db.session.delete(job)
+        db.session.commit()
+        return jsonify({"status": "success"})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.errorhandler(404)
+def page_not_found(e):
+    try:
+        return send_file('404.html'), 404
+    except FileNotFoundError:
+        return "404 - Page Not Found", 404
 
 if __name__ == '__main__':
     # Function to automatically open the browser

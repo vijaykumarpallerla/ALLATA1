@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found | ALL AT A1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .error-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            min-height: 65vh;
+        }
+
+        .error-illustration {
+            width: 100%;
+            max-width: 360px;
+            margin-bottom: 1rem;
+        }
+
+        .error-title {
+            font-size: 2.5rem;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .error-desc {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            max-width: 580px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">
+                <img src="/Logo.png" alt="Portal Logo" class="logo-img" onerror="this.style.display='none'">
+                <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
+                        class="color-3">A</span><span class="color-4">1</span></span>
+            </a>
+            <div class="nav-menu">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/#jobs" class="nav-link">Browse Jobs</a>
+                <a href="/contact.html" class="nav-link">Contact Us</a>
+            </div>
+            <div class="nav-actions">
+                <button class="btn btn-primary" onclick="window.location.href='/job.html'">Post a Job</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="error-container">
+            <!-- Awesome Vector SVG Illustration -->
+            <svg class="error-illustration" viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg">
+                <!-- Background decorative elements -->
+                <circle cx="400" cy="225" r="220" fill="#f8fafc" />
+                <circle cx="400" cy="225" r="180" fill="#f1f5f9" />
+
+                <!-- Server Rack Right -->
+                <rect x="500" y="80" width="140" height="300" rx="8" fill="#334155" />
+                <rect x="520" y="100" width="100" height="40" rx="4" fill="#1e293b" />
+                <circle cx="540" cy="120" r="6" fill="#10b981" />
+                <circle cx="560" cy="120" r="6" fill="#f59e0b" />
+                <rect x="520" y="160" width="100" height="40" rx="4" fill="#1e293b" />
+                <circle cx="540" cy="180" r="6" fill="#10b981" />
+                <circle cx="560" cy="180" r="6" fill="#ef4444" />
+                <rect x="520" y="220" width="100" height="40" rx="4" fill="#1e293b" />
+                <circle cx="540" cy="240" r="6" fill="#10b981" />
+
+                <!-- Server Rack Left -->
+                <rect x="200" y="130" width="140" height="250" rx="8" fill="#334155" />
+                <rect x="220" y="150" width="100" height="40" rx="4" fill="#1e293b" />
+                <circle cx="240" cy="170" r="6" fill="#10b981" />
+                <circle cx="260" cy="170" r="6" fill="#f59e0b" />
+                <rect x="220" y="210" width="100" height="40" rx="4" fill="#1e293b" />
+                <circle cx="240" cy="230" r="6" fill="#10b981" />
+
+                <!-- Connecting Data Cables -->
+                <path d="M 280 250 C 350 250, 350 350, 430 350" fill="none" stroke="#f97316" stroke-width="6"
+                    stroke-linecap="round" />
+                <path d="M 520 180 C 450 180, 450 300, 380 300" fill="none" stroke="#14b8a6" stroke-width="6"
+                    stroke-linecap="round" />
+
+                <!-- Floating Hologram Screen -->
+                <rect x="300" y="30" width="220" height="140" rx="8" fill="rgba(14, 165, 233, 0.15)" stroke="#0ea5e9"
+                    stroke-width="2" />
+                <rect x="320" y="50" width="120" height="8" rx="4" fill="#0ea5e9" />
+                <rect x="320" y="70" width="160" height="8" rx="4" fill="#bae6fd" />
+                <rect x="320" y="90" width="140" height="8" rx="4" fill="#bae6fd" />
+                <rect x="320" y="110" width="90" height="8" rx="4" fill="#bae6fd" />
+                <circle cx="480" cy="80" r="20" fill="none" stroke="#f59e0b" stroke-width="8"
+                    stroke-dasharray="30 100" />
+                <circle cx="480" cy="80" r="20" fill="none" stroke="#10b981" stroke-width="8" stroke-dasharray="80 100"
+                    stroke-dashoffset="-30" />
+
+                <!-- Center Tech Worker -->
+                <path d="M 400 320 L 400 370 M 380 370 L 420 370 M 400 370 L 370 400 M 400 370 L 430 400" fill="none"
+                    stroke="#475569" stroke-width="8" stroke-linecap="round" />
+                <rect x="375" y="310" width="50" height="15" rx="5" fill="#64748b" />
+                <rect x="370" y="240" width="20" height="80" rx="10" fill="#e2e8f0" />
+                <!-- Legs -->
+                <path d="M 390 315 L 430 315 L 430 390" fill="none" stroke="#3b82f6" stroke-width="22"
+                    stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M 410 315 L 460 315 L 460 360" fill="none" stroke="#2563eb" stroke-width="22"
+                    stroke-linecap="round" stroke-linejoin="round" />
+                <!-- Shoes -->
+                <rect x="420" y="390" width="30" height="12" rx="6" fill="#1e293b" />
+                <rect x="450" y="360" width="30" height="12" rx="6" fill="#1e293b" />
+                <!-- Torso -->
+                <rect x="382" y="200" width="45" height="100" rx="15" fill="#f97316" />
+                <line x1="392" y1="200" x2="392" y2="300" stroke="#c2410c" stroke-width="2" />
+                <line x1="405" y1="200" x2="405" y2="300" stroke="#c2410c" stroke-width="2" />
+                <polygon points="395,200 415,200 405,230" fill="#ffffff" />
+                <!-- Head -->
+                <circle cx="405" cy="165" r="22" fill="#fcd34d" />
+                <!-- Hair & Beard -->
+                <path d="M 383 165 C 383 140, 427 140, 427 165" fill="#451a03" />
+                <path d="M 390 175 Q 405 195 425 170 Q 405 180 390 175" fill="#451a03" />
+                <!-- Glasses -->
+                <rect x="408" y="155" width="10" height="10" fill="none" stroke="#1e293b" stroke-width="2" />
+                <rect x="420" y="155" width="10" height="10" fill="none" stroke="#1e293b" stroke-width="2" />
+                <line x1="418" y1="160" x2="420" y2="160" stroke="#1e293b" stroke-width="2" />
+                <!-- Arms -->
+                <path d="M 415 220 L 440 260 L 480 250" fill="none" stroke="#f97316" stroke-width="14"
+                    stroke-linecap="round" stroke-linejoin="round" />
+                <circle cx="485" cy="248" r="8" fill="#fcd34d" />
+
+                <!-- Floating Hologram Keyboard -->
+                <polygon points="450,260 520,250 530,270 455,280" fill="rgba(56, 189, 248, 0.4)" stroke="#38bdf8"
+                    stroke-width="2" />
+            </svg>
+
+            <h1 class="error-title">Page Not Found</h1>
+            <p class="error-desc">We couldn't find the page you're looking for. The URL may be misspelled or the page
+                you're looking for is no longer available.</p>
+            <button class="btn btn-primary btn-large" onclick="window.location.href='/'">Return to Home &nbsp;<i
+                    class="fas fa-home" style="font-size: 0.9rem;"></i></button>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-bottom">
+            <p>&copy; 2026 ALL AT A1. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+
+</html>

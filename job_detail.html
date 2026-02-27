@@ -77,14 +77,16 @@
 
         .job-meta-list li {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 0.75rem;
+            line-height: 1.5;
         }
 
         .job-meta-list i {
             color: var(--primary-color);
             width: 20px;
             text-align: center;
+            margin-top: 4px;
         }
     </style>
 </head>
@@ -131,10 +133,13 @@
             </div>
 
             <ul class="job-meta-list">
-                <li><i class="fas fa-map-marker-alt"></i> <strong>Location:</strong> <!-- JOB_LOCATION --></li>
-                <li><i class="fas fa-briefcase"></i> <strong>Job Type:</strong> <!-- JOB_TYPE --></li>
-                <li><i class="fas fa-money-bill-wave"></i> <strong>Salary:</strong> <!-- JOB_SALARY --></li>
-                <li><i class="fas fa-chart-line"></i> <strong>Experience:</strong> <!-- JOB_EXPERIENCE --></li>
+                <li><i class="fas fa-map-marker-alt"></i> <span><strong>Location:</strong> <!-- JOB_LOCATION --></span>
+                </li>
+                <li><i class="fas fa-briefcase"></i> <span><strong>Job Type:</strong> <!-- JOB_TYPE --></span></li>
+                <li><i class="fas fa-money-bill-wave"></i> <span><strong>Salary:</strong> <!-- JOB_SALARY --></span>
+                </li>
+                <li><i class="fas fa-chart-line"></i> <span><strong>Experience:</strong> <!-- JOB_EXPERIENCE --></span>
+                </li>
             </ul>
 
             <div class="job-detail-body">
@@ -145,7 +150,8 @@
             </div>
 
             <div class="job-detail-footer" id="apply-section">
-                <span style="color: var(--text-muted);"><i class="far fa-clock"></i> Posted <!-- JOB_POSTED --></span>
+                <span style="color: var(--text-muted);"><i class="far fa-clock"></i> Date Posted:
+                    <!-- JOB_POSTED --></span>
                 <!-- APPLY_BUTTON -->
             </div>
         </div>
@@ -165,15 +171,12 @@
             <div class="footer-col">
                 <h4>For Candidates</h4>
                 <a href="/#jobs">Browse Jobs</a>
-                <a href="#">Candidate Dashboard</a>
                 <a href="#">Job Alerts</a>
                 <a href="#">Saved Jobs</a>
             </div>
             <div class="footer-col">
                 <h4>For Employers</h4>
-                <a href="#">Post a Job</a>
-                <a href="#">Employer Dashboard</a>
-                <a href="#">Pricing</a>
+                <a href="/job.html">Post a Job</a>
             </div>
             <div class="footer-col">
                 <h4>About Us</h4>

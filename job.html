@@ -83,6 +83,11 @@
             transition: all var(--transition-fast);
         }
 
+        .alert-btn-danger {
+            background-color: #ef4444;
+            /* Red for rejections */
+        }
+
         .alert-btn:hover {
             background-color: var(--primary-dark);
             transform: translateY(-2px);
@@ -143,14 +148,14 @@
     <!-- Navbar -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="index.html" class="nav-logo">
-                <img src="Logo.png" alt="Portal Logo" class="logo-img">
+            <a href="/" class="nav-logo">
+                <img src="Logo.png" alt="Portal Logo" class="logo-img" onerror="this.style.display='none'">
                 <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
                         class="color-3">A</span><span class="color-4">1</span></span>
             </a>
             <div class="nav-menu">
-                <a href="index.html" class="nav-link">Home</a>
-                <a href="index.html#jobs" class="nav-link">Browse Jobs</a>
+                <a href="/" class="nav-link">Home</a>
+                <a href="/#jobs" class="nav-link">Browse Jobs</a>
                 <div class="nav-dropdown">
                     <a href="#" class="nav-link">Legal Agreements <i class="fas fa-chevron-down dropdown-icon"></i></a>
                     <div class="dropdown-content">
@@ -213,9 +218,14 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="jobLocation">Location <span>*</span></label>
+                        <label for="jobLocation" id="locationLabel">Location <span>*</span></label>
                         <input type="text" id="jobLocation" class="form-control" placeholder="e.g. New York, NY"
                             required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="jobExperience">Experience (Optional)</label>
+                        <input type="text" id="jobExperience" class="form-control" placeholder="e.g. 3+ Years">
                     </div>
 
                     <div class="form-group">
@@ -246,8 +256,8 @@
     <footer>
         <div class="footer-content">
             <div class="footer-col">
-                <a href="index.html" class="nav-logo">
-                    <img src="Logo.png" alt="Portal Logo" class="logo-img-footer">
+                <a href="/" class="nav-logo">
+                    <img src="Logo.png" alt="Portal Logo" class="logo-img-footer" onerror="this.style.display='none'">
                     <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
                             class="color-3">A</span><span class="color-4">1</span></span>
                 </a>
@@ -255,16 +265,13 @@
             </div>
             <div class="footer-col">
                 <h4>For Candidates</h4>
-                <a href="index.html#jobs">Browse Jobs</a>
-                <a href="#">Candidate Dashboard</a>
+                <a href="/#jobs">Browse Jobs</a>
                 <a href="#">Job Alerts</a>
                 <a href="#">Saved Jobs</a>
             </div>
             <div class="footer-col">
                 <h4>For Employers</h4>
                 <a href="job.html">Post a Job</a>
-                <a href="#">Employer Dashboard</a>
-                <a href="#">Pricing</a>
             </div>
             <div class="footer-col">
                 <h4>About Us</h4>
@@ -288,10 +295,37 @@
         </div>
     </div>
 
+    <!-- AI Rejection Modal -->
+    <div id="errorModal" class="alert-modal">
+        <div class="alert-content">
+            <i class="fas fa-exclamation-triangle alert-icon" style="color: #ef4444;"></i>
+            <h3 class="alert-title" style="color: #ef4444;">Posting Rejected</h3>
+            <p class="alert-message" id="errorMessageText">Your job was flagged by our system.</p>
+            <button class="alert-btn alert-btn-danger" id="closeErrorBtn">Understood</button>
+        </div>
+    </div>
+
     <script src="script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const form = document.getElementById('jobForm');
+            const workModelSelect = document.getElementById('workModel');
+            const locationInput = document.getElementById('jobLocation');
+            const locationLabel = document.getElementById('locationLabel');
+
+            // Dynamically toggle Location requirement based on Work Model
+            if (workModelSelect && locationInput && locationLabel) {
+                workModelSelect.addEventListener('change', (e) => {
+                    if (e.target.value === 'Remote') {
+                        locationInput.required = false;
+                        locationLabel.innerHTML = 'Location (Optional)';
+                    } else {
+                        locationInput.required = true;
+                        locationLabel.innerHTML = 'Location <span>*</span>';
+                    }
+                });
+            }
+
             if (form) {
                 form.addEventListener('submit', async function (e) {
                     e.preventDefault();
@@ -301,9 +335,20 @@
                     const description = document.getElementById('jobDescription').value;
                     const type = document.getElementById('jobType').value;
                     const workModel = document.getElementById('workModel').value;
-                    const locationBase = document.getElementById('jobLocation').value;
-                    const location = workModel + ' - ' + locationBase;
-                    const skills = document.getElementById('jobSkills').value;
+                    const locationBase = document.getElementById('jobLocation').value.trim();
+                    const location = locationBase ? (workModel + ' - ' + locationBase) : workModel;
+
+                    const exp = document.getElementById('jobExperience').value.trim();
+                    const skills = document.getElementById('jobSkills').value.trim();
+
+                    let finalExperience = "Not specified";
+                    if (exp && skills) {
+                        finalExperience = `${exp} | Skills: ${skills}`;
+                    } else if (exp) {
+                        finalExperience = exp;
+                    } else if (skills) {
+                        finalExperience = `Skills: ${skills}`;
+                    }
                     const salary = document.getElementById('jobSalary').value;
                     const applyLink = document.getElementById('jobApplyLink').value;
 
@@ -324,7 +369,7 @@
                                 description: description,
                                 job_type: type,
                                 location: location,
-                                experience: skills,
+                                experience: finalExperience,
                                 salary: salary,
                                 apply_url: applyLink
                             })
@@ -337,7 +382,14 @@
                             document.getElementById('successModal').classList.add('active');
                             form.reset();
                         } else {
-                            alert('Error: ' + result.message);
+                            if (response.status === 403) {
+                                // AI Rejection UI 
+                                document.getElementById('errorMessageText').innerText = result.message;
+                                document.getElementById('errorModal').classList.add('active');
+                            } else {
+                                // Standard Fallback Pop
+                                alert('Error: ' + result.message);
+                            }
                         }
                     } catch (error) {
                         console.error('Error submitting job:', error);
@@ -349,13 +401,21 @@
                 });
             }
 
-            // Bind listener to close the new modal and redirect
+            // Bind listener to close the Success modal and redirect
             const closeBtn = document.getElementById('closeAlertBtn');
             if (closeBtn) {
                 closeBtn.addEventListener('click', () => {
                     document.getElementById('successModal').classList.remove('active');
                     // Force a full server refresh so the new job appears immediately 
                     window.location.replace('/#jobs');
+                });
+            }
+
+            // Bind listener to close the Error modal (stays on page)
+            const closeErrorBtn = document.getElementById('closeErrorBtn');
+            if (closeErrorBtn) {
+                closeErrorBtn.addEventListener('click', () => {
+                    document.getElementById('errorModal').classList.remove('active');
                 });
             }
         });
