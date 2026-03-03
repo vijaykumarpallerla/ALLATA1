@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Engineer's Prompt Library | ALL AT A1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .article-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            padding: 4rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            line-height: 1.8;
+        }
+
+        .article-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .article-header h1 {
+            font-size: 2.8rem;
+            color: var(--text-main);
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .article-header p {
+            font-size: 1.2rem;
+            color: var(--logo-color-3);
+            font-weight: 500;
+        }
+
+        .section-title {
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin-top: 3.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .sub-title {
+            color: var(--text-main);
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .article-text {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .highlight-box {
+            background-color: rgba(99, 102, 241, 0.1);
+            border-left: 4px solid var(--primary-color);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        }
+
+        .highlight-box h4 {
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .prompt-box {
+            background-color: #1e1e2d;
+            border: 1px solid #333;
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            margin: 2rem 0;
+            font-family: monospace;
+            color: #10b981;
+            position: relative;
+        }
+
+        .prompt-box.hero::before {
+            content: "👑 Hero Prompt";
+            display: block;
+            position: absolute;
+            top: -12px;
+            left: 15px;
+            background: #10b981;
+            color: white;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+        }
+
+        .prompt-box.zero::before {
+            content: "❌ Zero Prompt";
+            display: block;
+            position: absolute;
+            top: -12px;
+            left: 15px;
+            background: #ef4444;
+            color: white;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: var(--bg-main);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table th {
+            background-color: var(--primary-dark);
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Custom Uncopyable CSS Diagrams */
+        .diagram-container {
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #1e1e2d, #151521);
+            border-radius: var(--radius-lg);
+            margin: 2.5rem 0;
+            border: 1px solid #333;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Token Animation */
+        .text-stream {
+            display: flex;
+            gap: 5px;
+            font-family: monospace;
+            color: rgba(255, 255, 255, 0.3);
+            margin-right: 20px;
+            font-size: 1.2rem;
+            align-items: center;
+        }
+
+        .token-block {
+            width: 50px;
+            height: 50px;
+            background: rgba(16, 185, 129, 0.2);
+            border: 2px solid #10b981;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #10b981;
+            font-weight: bold;
+            font-family: monospace;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+            animation: pulse-token 2s infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes pulse-token {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+            }
+
+            50% {
+                transform: scale(1.1);
+                box-shadow: 0 0 20px rgba(16, 185, 129, 0.8);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+            }
+        }
+
+        /* Temperature Slider */
+        .slider-ui {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 80%;
+        }
+
+        .slider-track {
+            width: 100%;
+            height: 12px;
+            background: #333;
+            border-radius: 6px;
+            position: relative;
+            margin: 20px 0;
+        }
+
+        .slider-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ef4444);
+            border-radius: 6px;
+            width: 100%;
+        }
+
+        .slider-knob {
+            width: 28px;
+            height: 28px;
+            background: white;
+            border: 4px solid #3b82f6;
+            border-radius: 50%;
+            position: absolute;
+            top: -8px;
+            left: 10%;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.8);
+            animation: pulse-knob 2s infinite alternate;
+        }
+
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-family: monospace;
+        }
+
+        @keyframes pulse-knob {
+            0% {
+                transform: scale(1);
+            }
+
+            100% {
+                transform: scale(1.1);
+            }
+        }
+
+        /* Checklist */
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: var(--bg-main);
+            border-radius: var(--radius-md);
+            margin-bottom: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .checklist-item i {
+            color: #10b981;
+            font-size: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .article-container {
+                padding: 2rem;
+            }
+
+            .article-header h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">
+                <img src="{{ url_for('static', filename='Logo.png') }}" alt="Portal Logo" class="logo-img">
+                <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
+                        class="color-3">A</span><span class="color-4">1</span></span>
+            </a>
+            <div class="nav-menu">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/#jobs" class="nav-link">Browse Jobs</a>
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link">Legal Agreements <i class="fas fa-chevron-down dropdown-icon"></i></a>
+                    <div class="dropdown-content">
+                        <a href="terms.html">Terms and Conditions</a>
+                        <a href="privacy.html">Privacy Policy</a>
+                    </div>
+                </div>
+                <a href="contact.html" class="nav-link">Contact Us</a>
+            </div>
+            <div class="nav-actions">
+                <a href="job.html" class="btn btn-primary" style="text-decoration: none;">Post a Job</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container" style="padding: 4rem 1rem 6rem 1rem;">
+        <div class="article-container">
+            <div class="article-header">
+                <h1>AI Engineering & Prompt Logic</h1>
+                <p>How AI actually works and how to speak its language. Moving from "Asking questions" to "Structuring
+                    Outputs."</p>
+            </div>
+
+            <h2 class="section-title">The Token Engine (How AI Actually "Reads")</h2>
+            <p class="article-text">When you type a sentence into an AI, it doesn't see "words." It breaks your text
+                into Tokens.</p>
+            <p class="article-text"><strong>The Reality:</strong> A token is a numerical representation of a cluster of
+                characters. AI is a giant mathematical function. It takes your input tokens, runs them through billions
+                of weights (numbers), and calculates the statistical probability of the next token.</p>
+
+            <div class="highlight-box">
+                <h4>Why this matters</h4>
+                <p>If your prompt is "noisy" (extra words, bad grammar), the math gets messy. If your prompt is "clean"
+                    (precise instructions), the probability of a perfect answer hits 99%.</p>
+            </div>
+
+            <!-- CSS Diagram: Tokens -->
+            <div class="diagram-container">
+                <div class="text-stream">
+                    <span>H</span><span>e</span><span>l</span><span>l</span><span>o</span>
+                    <i class="fas fa-arrow-right" style="margin: 0 15px; color: var(--primary-color);"></i>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <div class="token-block">[48]</div>
+                    <div class="token-block">[92]</div>
+                </div>
+                <div
+                    style="position: absolute; bottom: 20px; color: var(--text-muted); font-family: monospace; font-size: 0.8rem;">
+                    Raw Text → Numbered Tokens</div>
+            </div>
+
+            <h2 class="section-title">The Latent Space (Where AI Finds Answers)</h2>
+            <p class="article-text">Imagine a 3D map where every concept in human history is a "Point." <em>"Apple"</em>
+                is near <em>"Fruit"</em>. <em>"Python"</em> is near <em>"Coding"</em>.</p>
+            <p class="article-text">When you write a prompt, you are giving the AI <strong>Coordinates</strong>.</p>
+
+            <div class="prompt-box zero">
+                "Tell me about code."<br>
+                <span style="color: var(--text-muted); font-size: 0.9rem;">(The AI is lost in a massive, vague area of
+                    the map).</span>
+            </div>
+
+            <div class="prompt-box hero">
+                "Explain Python Decorators for a Senior Backend Engineer."<br>
+                <span style="color: var(--text-muted); font-size: 0.9rem;">(You have just teleported the AI to a very
+                    specific, high-level coordinate).</span>
+            </div>
+
+            <h2 class="section-title">Context Window Management</h2>
+            <p class="article-text">Every AI has a strictly limited "Memory" called the Context Window. If the sum of
+                your Input Tokens and its Output Tokens hits the limit, the AI "forgets" the top of the conversation.
+            </p>
+
+            <div class="highlight-box">
+                <h4>The Architect Move</h4>
+                <p>To build a 15-page application constraint, you can't just keep chatting. You must <strong>Summarize
+                        and Inject</strong>. You take the confirmed logic of Module 1, summarize it, and put it into the
+                    exact prompt for Module 2. This is called Context Optimization.</p>
+            </div>
+
+            <h2 class="section-title">The "System" vs "User" Prompt Strategy</h2>
+
+            <table class="comparison-table">
+                <tr>
+                    <th>Prompt Layer</th>
+                    <th>The Purpose</th>
+                </tr>
+                <tr>
+                    <td><strong>The System Prompt</strong></td>
+                    <td>The "Hard Coding" Foundation. <em>"You are a Logic Engine. Never use fluff. Output in
+                            Markdown."</em></td>
+                </tr>
+                <tr>
+                    <td><strong>The User Prompt</strong></td>
+                    <td>The exact task. <em>"Analyze this sorting algorithm."</em></td>
+                </tr>
+            </table>
+
+            <h2 class="section-title">Few-Shot Prompting (The Logic Trick)</h2>
+            <p class="article-text">AI learns instantly from examples. By providing examples, you literally narrow the
+                "Latent Space" so the AI has nowhere to go but the right answer.</p>
+
+            <div class="prompt-box hero">
+                "Here are 2 examples of my style:<br>
+                [Example 1]<br>
+                [Example 2]<br>
+                Now, write the data schema for [New Feature] using this exact structural tone."
+            </div>
+
+            <h2 class="section-title">Chain of Thought (The "Mental Scratchpad")</h2>
+            <p class="article-text">Have you ever asked an AI a complex logic question and it gave you a confident, yet
+                wrong, answer? This happens because the AI tried to "jump" to the finish line without running the
+                calculations.</p>
+
+            <div class="highlight-box">
+                <h4>How to fix it: Zero-Shot CoT</h4>
+                <p>Researchers found that adding one simple sentence—<strong>"Let's think step by step"</strong>—to the
+                    end of a prompt increased logic accuracy from 17% to 78%. By making the AI explicitly output its
+                    reasoning steps, you give the model more "computational tokens" to arrive at the right answer.</p>
+            </div>
+
+            <h2 class="section-title">Delimiters & Structural Output</h2>
+            <p class="article-text">If you don't use strict "Walls" in your prompt, the AI gets confused about what is
+                an "instruction" and what is "data." For true structural output, force the AI to speak in JSON.</p>
+
+            <div class="prompt-box hero">
+                "Analyze the user's sentiment. Output ONLY in JSON format using the following keys: sentiment_score,
+                mood_detected, recommended_action."<br><br>
+                ### INSTRUCTIONS END ###<br><br>
+                [User input data here...]
+            </div>
+
+            <h2 class="section-title">Temperature and Top-P (The "Chaos Knobs")</h2>
+            <p class="article-text">In developer playgrounds, you have access to a slider called Temperature. If you
+                don't mathematically tune this, you're rolling the dice.</p>
+
+            <!-- CSS Diagram: Settings -->
+            <div class="diagram-container">
+                <div class="slider-ui">
+                    <div style="color: white; font-weight: bold; margin-bottom: 15px; font-size: 1.2rem;">Model
+                        Temperature: <span style="color: #3b82f6;">0.1</span></div>
+                    <div class="slider-track">
+                        <div class="slider-fill"></div>
+                        <div class="slider-knob"></div>
+                    </div>
+                    <div class="slider-labels">
+                        <span style="color: #3b82f6;">0.0 (Logic/Math)</span>
+                        <span style="color: #ef4444;">1.0+ (Chaos/Creative)</span>
+                    </div>
+                </div>
+            </div>
+
+            <table class="comparison-table">
+                <tr>
+                    <th>Task Type</th>
+                    <th>Set Temperature To</th>
+                    <th>Why?</th>
+                </tr>
+                <tr>
+                    <td><strong>DSA / Coding</strong></td>
+                    <td>0.0 - 0.2</td>
+                    <td>You require strict statistical logic, not "creativity".</td>
+                </tr>
+                <tr>
+                    <td><strong>Blog Writing</strong></td>
+                    <td>0.7 - 0.8</td>
+                    <td>You want a human-like, varied vocabulary flow.</td>
+                </tr>
+                <tr>
+                    <td><strong>Brainstorming</strong></td>
+                    <td>1.0+</td>
+                    <td>You want wild, outside-the-box hallucination ideas.</td>
+                </tr>
+            </table>
+
+            <h2 class="section-title">The Architect's Final Master Checklist</h2>
+            <p class="article-text">Before you hit enter on a complex prompt, ensure it passes the Hero Logic Checklist.
+            </p>
+
+            <div class="checklist-item">
+                <i class="fas fa-check-circle"></i>
+                <div><strong>Define Persona:</strong> Did you explicitly assign the AI a role (e.g., Senior Architect)?
+                </div>
+            </div>
+            <div class="checklist-item">
+                <i class="fas fa-check-circle"></i>
+                <div><strong>Set Delimiters:</strong> Are your instructions cleanly separated from your raw data using
+                    ###?</div>
+            </div>
+            <div class="checklist-item">
+                <i class="fas fa-check-circle"></i>
+                <div><strong>Zero-Banter:</strong> Did you add negative constraints like "Output ONLY the code. No
+                    explanation."?</div>
+            </div>
+            <div class="checklist-item">
+                <i class="fas fa-check-circle"></i>
+                <div><strong>Chain of Thought:</strong> Did you force the AI to "Think step-by-step" before giving the
+                    final answer?</div>
+            </div>
+            <div class="checklist-item">
+                <i class="fas fa-check-circle"></i>
+                <div><strong>Self-Correction Loop:</strong> Did you ask the AI to act as a Security Auditor and review
+                    the code it just generated for flaws?</div>
+            </div>
+
+            <div
+                style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border-color); text-align: center; color: var(--text-muted); font-size: 0.95rem; font-style: italic;">
+                This guide is for educational purposes. All prompt methodologies are industry standard as of 2026.
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <a href="/" class="nav-logo">
+                    <img src="{{ url_for('static', filename='Logo.png') }}" alt="Portal Logo" class="logo-img-footer">
+                    <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
+                            class="color-3">A</span><span class="color-4">1</span></span>
+                </a>
+                <p>A premier, AI-moderated career hub dedicated to connecting top talent with high-quality, verified
+                    opportunities.</p>
+            </div>
+            <div class="footer-col">
+                <h4>For Employers</h4>
+                <a href="job.html">Post a Job</a>
+                <a href="/#jobs">Browse Jobs</a>
+                <a href="#">Job Alerts</a>
+            </div>
+            <div class="footer-col">
+                <h4>Support & Legal</h4>
+                <a href="aboutus.html">About Us</a>
+                <a href="contact.html">Contact Us</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Service</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 ALL AT A1. All rights reserved.</p>
+        </div>
+    </footer>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>

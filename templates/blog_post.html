@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ blog.title }} | ALL AT A1 Tech Insights</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .bg-gradient-1 {
+            background: linear-gradient(135deg, #4f46e5, #312e81);
+        }
+
+        .bg-gradient-2 {
+            background: linear-gradient(135deg, #059669, #064e3b);
+        }
+
+        .bg-gradient-3 {
+            background: linear-gradient(135deg, #9333ea, #581c87);
+        }
+
+        .bg-gradient-4 {
+            background: linear-gradient(135deg, #dc2626, #7f1d1d);
+        }
+
+        .bg-gradient-5 {
+            background: linear-gradient(135deg, #2563eb, #1e3a8a);
+        }
+
+        .bg-gradient-6 {
+            background: linear-gradient(135deg, #ca8a04, #713f12);
+        }
+
+        .blog-header {
+            text-align: center;
+            padding: 5rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            color: white;
+        }
+
+        .blog-header h1 {
+            font-size: 3.5rem;
+            color: white;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .blog-container {
+            max-width: 800px;
+            margin: 3rem auto;
+            padding: 0 1rem;
+            line-height: 1.8;
+            font-size: 1.1rem;
+            color: var(--text-main);
+        }
+
+        .blog-container h2 {
+            color: var(--primary-color);
+            margin-top: 2rem;
+        }
+
+        .blog-container ul,
+        .blog-container ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-muted);
+        }
+
+        .blog-container li {
+            margin-bottom: 0.5rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            border: 1px solid;
+        }
+
+        .badge-dsa {
+            color: #c084fc;
+            background: rgba(192, 132, 252, 0.1);
+            border-color: rgba(192, 132, 252, 0.3);
+        }
+
+        .badge-jobs {
+            color: #34d399;
+            background: rgba(52, 211, 153, 0.1);
+            border-color: rgba(52, 211, 153, 0.3);
+        }
+
+        .badge-prompt {
+            color: #a78bfa;
+            background: rgba(167, 139, 250, 0.1);
+            border-color: rgba(167, 139, 250, 0.3);
+        }
+
+        .badge-projects {
+            color: #60a5fa;
+            background: rgba(96, 165, 250, 0.1);
+            border-color: rgba(96, 165, 250, 0.3);
+        }
+
+        .back-btn {
+            margin-top: 2rem;
+            display: inline-block;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-btn:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">
+                <img src="{{ url_for('static', filename='Logo.png') }}" alt="Portal Logo" class="logo-img">
+                <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
+                        class="color-3">A</span><span class="color-4">1</span></span>
+            </a>
+            <div class="nav-menu">
+                <a href="/" class="nav-link active">Tech Insights</a>
+                <a href="{{ url_for('students_page') }}" class="nav-link" style="color: var(--logo-color-3);"><i
+                        class="fas fa-graduation-cap"></i> Students</a>
+                <a href="{{ url_for('usa_jobs_page') }}" class="nav-link">Browse Jobs</a>
+                <a href="{{ url_for('contact_page') }}" class="nav-link">Contact Us</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="blog-header {{ blog.bg_class }}" style="position: relative; overflow: hidden;">
+        <div
+            style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-size: 20px 20px; background-image: radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px); z-index: 1;">
+        </div>
+        <div style="position: relative; z-index: 2;">
+            <span class="badge {{ blog.badge_class }}"
+                style="background: rgba(0,0,0,0.3); border-color: rgba(255,255,255,0.2); color: white;">{{ blog.badge
+                }}</span>
+            <h1><i class="{{ blog.icon }}" style="margin-right: 15px; opacity: 0.9;"></i>{{ blog.title }}</h1>
+            <p style="color: rgba(255,255,255,0.9); font-size: 1.2rem; max-width: 600px; margin: 0 auto;">{{
+                blog.description }}</p>
+        </div>
+    </header>
+
+    <main class="blog-container">
+        {{ blog.content | safe }}
+
+        <div
+            style="margin-top: 3rem; padding: 2rem; background: rgba(167, 139, 250, 0.1); border-left: 4px solid var(--logo-color-3); border-radius: 8px;">
+            <h3 style="color: var(--text-main); margin-bottom: 0.5rem;"><i class="fas fa-briefcase"></i> Why Employers
+                Pay For This</h3>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">Mastering these exact frameworks represents the
+                shift from standard engineering to High-Paying Agentic Workgroups. Engineers fluent in these systems are
+                bypassing traditional HR filters for Elite roles in 2026.</p>
+        </div>
+
+        <a href="/" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Tech Insights</a>
+    </main>
+
+    <footer>
+        <div class="footer-bottom">
+            <p>&copy; 2026 ALL AT A1. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>

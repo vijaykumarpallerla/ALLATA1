@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Project Ideas for 2026 | ALL AT A1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .projects-header {
+            text-align: center;
+            padding: 4rem 1rem;
+            background: linear-gradient(135deg, var(--bg-main) 0%, rgba(99, 102, 241, 0.05) 100%);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .projects-header h1 {
+            font-size: 3rem;
+            color: var(--text-main);
+            margin-bottom: 1rem;
+        }
+
+        .projects-header p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            padding: 4rem 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .project-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            position: relative;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            border-color: var(--primary-color);
+        }
+
+        .project-card:hover .project-icon {
+            transform: scale(1.1);
+            color: var(--primary-color);
+        }
+
+        .card-visual {
+            height: 160px;
+            background: linear-gradient(135deg, #1e1e2d, #151521);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-icon {
+            font-size: 3.5rem;
+            color: var(--logo-color-3);
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+
+        /* Subtle Background Card Animations */
+        .grid-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-size: 20px 20px;
+            background-image: radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            opacity: 0.5;
+            z-index: 1;
+        }
+
+        .card-visual::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: inherit;
+            filter: blur(20px);
+            z-index: 1;
+        }
+
+        .card-content {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .card-badge {
+            align-self: flex-start;
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            color: var(--text-main);
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        .card-desc {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border-color);
+            padding-top: 1.5rem;
+            margin-top: auto;
+        }
+
+        .tech-stack {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tech-pill {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        .view-btn {
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: gap 0.2s ease;
+        }
+
+        .project-card:hover .view-btn {
+            gap: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .projects-header h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">
+                <img src="{{ url_for('static', filename='Logo.png') }}" alt="Portal Logo" class="logo-img">
+                <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
+                        class="color-3">A</span><span class="color-4">1</span></span>
+            </a>
+            <div class="nav-menu">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/#jobs" class="nav-link">Browse Jobs</a>
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link">Legal Agreements <i class="fas fa-chevron-down dropdown-icon"></i></a>
+                    <div class="dropdown-content">
+                        <a href="terms.html">Terms and Conditions</a>
+                        <a href="privacy.html">Privacy Policy</a>
+                    </div>
+                </div>
+                <a href="contact.html" class="nav-link">Contact Us</a>
+            </div>
+            <div class="nav-actions">
+                <a href="job.html" class="btn btn-primary" style="text-decoration: none;">Post a Job</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="projects-header">
+        <h1>Elite Project Portfolio Architecture</h1>
+        <p>Weather apps and To-Do lists no longer impress recruiters in 2026. Stand out by building Agentic Workflows,
+            Security Simulators, and Decentralized Topologies.</p>
+    </header>
+
+    <main class="projects-grid">
+        <!-- Project 1 -->
+        <a href="project1.html" class="project-card">
+            <div class="card-visual">
+                <div class="grid-bg"></div>
+                <i class="fas fa-shield-alt project-icon"></i>
+            </div>
+            <div class="card-content">
+                <span class="card-badge"
+                    style="color: #ef4444; background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3);">Cybersecurity</span>
+                <h2 class="card-title">The "Interview Shield" App 🛡️</h2>
+                <p class="card-desc">An anti-cheat Electron desktop lockdown client designed to prevent "Proxy
+                    Interviewing" and AI hallucination scripts during live tech assessments.</p>
+                <div class="card-footer">
+                    <div class="tech-stack">
+                        <span class="tech-pill">Electron</span>
+                        <span class="tech-pill">Node.js</span>
+                        <span class="tech-pill">WebRTC</span>
+                    </div>
+                    <span class="view-btn">View Architecture <i class="fas fa-arrow-right"></i></span>
+                </div>
+            </div>
+        </a>
+
+        <!-- Project 2 -->
+        <a href="project2.html" class="project-card">
+            <div class="card-visual">
+                <div class="grid-bg"></div>
+                <i class="fas fa-robot project-icon"></i>
+            </div>
+            <div class="card-content">
+                <span class="card-badge">Agentic AI</span>
+                <h2 class="card-title">The "Guardian Swarm" Bot 🛡️🤖</h2>
+                <p class="card-desc">A 24/7 autonomous Python robot swarm that independently runs rate-limited
+                    Reconnaissance, Safe Vulnerability Tests (XSS), and automated Discord alerting.</p>
+                <div class="card-footer">
+                    <div class="tech-stack">
+                        <span class="tech-pill">Python</span>
+                        <span class="tech-pill">Selenium</span>
+                        <span class="tech-pill">Scapy</span>
+                    </div>
+                    <span class="view-btn">View Architecture <i class="fas fa-arrow-right"></i></span>
+                </div>
+            </div>
+        </a>
+
+        <!-- Project 3 -->
+        <a href="project3.html" class="project-card">
+            <div class="card-visual">
+                <div class="grid-bg"></div>
+                <i class="fas fa-bolt project-icon"></i>
+            </div>
+            <div class="card-content">
+                <span class="card-badge"
+                    style="color: #f59e0b; background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.3);">Hardware
+                    Physics</span>
+                <h2 class="card-title">The "Deep-Sync" Virtual Lab ⚡🧪</h2>
+                <p class="card-desc">A drag-and-drop hardware engineering simulator running real-time Ohm's Law
+                    computations. "Burn out" virtual components safely before touching physical electrical engineering
+                    labs.</p>
+                <div class="card-footer">
+                    <div class="tech-stack">
+                        <span class="tech-pill">PyGame</span>
+                        <span class="tech-pill">React</span>
+                        <span class="tech-pill">FEA</span>
+                    </div>
+                    <span class="view-btn">View Architecture <i class="fas fa-arrow-right"></i></span>
+                </div>
+            </div>
+        </a>
+
+        <!-- Project 4 -->
+        <a href="project4.html" class="project-card">
+            <div class="card-visual">
+                <div class="grid-bg"></div>
+                <i class="fas fa-recycle project-icon"></i>
+            </div>
+            <div class="card-content">
+                <span class="card-badge"
+                    style="color: #3b82f6; background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.3);">Computer
+                    Vision</span>
+                <h2 class="card-title">The "Scrap-to-System" Architect 🛠️♻️</h2>
+                <p class="card-desc">A Generative DIY engine utilizing strict LLM constraints to convert household
+                    e-waste (batteries, old motors) into functional mechatronic devices with automatically drafted Bills
+                    of Materials.</p>
+                <div class="card-footer">
+                    <div class="tech-stack">
+                        <span class="tech-pill">YOLOv8</span>
+                        <span class="tech-pill">LLM JSON</span>
+                        <span class="tech-pill">Pinecone</span>
+                    </div>
+                    <span class="view-btn">View Architecture <i class="fas fa-arrow-right"></i></span>
+                </div>
+            </div>
+        </a>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <a href="/" class="nav-logo">
+                    <img src="{{ url_for('static', filename='Logo.png') }}" alt="Portal Logo" class="logo-img-footer">
+                    <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
+                            class="color-3">A</span><span class="color-4">1</span></span>
+                </a>
+                <p>A premier, AI-moderated career hub dedicated to connecting top talent with high-quality, verified
+                    opportunities.</p>
+            </div>
+            <div class="footer-col">
+                <h4>For Employers</h4>
+                <a href="job.html">Post a Job</a>
+                <a href="/#jobs">Browse Jobs</a>
+                <a href="#">Job Alerts</a>
+            </div>
+            <div class="footer-col">
+                <h4>Support & Legal</h4>
+                <a href="aboutus.html">About Us</a>
+                <a href="contact.html">Contact Us</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Service</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 ALL AT A1. All rights reserved.</p>
+        </div>
+    </footer>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>

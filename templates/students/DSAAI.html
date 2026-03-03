@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mastering DSA + Gen AI | ALL AT A1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .article-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            padding: 4rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            line-height: 1.8;
+        }
+
+        .article-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .article-header h1 {
+            font-size: 2.8rem;
+            color: var(--text-main);
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .article-header p {
+            font-size: 1.2rem;
+            color: var(--logo-color-3);
+            font-weight: 500;
+        }
+
+        .section-title {
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin-top: 3.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .sub-title {
+            color: var(--text-main);
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .article-text {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .highlight-box {
+            background-color: rgba(99, 102, 241, 0.1);
+            border-left: 4px solid var(--primary-color);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        }
+
+        .highlight-box h4 {
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .prompt-box {
+            background-color: #1e1e2d;
+            border: 1px solid #333;
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            margin: 2rem 0;
+            font-family: monospace;
+            color: #10b981;
+            position: relative;
+        }
+
+        .prompt-box::before {
+            content: "🤖 Architect Prompt";
+            display: block;
+            position: absolute;
+            top: -12px;
+            left: 15px;
+            background: var(--primary-color);
+            color: white;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: var(--bg-main);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table th {
+            background-color: var(--primary-dark);
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            height: 350px;
+            background: linear-gradient(45deg, #2a2a3c, #1e1e2d);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 2.5rem 0;
+            border: 2px dashed var(--border-color);
+            flex-direction: column;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .image-placeholder i {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .image-placeholder span {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        .css-diagram {
+            width: 100%;
+            height: 350px;
+            background: linear-gradient(135deg, #1e1e2d, #151521);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            margin: 2.5rem 0;
+            border: 1px solid #333;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .diagram-left,
+        .diagram-right {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 40%;
+            position: relative;
+        }
+
+        .cube {
+            width: 40px;
+            height: 40px;
+            background: rgba(99, 102, 241, 0.2);
+            border: 2px solid var(--primary-color);
+            position: absolute;
+            animation: float 4s infinite ease-in-out;
+            border-radius: 4px;
+        }
+
+        .cube-1 {
+            top: 20%;
+            left: 30%;
+            animation-delay: 0s;
+        }
+
+        .cube-2 {
+            top: 60%;
+            left: 20%;
+            animation-delay: 0.5s;
+            background: rgba(99, 102, 241, 0.4);
+        }
+
+        .cube-3 {
+            top: 40%;
+            left: 60%;
+            animation-delay: 1s;
+        }
+
+        .cube-4 {
+            top: 70%;
+            left: 50%;
+            animation-delay: 1.5s;
+        }
+
+        .cube-5 {
+            top: 30%;
+            left: 10%;
+            animation-delay: 2s;
+            background: rgba(99, 102, 241, 0.4);
+        }
+
+        .tower {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tower-level {
+            width: 80px;
+            height: 30px;
+            background: rgba(16, 185, 129, 0.2);
+            border: 2px solid #10b981;
+            border-radius: 4px;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+            animation: pulse-glow 2s infinite alternate;
+        }
+
+        .cube-label {
+            position: absolute;
+            bottom: -20px;
+            color: var(--text-muted);
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-15px) rotate(10deg);
+            }
+
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+        }
+
+        @keyframes pulse-glow {
+            0% {
+                box-shadow: 0 0 5px rgba(16, 185, 129, 0.2);
+            }
+
+            100% {
+                box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
+            }
+        }
+
+        .graph-diagram {
+            width: 100%;
+            height: 350px;
+            background: radial-gradient(circle at center, #1e1e2d 0%, #0d0d14 100%);
+            border-radius: var(--radius-lg);
+            margin: 2.5rem 0;
+            border: 1px solid #333;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .node {
+            width: 30px;
+            height: 30px;
+            background: var(--bg-card);
+            border: 2px solid var(--primary-color);
+            border-radius: 50%;
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 0.8rem;
+            font-weight: bold;
+            z-index: 2;
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.5);
+            animation: pulse-node 3s infinite alternate;
+        }
+
+        .node-1 {
+            top: 20%;
+            left: 20%;
+            animation-delay: 0s;
+        }
+
+        .node-2 {
+            top: 70%;
+            left: 30%;
+            animation-delay: 0.5s;
+        }
+
+        .node-3 {
+            top: 40%;
+            left: 50%;
+            animation-delay: 1s;
+            border-color: #f59e0b;
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.5);
+        }
+
+        .node-4 {
+            top: 25%;
+            left: 75%;
+            animation-delay: 1.5s;
+        }
+
+        .node-5 {
+            top: 65%;
+            left: 80%;
+            animation-delay: 2s;
+        }
+
+        .edge {
+            position: absolute;
+            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.5), transparent);
+            height: 2px;
+            z-index: 1;
+            transform-origin: left center;
+        }
+
+        .edge-1 {
+            top: 25%;
+            left: 24%;
+            width: 33%;
+            transform: rotate(32deg);
+        }
+
+        .edge-2 {
+            top: 44%;
+            left: 53%;
+            width: 25%;
+            transform: rotate(-35deg);
+        }
+
+        .edge-3 {
+            top: 74%;
+            left: 33%;
+            width: 23%;
+            transform: rotate(-45deg);
+        }
+
+        .edge-4 {
+            top: 44%;
+            left: 53%;
+            width: 29%;
+            transform: rotate(30deg);
+        }
+
+        .edge-5 {
+            top: 24%;
+            left: 23%;
+            width: 52%;
+            transform: rotate(5deg);
+            opacity: 0.3;
+        }
+
+        .data-packet {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            position: absolute;
+            box-shadow: 0 0 10px #10b981;
+            animation: move-packet linear infinite;
+        }
+
+        .packet-1 {
+            top: -3px;
+            left: 0;
+            animation-duration: 2s;
+        }
+
+        .packet-2 {
+            top: -3px;
+            left: 0;
+            animation-duration: 1.5s;
+            animation-delay: 0.5s;
+        }
+
+        @keyframes move-packet {
+            0% {
+                left: 0;
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                left: 100%;
+                opacity: 0;
+            }
+        }
+
+        @keyframes pulse-node {
+            0% {
+                transform: scale(1);
+            }
+
+            100% {
+                transform: scale(1.1);
+            }
+        }
+
+        /* Additional Diagram CSS */
+        .css-diagram,
+        .list-diagram,
+        .stack-diagram,
+        .hash-diagram,
+        .graph-diagram {
+            -webkit-user-select: none;
+            /* Safari */
+            -ms-user-select: none;
+            /* IE 10 and IE 11 */
+            user-select: none;
+            /* Standard syntax */
+        }
+
+        .list-diagram {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #1e1e2d, #151521);
+            border-radius: var(--radius-lg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 2rem;
+            border: 1px solid #333;
+            position: relative;
+            margin: 2.5rem 0;
+        }
+
+        .list-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .list-box {
+            width: 50px;
+            height: 50px;
+            background: rgba(99, 102, 241, 0.2);
+            border: 2px solid var(--primary-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .list-arrow {
+            color: #10b981;
+            font-size: 1.5rem;
+            animation: pulse-glow 2s infinite;
+        }
+
+        .list-link {
+            border-radius: 50%;
+            border-color: #10b981;
+        }
+
+        .stack-diagram {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #1e1e2d, #151521);
+            border-radius: var(--radius-lg);
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            padding: 2rem;
+            border: 1px solid #333;
+            margin: 2.5rem 0;
+        }
+
+        .stack-container {
+            width: 100px;
+            height: 200px;
+            border: 3px solid var(--primary-color);
+            border-top: none;
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: center;
+            padding-bottom: 5px;
+            gap: 5px;
+            position: relative;
+        }
+
+        .stack-item {
+            width: 80px;
+            height: 30px;
+            background: rgba(99, 102, 241, 0.4);
+            border: 2px solid var(--primary-color);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            border-radius: 4px;
+            animation: slide-down 3s infinite;
+        }
+
+        .stack-item:nth-child(2) {
+            animation-delay: 1s;
+        }
+
+        .stack-item:nth-child(3) {
+            animation-delay: 2s;
+        }
+
+        .hash-diagram {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #1e1e2d, #151521);
+            border-radius: var(--radius-lg);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 2rem;
+            border: 1px solid #333;
+            margin: 2.5rem 0;
+        }
+
+        .hash-key {
+            padding: 10px 20px;
+            background: rgba(245, 158, 11, 0.2);
+            border: 2px dashed #f59e0b;
+            color: white;
+            border-radius: 8px;
+            font-family: monospace;
+        }
+
+        .hash-func {
+            width: 100px;
+            height: 100px;
+            background: rgba(16, 185, 129, 0.2);
+            border: 2px solid #10b981;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            animation: spin-slow 10s linear infinite;
+        }
+
+        .hash-bucket {
+            width: 80px;
+            height: 100px;
+            background: rgba(99, 102, 241, 0.2);
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            padding-bottom: 10px;
+            color: white;
+        }
+
+        @keyframes slide-down {
+            0% {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+
+            20% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            80% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes spin-slow {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .article-container {
+                padding: 2rem;
+            }
+
+            .article-header h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">
+                <img src="{{ url_for('static', filename='Logo.png') }}" alt="Portal Logo" class="logo-img">
+                <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
+                        class="color-3">A</span><span class="color-4">1</span></span>
+            </a>
+            <div class="nav-menu">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/#jobs" class="nav-link">Browse Jobs</a>
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link">Legal Agreements <i class="fas fa-chevron-down dropdown-icon"></i></a>
+                    <div class="dropdown-content">
+                        <a href="terms.html">Terms and Conditions</a>
+                        <a href="privacy.html">Privacy Policy</a>
+                    </div>
+                </div>
+                <a href="contact.html" class="nav-link">Contact Us</a>
+            </div>
+            <div class="nav-actions">
+                <a href="job.html" class="btn btn-primary" style="text-decoration: none;">Post a Job</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container" style="padding: 4rem 1rem 6rem 1rem;">
+
+        <div class="article-container">
+            <div class="article-header">
+                <h1>Don't Be a Coder, Be an Architect: Master DSA + Gen AI</h1>
+                <p>The ultimate cheat code to controlling AI and landing high-paying developer roles in 2026.</p>
+            </div>
+
+            <p class="article-text">
+                Most people think, <em>"AI can code, so I don't need to learn to code."</em> But they are completely
+                wrong. AI is like a high-speed sports car—if you don't know how to drive (Logic/DSA), you'll just crash
+                it even faster.
+            </p>
+
+            <div class="highlight-box">
+                <h4>The Reality Check</h4>
+                <p><strong>AI's Weakness:</strong> AI is fantastic at writing code blocks, but it is terrible at
+                    choosing the most efficient system path for 1 million users.<br>
+                    <strong>Your Strength:</strong> When you understand Data Structures & Algorithms, you don't just
+                    "Ask AI to code." You instruct AI on how to organize the data so the application doesn't crash.
+                </p>
+            </div>
+
+            <p class="article-text"><strong>Let's break it down simply:</strong></p>
+            <ul class="article-text" style="padding-left: 2rem;">
+                <li><strong>Data Structures:</strong> These are the Shelves in your shop. (How you store stuff).</li>
+                <li><strong>Algorithms:</strong> These are the Steps to find an item on the shelf. (How you find stuff).
+                </li>
+                <li><strong>Gen AI:</strong> This is the Robot Arm that follows your steps.</li>
+            </ul>
+            <p class="article-text">If your shelves are messy (Bad DSA), the robot arm (AI) will take 10 minutes to find
+                one item. If your shelves are organized perfectly, the robot finds it in 1 second.</p>
+
+            <!-- CSS Diagram 1 -->
+            <div class="css-diagram">
+                <div class="diagram-left">
+                    <div class="cube cube-1"></div>
+                    <div class="cube cube-2"></div>
+                    <div class="cube cube-3"></div>
+                    <div class="cube cube-4"></div>
+                    <div class="cube cube-5"></div>
+                    <div class="cube-label">Raw Code (Chaos)</div>
+                </div>
+                <div class="diagram-center">
+                    <i class="fas fa-arrow-right" style="color: var(--primary-color); font-size: 2rem;"></i>
+                </div>
+                <div class="diagram-right">
+                    <div class="tower">
+                        <div class="tower-level"></div>
+                        <div class="tower-level"></div>
+                        <div class="tower-level"></div>
+                    </div>
+                    <div class="cube-label" style="color: #10b981;">Optimized DSA (Order)</div>
+                </div>
+            </div>
+
+            <h2 class="section-title">The Container Secret (Arrays vs. Linked Lists)</h2>
+            <p class="article-text">In 2026, when you ask an AI to "keep a list of my friends," it will instinctively
+                reach for an Array.</p>
+
+            <h3 class="sub-title">1. The Array (The "Cinema Row" Metaphor)</h3>
+            <p class="article-text">Imagine a row of seats in a high-end cinema. Every seat is strictly numbered and
+                bolted down. Once the row is built for 10 people, you can't magically make it 11 without building a
+                completely new row.</p>
+            <p class="article-text"><strong>The "Boss" Problem:</strong> Imagine the row is full. A VIP arrives and
+                wants to sit at the very beginning (Seat 0). Every single person in the row has to stand up, move one
+                seat to the right, and sit back down. For 1 million users, that's 1,000,000 individual moves. Your app
+                will freeze.</p>
+
+            <h3 class="sub-title">2. The Linked List (The "Train Car" Metaphor)</h3>
+            <p class="article-text">Instead of seats bolted to the floor, imagine a Freight Train. Each car holds a
+                passenger and is hooked to the next with a heavy chain. If that VIP arrives, you don't move anyone! You
+                just bring in a new train car, hook it to the front, and you're done. Whether you have 10 users or 10
+                billion users, it takes the exact same instant amount of time (O(1)).</p>
+
+            <table class="comparison-table">
+                <tr>
+                    <th>Action</th>
+                    <th>Cinema Row (Array)</th>
+                    <th>The Train (Linked List)</th>
+                </tr>
+                <tr>
+                    <td>Finding a specific person</td>
+                    <td>Super Fast (Just go to Seat #)</td>
+                    <td>Slow (Must walk through every car)</td>
+                </tr>
+                <tr>
+                    <td>Adding a person at the start</td>
+                    <td>Very Slow (Everyone must move)</td>
+                    <td>Super Fast (Just add a link)</td>
+                </tr>
+            </table>
+
+            <!-- CSS Diagram: Array vs Linked List -->
+            <div class="list-diagram">
+                <div style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 10px;">Cinema Row (Array)</div>
+                <div class="list-row">
+                    <div class="list-box">0</div>
+                    <div class="list-box">1</div>
+                    <div class="list-box">2</div>
+                    <div class="list-box">3</div>
+                    <div class="list-box">4</div>
+                </div>
+                <div style="color: var(--text-muted); font-size: 0.9rem; margin: 30px 0 10px;">The Train (Linked List)
+                </div>
+                <div class="list-row">
+                    <div class="list-box list-link">A</div><i class="fas fa-arrow-right list-arrow"></i>
+                    <div class="list-box list-link">B</div><i class="fas fa-arrow-right list-arrow"></i>
+                    <div class="list-box list-link" style="animation: pulse-glow 2s infinite alternate;">VIP</div><i
+                        class="fas fa-arrow-right list-arrow"></i>
+                    <div class="list-box list-link">C</div>
+                </div>
+            </div>
+
+            <h2 class="section-title">The "Undo" Secret (The Stack)</h2>
+            <p class="article-text">Have you ever wondered how ChatGPT remembers your last prompt, or how the "Undo"
+                (Ctrl+Z) button works in software? It uses a logic called a Stack.</p>
+            <h3 class="sub-title">The "Pancake" Metaphor</h3>
+            <p class="article-text">Imagine a chef making a stack of pancakes. The first one cooked goes at the bottom.
+                The last one cooked sits right on top. If you want to eat one, you take the one from the
+                top—<strong>Last-In, First-Out (LIFO)</strong>.</p>
+            <p class="article-text">If you don't tell the AI to use a Stack for browser history, it might try to save
+                every single page in a giant, chaotic list, wasting memory.</p>
+
+            <div class="prompt-box">
+                "AI, implement the 'Undo' feature using a Stack data structure so system memory is cleared efficiently
+                after every pop operation."
+            </div>
+
+            <!-- CSS Diagram: Stack -->
+            <div class="stack-diagram">
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                    <div class="stack-container">
+                        <div class="stack-item">Page 1</div>
+                        <div class="stack-item">Page 2</div>
+                        <div class="stack-item">Page 3</div>
+                    </div>
+                    <div style="color: var(--text-muted); font-size: 0.9rem; margin-top: 15px;">Browser History (Stack)
+                    </div>
+                </div>
+                <div
+                    style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; padding-bottom: 30px;">
+                    <i class="fas fa-layer-group"
+                        style="font-size: 4rem; color: var(--primary-color); margin-bottom: 1.5rem;"></i>
+                    <div style="color: var(--text-muted); font-size: 1rem; font-weight: bold;">Last-In, First-Out (LIFO)
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="section-title">The Teleportation Secret (Hash Maps)</h2>
+            <p class="article-text">Imagine you are at a massive hotel with 10,000 rooms. You go to the front desk and
+                ask, "Is John Smith here?"</p>
+            <ul class="article-text" style="padding-left: 2rem;">
+                <li><strong>The Array Way:</strong> Walk to Room 1, knock, then Room 2... (Wait all night).</li>
+                <li><strong>The Hash Map Way:</strong> The clerk types "John Smith" into a computer. A "Magic Formula"
+                    instantly outputs: "Room 402." You teleport straight there. No searching. Just arriving.</li>
+            </ul>
+
+            <h3 class="sub-title">The "Magic Locker" Metaphor</h3>
+            <p class="article-text">When you talk to an AI, it uses Key-Value pairs (Hash Maps) to store your entire
+                session. Without Hash Maps, the AI would take minutes to "find" your conversation tree every single time
+                you sent a new text.</p>
+
+            <div class="highlight-box">
+                <h4>Handling Collisions</h4>
+                <p>What if the Magic Formula gives two different names (like Apple and Orange) the exact same room
+                    number? As the Architect, you put a <strong>Linked List</strong> (a bunk bed) inside that room. The
+                    computer jumps to the room instantly, then quickly searches the small bunk bed chain.</p>
+            </div>
+
+            <!-- CSS Diagram: Hash Map -->
+            <div class="hash-diagram">
+                <div style="text-align: center;">
+                    <div class="hash-key">"John Smith"</div>
+                    <div style="color: var(--text-muted); font-size: 0.8rem; margin-top: 5px;">Key</div>
+                </div>
+                <i class="fas fa-arrow-right" style="color: var(--text-muted); font-size: 1.5rem;"></i>
+                <div style="text-align: center;">
+                    <div class="hash-func"><i class="fas fa-magic" style="font-size: 2.5rem;"></i></div>
+                    <div style="color: var(--text-muted); font-size: 0.8rem; margin-top: 5px;">Magic Formula<br>(Hash
+                        Function)</div>
+                </div>
+                <i class="fas fa-arrow-right" style="color: var(--text-muted); font-size: 1.5rem;"></i>
+                <div style="display: flex; gap: 15px;">
+                    <div class="hash-bucket" style="opacity: 0.3;">...</div>
+                    <div class="hash-bucket"
+                        style="border-color: #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);">
+                        <span style="font-size: 1.2rem; font-weight: bold;">Room 402</span>
+                    </div>
+                    <div class="hash-bucket" style="opacity: 0.3;">...</div>
+                </div>
+            </div>
+
+            <h2 class="section-title">The Connection Secret (Graphs)</h2>
+            <p class="article-text">Arrays, Stacks, and Trees are all linear or hierarchical. But the real world isn't a
+                straight line. The real world is a complex web.</p>
+
+            <h3 class="sub-title">The "Social Media" Metaphor</h3>
+            <p class="article-text">Imagine a sprawling party. Every person is a "Node," and the friendships connecting
+                them are "Edges." This is how Recommendation Engines work (<em>"Because you liked Inception, you'll like
+                    Interstellar"</em>) and how Google Maps calculates the shortest path through traffic (Dijkstra's
+                Algorithm).</p>
+
+            <div class="prompt-box">
+                "AI, model our user-interest data as a Directed Acyclic Graph (DAG) and use a breadth-first search to
+                suggest the three most relevant topics to the user based on their last 5 clicks."
+            </div>
+            <p class="article-text" style="font-style: italic; color: var(--primary-color);">Boom. That is a sentence
+                that gets you hired as a Lead Engineer.</p>
+
+            <!-- CSS Diagram 2 -->
+            <div class="graph-diagram">
+                <div class="node node-1">A</div>
+                <div class="node node-2">B</div>
+                <div class="node node-3"><i class="fas fa-user"></i></div>
+                <div class="node node-4">C</div>
+                <div class="node node-5">D</div>
+
+                <div class="edge edge-1">
+                    <div class="data-packet packet-1"></div>
+                </div>
+                <div class="edge edge-2">
+                    <div class="data-packet packet-2"></div>
+                </div>
+                <div class="edge edge-3"></div>
+                <div class="edge edge-4">
+                    <div class="data-packet packet-1" style="animation-delay: 1s;"></div>
+                </div>
+                <div class="edge edge-5"></div>
+            </div>
+
+            <h2 class="section-title">Final Summary Cheat Sheet</h2>
+            <table class="comparison-table" style="margin-bottom: 0;">
+                <tr>
+                    <th>Data Structure</th>
+                    <th>Best Real-World Use Case</th>
+                </tr>
+                <tr>
+                    <td><strong>Arrays</strong></td>
+                    <td>Fixed lists (Cinema Seats)</td>
+                </tr>
+                <tr>
+                    <td><strong>Linked Lists</strong></td>
+                    <td>Flexible lists (Train Cars)</td>
+                </tr>
+                <tr>
+                    <td><strong>Stacks / Queues</strong></td>
+                    <td>Order operations (Pancakes / Supermarket Lines)</td>
+                </tr>
+                <tr>
+                    <td><strong>Trees</strong></td>
+                    <td>Fast ordered searching (Decision Forks)</td>
+                </tr>
+                <tr>
+                    <td><strong>Hash Maps</strong></td>
+                    <td>Instant access & caching (The Magic Locker)</td>
+                </tr>
+                <tr>
+                    <td><strong>Graphs</strong></td>
+                    <td>Complex web relationships & mapping (Social Networks)</td>
+                </tr>
+            </table>
+
+            <div
+                style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border-color); text-align: center; color: var(--text-muted); font-size: 0.95rem; font-style: italic;">
+                This guide is for educational purposes. All logic concepts are industry standard as of 2026.
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <a href="/" class="nav-logo">
+                    <img src="{{ url_for('static', filename='Logo.png') }}" alt="Portal Logo" class="logo-img-footer">
+                    <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
+                            class="color-3">A</span><span class="color-4">1</span></span>
+                </a>
+                <p>A premier, AI-moderated career hub dedicated to connecting top talent with high-quality, verified
+                    opportunities.</p>
+            </div>
+            <div class="footer-col">
+                <h4>For Employers</h4>
+                <a href="job.html">Post a Job</a>
+                <a href="/#jobs">Browse Jobs</a>
+                <a href="#">Job Alerts</a>
+            </div>
+            <div class="footer-col">
+                <h4>Support & Legal</h4>
+                <a href="aboutus.html">About Us</a>
+                <a href="contact.html">Contact Us</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Service</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 ALL AT A1. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>

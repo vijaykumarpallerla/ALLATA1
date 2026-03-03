@@ -1,4 +1,4 @@
-from flask import Flask, send_file, request, jsonify
+from flask import Flask, send_file, request, jsonify, render_template
 import webbrowser
 import threading
 import os
@@ -28,8 +28,7 @@ class HideAdminLinkFilter(logging.Filter):
 logging.getLogger('werkzeug').addFilter(HideAdminLinkFilter())
 
 # Initialize Flask app
-# We use the current directory for static files so we don't need to move styles.css, script.js, index.html 
-app = Flask(__name__, static_folder='.', static_url_path='', template_folder='.')
+app = Flask(__name__)
 
 # Database configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
@@ -61,12 +60,36 @@ with app.app_context():
     # Because sqlite is rigid, adding a default False value to existing rows might require dropping the table or setting server_default.
     # Since it's development, we'll let SQLAlchemy manage it or add a try/except for the migration if Xata handles it.
     db.create_all()
+import json
+
 @app.route('/')
 def home():
+    try:
+        json_path = os.path.join(app.root_path, 'static', 'data', 'blogs.json')
+        with open(json_path, 'r', encoding='utf-8') as f:
+            blogs = json.load(f)
+    except Exception as e:
+        blogs = []
+    return render_template('index.html', blogs=blogs)
+
+@app.route('/blog/<blog_id>')
+def read_blog(blog_id):
+    try:
+        json_path = os.path.join(app.root_path, 'static', 'data', 'blogs.json')
+        with open(json_path, 'r', encoding='utf-8') as f:
+            blogs = json.load(f)
+        for blog in blogs:
+            if blog['id'] == blog_id:
+                return render_template('blog_post.html', blog=blog)
+    except Exception as e:
+        pass
+    return "Blog not found", 404
+
+@app.route('/browse_jobs')
+def usa_jobs_page():
     # Read the main job portal HTML
     try:
-        with open('index.html', 'r', encoding='utf-8') as f:
-            html_content = f.read()
+        html_content = render_template('USA_Browse_jobs.html')
 
         # Parse query parameters for server-side filtering
         jobtype_query = request.args.get('jobtype', '')
@@ -376,8 +399,7 @@ def job_detail():
         return "Job not found", 404
         
     try:
-        with open('job_detail.html', 'r', encoding='utf-8') as f:
-            html = f.read()
+        html = render_template('job_detail.html')
             
         html = html.replace('<!-- JOB_TITLE -->', job.title)
         html = html.replace('<!-- JOB_COMPANY -->', job.company)
@@ -439,7 +461,7 @@ def job_detail():
 @app.route(f'/{ADMIN_PATH}')
 def admin():
     # Secret route to access the admin panel
-    return send_file('admin.html')
+    return render_template('admin.html')
 
 @app.route('/api/admin/messages', methods=['GET'])
 def get_admin_messages():
@@ -505,9 +527,65 @@ def delete_admin_job(job_id):
 @app.errorhandler(404)
 def page_not_found(e):
     try:
-        return send_file('404.html'), 404
-    except FileNotFoundError:
+        return render_template('404.html'), 404
+    except Exception:
         return "404 - Page Not Found", 404
+
+@app.route('/job.html')
+def job_html_page():
+    return render_template('job.html')
+
+@app.route('/aboutus.html')
+def aboutus_page():
+    return render_template('aboutus.html')
+
+@app.route('/contact.html')
+def contact_page():
+    return render_template('contact.html')
+
+@app.route('/terms.html')
+def terms_page():
+    return render_template('terms.html')
+
+@app.route('/privacy.html')
+def privacy_page():
+    return render_template('privacy.html')
+
+@app.route('/students.html')
+def students_page():
+    return render_template('students/students.html')
+
+@app.route('/projects.html')
+def projects_page():
+    return render_template('students/projects.html')
+
+@app.route('/project1.html')
+def project1_page():
+    return render_template('students/project1.html')
+
+@app.route('/project2.html')
+def project2_page():
+    return render_template('students/project2.html')
+
+@app.route('/project3.html')
+def project3_page():
+    return render_template('students/project3.html')
+
+@app.route('/project4.html')
+def project4_page():
+    return render_template('students/project4.html')
+
+@app.route('/DSAAI.html')
+def dsaai_page():
+    return render_template('students/DSAAI.html')
+
+@app.route('/crack2026.html')
+def crack2026_page():
+    return render_template('students/crack2026.html')
+
+@app.route('/promptai.html')
+def promptai_page():
+    return render_template('students/promptai.html')
 
 if __name__ == '__main__':
     # Function to automatically open the browser

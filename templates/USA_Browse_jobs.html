@@ -7,7 +7,7 @@
     <title>ALL AT A1 | Job Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 
 <body>
@@ -15,12 +15,14 @@
     <nav class="navbar">
         <div class="nav-container">
             <a href="/" class="nav-logo">
-                <img src="Logo.png" alt="Portal Logo" class="logo-img">
+                <img src="{{ url_for('static', filename='Logo.png') }}" alt="Portal Logo" class="logo-img">
                 <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
                         class="color-3">A</span><span class="color-4">1</span></span>
             </a>
             <div class="nav-menu">
                 <a href="/" class="nav-link active">Home</a>
+                <a href="students.html" class="nav-link" style="color: var(--logo-color-3); font-weight: 600;"><i
+                        class="fas fa-graduation-cap"></i> Students</a>
                 <a href="/#jobs" class="nav-link">Browse Jobs</a>
                 <div class="nav-dropdown">
                     <a href="#legal" class="nav-link">Legal Agreements <i
@@ -130,24 +132,22 @@
         <div class="footer-content">
             <div class="footer-col">
                 <a href="#" class="nav-logo">
-                    <img src="Logo.png" alt="Portal Logo" class="logo-img-footer">
+                    <img src="{{ url_for('static', filename='Logo.png') }}" alt="Portal Logo" class="logo-img-footer">
                     <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
                             class="color-3">A</span><span class="color-4">1</span></span>
                 </a>
-                <p>Bringing jobs from various portals into one centralized platform for your convenience.</p>
-            </div>
-            <div class="footer-col">
-                <h4>For Candidates</h4>
-                <a href="/#jobs">Browse Jobs</a>
-                <a href="#">Job Alerts</a>
-                <a href="#">Saved Jobs</a>
+                <p>A premier, AI-moderated career hub dedicated to connecting top talent with high-quality, verified
+                    opportunities.</p>
             </div>
             <div class="footer-col">
                 <h4>For Employers</h4>
                 <a href="job.html">Post a Job</a>
+                <a href="/#jobs">Browse Jobs</a>
+                <a href="#">Job Alerts</a>
             </div>
             <div class="footer-col">
-                <h4>About Us</h4>
+                <h4>Support & Legal</h4>
+                <a href="aboutus.html">About Us</a>
                 <a href="contact.html">Contact Us</a>
                 <a href="privacy.html">Privacy Policy</a>
                 <a href="terms.html">Terms of Service</a>
@@ -158,7 +158,7 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 
 </html>

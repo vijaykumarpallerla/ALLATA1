@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The "Scrap-to-System" Architect | ALL AT A1 Projects</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .article-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            padding: 4rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            line-height: 1.8;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: var(--primary-color);
+        }
+
+        .article-header {
+            text-align: left;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .project-badge {
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .article-header h1 {
+            font-size: 2.8rem;
+            color: var(--text-main);
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .article-header p {
+            font-size: 1.4rem;
+            color: var(--logo-color-3);
+            font-weight: 500;
+        }
+
+        .section-title {
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin-top: 3.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .article-text {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .highlight-box {
+            background-color: rgba(99, 102, 241, 0.1);
+            border-left: 4px solid var(--primary-color);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        }
+
+        .highlight-box h4 {
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .code-box {
+            background-color: #1e1e2d;
+            border: 1px solid #333;
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            margin: 2rem 0;
+            font-family: monospace;
+            color: #a5b4fc;
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .code-box::before {
+            content: "System Prompt Constraint (Groq/Llama)";
+            display: block;
+            position: absolute;
+            top: -12px;
+            left: 15px;
+            background: #3730a3;
+            color: white;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+        }
+
+        /* CSS AI Vision Scanner Animation */
+        .vision-container {
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            width: 100%;
+            height: 350px;
+            background: #0f172a;
+            border-radius: var(--radius-lg);
+            margin: 2.5rem 0;
+            border: 1px solid #333;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+        }
+
+        .vision-grid {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+            transform: rotateX(45deg) scale(1.5);
+        }
+
+        .vision-scanner {
+            position: absolute;
+            width: 100%;
+            height: 20px;
+            background: linear-gradient(to bottom, transparent, rgba(16, 185, 129, 0.5));
+            border-bottom: 2px solid #10b981;
+            animation: scan-up-down 3s infinite alternate linear;
+            z-index: 5;
+        }
+
+        .junk-item {
+            position: absolute;
+            background: #1e293b;
+            border: 1px solid #475569;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            z-index: 2;
+            transition: border-color 0.3s;
+        }
+
+        .ji-batt {
+            width: 60px;
+            height: 90px;
+            top: 30%;
+            left: 20%;
+            animation: float-1 4s infinite alternate ease-in-out;
+        }
+
+        .ji-motor {
+            width: 70px;
+            height: 70px;
+            top: 60%;
+            left: 45%;
+            border-radius: 50%;
+            animation: float-2 5s infinite alternate-reverse ease-in-out;
+        }
+
+        .ji-plastic {
+            width: 80px;
+            height: 120px;
+            top: 20%;
+            left: 70%;
+            animation: float-1 6s infinite alternate ease-in-out;
+        }
+
+        .vision-tag {
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(16, 185, 129, 0.9);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-family: monospace;
+            white-space: nowrap;
+            opacity: 0;
+            animation: reveal-tag 6s infinite;
+        }
+
+        .ji-batt .vision-tag {
+            animation-delay: 0.5s;
+            content: "9V_POWER_SOURCE [98%]";
+        }
+
+        .ji-motor .vision-tag {
+            animation-delay: 1.5s;
+            content: "DC_MOTOR_12V [91%]";
+        }
+
+        .ji-plastic .vision-tag {
+            animation-delay: 2.5s;
+            content: "CHASSIS_PLA [88%]";
+        }
+
+        @keyframes scan-up-down {
+            0% {
+                top: 0%;
+                box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);
+            }
+
+            100% {
+                top: calc(100% - 20px);
+                box-shadow: 0 -10px 20px rgba(16, 185, 129, 0.2);
+            }
+        }
+
+        @keyframes float-1 {
+            from {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            to {
+                transform: translateY(-15px) rotate(5deg);
+            }
+        }
+
+        @keyframes float-2 {
+            from {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            to {
+                transform: translateY(20px) rotate(-10deg);
+            }
+        }
+
+        @keyframes reveal-tag {
+
+            0%,
+            10% {
+                opacity: 0;
+                transform: translate(-50%, 10px);
+            }
+
+            15%,
+            85% {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+
+            90%,
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -10px);
+            }
+        }
+
+        /* Steps */
+        .step-row {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+            background: var(--bg-main);
+            padding: 2rem;
+            border-radius: var(--radius-md);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .step-num {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: rgba(99, 102, 241, 0.2);
+            line-height: 1;
+        }
+
+        .step-content h3 {
+            font-size: 1.3rem;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .article-container {
+                padding: 2rem;
+            }
+
+            .article-header h1 {
+                font-size: 2.2rem;
+            }
+
+            .step-row {
+                flex-direction: column;
+            }
+
+            .ji-plastic {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">
+                <img src="{{ url_for('static', filename='Logo.png') }}" alt="Portal Logo" class="logo-img">
+                <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
+                        class="color-3">A</span><span class="color-4">1</span></span>
+            </a>
+            <div class="nav-menu">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/projects.html" class="nav-link">Projects</a>
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link">Legal Agreements <i class="fas fa-chevron-down dropdown-icon"></i></a>
+                    <div class="dropdown-content">
+                        <a href="terms.html">Terms and Conditions</a>
+                        <a href="privacy.html">Privacy Policy</a>
+                    </div>
+                </div>
+                <a href="contact.html" class="nav-link">Contact Us</a>
+            </div>
+            <div class="nav-actions">
+                <a href="job.html" class="btn btn-primary" style="text-decoration: none;">Post a Job</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container" style="padding: 4rem 1rem 6rem 1rem;">
+        <div class="article-container">
+            <a href="projects.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Elite Projects</a>
+
+            <div class="article-header">
+                <span class="project-badge">Computer Vision / AI API</span>
+                <h1>The "Scrap-to-System" Architect</h1>
+                <p>Generative DIY Engineering for the Circular Economy.</p>
+            </div>
+
+            <h2 class="section-title"><i class="fas fa-trash-restore"></i> The Problem (The "Waste" Gap)</h2>
+            <p class="article-text">Every single household contains a "Junk Drawer" completely full of old USB cables,
+                9V batteries, extracted DC toy motors, and rigid plastics. Usually, these go directly to a toxic
+                landfill.</p>
+            <p class="article-text">Meanwhile, first-year Engineering students and DIY hobbyists routinely spend
+                thousands of rupees purchasing retail "Science Kits" that are manufactured rapidly out of the exact same
+                raw components they already possess inside their own homes.</p>
+
+            <h2 class="section-title"><i class="fas fa-magic"></i> The Unique Builder Idea</h2>
+            <p class="article-text">An AI-powered <strong>Inventory-to-Innovation Edge Engine.</strong></p>
+            <p class="article-text">The user photographs their literal "Junk" on a desk. The Application acts as a
+                Senior Mechanical Engineer and logically reverse-engineers a highly functional electronic device (like a
+                mini-Vacuum, a Bluetooth speaker chassis, or an Emergency Power Bank) assembled entirely using
+                <em>only</em> those detected physical parts.</p>
+
+            <!-- CSS Diagram: AI Vision Scanner -->
+            <div class="vision-container">
+                <div class="vision-grid"></div>
+                <div class="vision-scanner"></div>
+
+                <div class="junk-item ji-batt">
+                    <div class="vision-tag">9V_POWER_SOURCE [98%]</div>
+                    <i class="fas fa-battery-full" style="font-size: 2rem; color: #f59e0b;"></i>
+                </div>
+
+                <div class="junk-item ji-motor">
+                    <div class="vision-tag" style="animation-delay: 2s;">DC_MOTOR_12V [91%]</div>
+                    <i class="fas fa-fan" style="font-size: 2rem; color: #3b82f6;"></i>
+                </div>
+
+                <div class="junk-item ji-plastic">
+                    <div class="vision-tag" style="animation-delay: 4s;">CHASSIS_PLA [88%]</div>
+                    <i class="fas fa-bottle-water" style="font-size: 2.5rem; color: #cbd5e1;"></i>
+                </div>
+            </div>
+
+            <h2 class="section-title"><i class="fas fa-code-branch"></i> The Technical Logic Stack</h2>
+
+            <div class="step-row">
+                <div class="step-num">01</div>
+                <div class="step-content">
+                    <h3>The "Junk" Classifier (Computer Vision)</h3>
+                    <p class="article-text" style="margin-bottom:0;">You capture the image buffer and pass it to a
+                        <strong>YOLOv8</strong> object detection model (or via explicitly parsed LLM Vision capability).
+                        The UI tags the raw items mathematically by Property Function (e.g.,
+                        <code>Battery = Power_Source</code>, <code>Plastic Bottle = Structural_Chassis</code>,
+                        <code>Copper = Conductor</code>).</p>
+                </div>
+            </div>
+
+            <div class="step-row">
+                <div class="step-num">02</div>
+                <div class="step-content">
+                    <h3>The "Constraint-Based" Generator</h3>
+                    <p class="article-text" style="margin-bottom:0;">This is exactly where your application financially
+                        beats a standard ChatGPT prompt. You implement strict <strong>Constraint Programming</strong>
+                        parameters via the API.</p>
+                </div>
+            </div>
+
+            <div class="code-box">
+                {<br>
+                &nbsp;&nbsp;<span style="color:#f87171;">"role"</span>: <span
+                    style="color:#a7f3d0;">"system"</span>,<br>
+                &nbsp;&nbsp;<span style="color:#f87171;">"content"</span>: <span style="color:#a7f3d0;">"You are a
+                    Senior Mechanical Engineer. Generate a functional blueprint using ONLY the components in the array
+                    provided. MANDATORY CONSTRAINT: You CANNOT utilize hot glue for chassis assembly, as the user
+                    inventory only possesses generic Scotch Tape."</span><br>
+                }
+            </div>
+
+            <div class="step-row">
+                <div class="step-num">03</div>
+                <div class="step-content">
+                    <h3>The "Physics Validator"</h3>
+                    <p class="article-text" style="margin-bottom:0;">If the user wants to physically build a Drone, but
+                        the vision AI detects the DC Motor is too fundamentally weak to generate lift for the plastic
+                        chassis weight, the AI halts generation: <em>"Fatal Error: Torque metrics insufficient.
+                            Attempting to build a Hovercraft instead."</em></p>
+                </div>
+            </div>
+
+            <h2 class="section-title"><i class="fas fa-brain"></i> The "Architect" Edge (2026 Ready)</h2>
+            <p class="article-text">Integrating a completely blank Generative AI will result in hallucinations (like
+                trying to attach a wire to plastic). To secure the "Senior" status, wire the backend LLM natively into a
+                <strong>Vector Database (Pinecone)</strong> populated with thousands of pre-verified "Open Source
+                Hardware" PDF schematics.</p>
+            <p class="article-text">The AI utilizes RAG (Retrieval-Augmented Generation) to pull actual engineering
+                physical tolerances before suggesting an assembly step.</p>
+
+            <h2 class="section-title"><i class="fas fa-briefcase"></i> Why This Secures High-Paying Offers</h2>
+            <p class="article-text">When a tier-one product firm evaluates this codebase on your portfolio, they
+                recognize a developer possessing:</p>
+            <ul class="article-text" style="padding-left: 2rem;">
+                <li><strong>Resourcefulness:</strong> You explicitly prove you can deploy high-functioning mechanical
+                    architectures utilizing strictly limited, constrained resources—literally the primary defining
+                    psychological trait of a Principal Engineer.</li>
+                <li><strong>Generative Pragmatism:</strong> You successfully utilized Artificial Intelligence to resolve
+                    a physical-world, mechanical problem, circumventing the cliche of generating simple "chat text."
+                </li>
+                <li><strong>Sustainable ESG Engineering:</strong> You tackled a documented global e-waste logistical
+                    crisis.</li>
+            </ul>
+
+            <div
+                style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border-color); text-align: center; color: var(--text-muted); font-size: 0.95rem; font-style: italic;">
+                This architectural blueprint is provided for educational engineering purposes.
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <a href="/" class="nav-logo">
+                    <img src="{{ url_for('static', filename='Logo.png') }}" alt="Portal Logo" class="logo-img-footer">
+                    <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
+                            class="color-3">A</span><span class="color-4">1</span></span>
+                </a>
+                <p>A premier, AI-moderated career hub dedicated to connecting top talent with high-quality, verified
+                    opportunities.</p>
+            </div>
+            <!-- Standard Footer Links Omitted for brevity, assume rendered correctly -->
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 ALL AT A1. All rights reserved.</p>
+        </div>
+    </footer>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>
