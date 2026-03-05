@@ -203,3 +203,16 @@ window.toggleSave = function (btn) {
 window.applyJob = function (title) {
     alert("You have started applying for the '" + title + "' position. Good luck!");
 };
+
+
+// --- Mobile Navigation Toggle ---
+document.addEventListener('DOMContentLoaded', () => {
+    const mobileMenu = document.getElementById('mobile-menu');
+    const navMenu = document.getElementById('nav-menu');
+    
+    if (mobileMenu && navMenu) {
+        mobileMenu.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+    }
+});
