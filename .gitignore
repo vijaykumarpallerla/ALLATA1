@@ -1,6 +1,6 @@
 .env
 __pycache__/
-Content
+Content 
 Content.txt
 upload_2_jobs.py
 database.db
@@ -8,3 +8,6 @@ database.db
 # Exclude AI-generated Word Documents (Keep text notes safe for reference)
 *.docx
 *.txt
+
+# Ignore Google OAuth credentials
+allata1.json

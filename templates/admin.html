@@ -70,6 +70,12 @@
             font-size: 1.8rem;
         }
 
+        .admin-user {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
         .admin-content {
             background-color: var(--bg-card);
             padding: 2rem;
@@ -339,7 +345,8 @@
     <nav class="navbar">
         <div class="nav-container">
             <a href="/" class="nav-logo">
-                <img src="{{ url_for('static', filename='Logo.png') }}" alt="Portal Logo" class="logo-img" onerror="this.style.display='none'">
+                <img src="{{ url_for('static', filename='Logo.png') }}" alt="Portal Logo" class="logo-img"
+                    onerror="this.style.display='none'">
                 <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
                         class="color-3">A</span><span class="color-4">1</span></span>
             </a>
@@ -377,7 +384,19 @@
             <div class="admin-header">
                 <h1 id="admin-page-title">User Messages</h1>
                 <div class="admin-user">
-                    <span style="font-weight: 500; color: var(--text-main);">Admin User</span>
+                    {% if admin_picture %}
+                    <img src="{{ admin_picture }}" alt="Profile"
+                        style="width:36px; height:36px; border-radius:50%; object-fit:cover; border: 2px solid var(--border-color);">
+                    {% endif %}
+                    <span style="font-weight: 600; color: var(--primary-dark);">
+                        Hi, {{ admin_name.split(' ')[0] }} 👋
+                    </span>
+                    <a href="/admin-logout"
+                        style="font-size:0.8rem; color:var(--text-muted); border:1px solid var(--border-color); padding:4px 10px; border-radius:20px; text-decoration:none; transition:all 0.2s;"
+                        onmouseover="this.style.color='#c5512c'; this.style.borderColor='#c5512c';"
+                        onmouseout="this.style.color='var(--text-muted)'; this.style.borderColor='var(--border-color)';">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
                 </div>
             </div>
 
@@ -433,6 +452,72 @@
                     <button class="btn btn-cancel" id="cancelDeleteBtn">Cancel</button>
                     <button class="btn btn-danger" id="confirmDeleteBtn">OK</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Job Detail Modal ── -->
+    <div id="jobDetailModal" class="modal">
+        <div class="modal-content" style="max-width: 680px;">
+            <div class="modal-header" style="justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+                <h3 id="jd-modal-title" style="font-size:1.2rem; flex:1;">Job Details</h3>
+                <div style="display:flex; align-items:center; gap:0.75rem;">
+                    <!-- Approve / Reject toggle — only shown for AI-checked jobs -->
+                    <button id="jd-toggle-btn"
+                        style="display:none; align-items:center; gap:0.4rem; padding:6px 16px; border-radius:20px; font-size:0.88rem; font-weight:600; font-family:inherit; cursor:pointer; border:none; transition:all 0.2s;"
+                        onclick="toggleJobApproval()">
+                    </button>
+                    <span class="close-modal" id="closeJobDetailModal">&times;</span>
+                </div>
+            </div>
+            <div class="modal-body" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
+
+                <!-- AI Status Banner -->
+                <div id="jd-status-banner"
+                    style="display:flex; align-items:center; gap:0.5rem; padding:0.6rem 1rem; border-radius:8px; font-weight:600; font-size:0.9rem;">
+                </div>
+
+                <!-- Two-column meta grid -->
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                    <div class="modal-detail-group">
+                        <div class="modal-detail-label">Company</div>
+                        <div class="modal-detail-value" id="jd-company"></div>
+                    </div>
+                    <div class="modal-detail-group">
+                        <div class="modal-detail-label">Location</div>
+                        <div class="modal-detail-value" id="jd-location"></div>
+                    </div>
+                    <div class="modal-detail-group">
+                        <div class="modal-detail-label">Job Type</div>
+                        <div class="modal-detail-value" id="jd-type"></div>
+                    </div>
+                    <div class="modal-detail-group">
+                        <div class="modal-detail-label">Salary</div>
+                        <div class="modal-detail-value" id="jd-salary"></div>
+                    </div>
+                    <div class="modal-detail-group">
+                        <div class="modal-detail-label">Experience / Skills</div>
+                        <div class="modal-detail-value" id="jd-experience"></div>
+                    </div>
+                    <div class="modal-detail-group">
+                        <div class="modal-detail-label">Date Posted</div>
+                        <div class="modal-detail-value" id="jd-posted"></div>
+                    </div>
+                </div>
+
+                <!-- Apply URL -->
+                <div class="modal-detail-group" id="jd-apply-group">
+                    <div class="modal-detail-label">Apply URL / Email</div>
+                    <div class="modal-detail-value" id="jd-apply"></div>
+                </div>
+
+                <!-- Description -->
+                <div class="modal-detail-group">
+                    <div class="modal-detail-label">Job Description</div>
+                    <div class="modal-detail-value" id="jd-description"
+                        style="min-height:120px; white-space:pre-wrap; line-height:1.6;"></div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -655,7 +740,7 @@
                                         <th>Company</th>
                                         <th>Location</th>
                                         <th>Type</th>
-                                        <th>Source</th>
+                                        <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -665,15 +750,27 @@
                         jobsToRender.forEach((job) => {
                             let sourceBadge = '';
                             if (mode === 'all') {
-                                sourceBadge = job.is_algorithm
-                                    ? `<td style="white-space:nowrap;"><span style="background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 600;"><i class="fas fa-robot"></i> Checked</span></td>`
-                                    : `<td style="white-space:nowrap;"><span style="background: rgba(100, 116, 139, 0.1); color: var(--text-muted); padding: 4px 8px; border-radius: 4px; font-size: 0.85rem;"><i class="fas fa-upload"></i> Scraped</span></td>`;
+                                if (!job.is_algorithm) {
+                                    // Bulk uploaded / scraped
+                                    sourceBadge = `<td style="white-space:nowrap;"><span style="background: rgba(100, 116, 139, 0.1); color: var(--text-muted); padding: 4px 8px; border-radius: 4px; font-size: 0.85rem;"><i class="fas fa-upload"></i> Scraped</span></td>`;
+                                } else if (job.ai_approved) {
+                                    // AI checked & approved
+                                    sourceBadge = `<td style="white-space:nowrap;"><span style="background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 600;"><i class="fas fa-robot"></i> Approved</span></td>`;
+                                } else {
+                                    // AI checked & rejected
+                                    sourceBadge = `<td style="white-space:nowrap;"><span style="background: rgba(197, 81, 44, 0.1); color: #c5512c; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 600;"><i class="fas fa-ban"></i> Rejected</span></td>`;
+                                }
                             } else {
-                                sourceBadge = `<td style="white-space:nowrap;"><span style="background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 600;"><i class="fas fa-check-circle"></i> Approved</span></td>`;
+                                // Algorithm Jobs tab
+                                sourceBadge = job.ai_approved
+                                    ? `<td style="white-space:nowrap;"><span style="background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 600;"><i class="fas fa-check-circle"></i> Approved</span></td>`
+                                    : `<td style="white-space:nowrap;"><span style="background: rgba(197, 81, 44, 0.1); color: #c5512c; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 600;"><i class="fas fa-ban"></i> Rejected</span></td>`;
                             }
 
+                            // Store job data on the row for click access
+                            const jobIndex = jobsToRender.indexOf(job);
                             tableHTML += `
-                                <tr>
+                                <tr data-jobindex="${jobIndex}" style="cursor:pointer;" onclick="openJobDetailModal(${jobIndex})">
                                     <td style="color: var(--text-muted); font-size: 0.9rem; white-space:nowrap;">${job.posted}</td>
                                     <td style="font-weight: 600; color: var(--primary-dark);">${job.title}</td>
                                     <td>${job.company}</td>
@@ -681,11 +778,14 @@
                                     <td style="white-space:nowrap;"><span style="background: var(--bg-body); padding: 4px 8px; border-radius: 4px; font-size: 0.85rem;">${job.type}</span></td>
                                     ${sourceBadge}
                                     <td class="action-cell">
-                                        <button class="action-btn" style="color: #ef4444;" onclick="openJobDeleteModal(event, ${job.id})"><i class="fas fa-trash"></i></button>
+                                        <button class="action-btn" style="color: #ef4444;" onclick="event.stopPropagation(); openJobDeleteModal(event, ${job.id})"><i class="fas fa-trash"></i></button>
                                     </td>
                                 </tr>
                             `;
                         });
+
+                        // Store jobs globally for modal access
+                        window.fetchedAdminJobs = jobsToRender;
 
                         tableHTML += `</tbody></table>`;
                         contentArea.innerHTML = tableHTML;
@@ -703,6 +803,119 @@
                 e.preventDefault();
                 window.loadManageJobs('all');
             });
+
+            // ── Job Detail Modal Logic ──
+            const jobDetailModal = document.getElementById('jobDetailModal');
+            document.getElementById('closeJobDetailModal').addEventListener('click', () => {
+                jobDetailModal.classList.remove('active');
+            });
+            window.addEventListener('click', (e) => {
+                if (e.target === jobDetailModal) jobDetailModal.classList.remove('active');
+            });
+
+            window.openJobDetailModal = function (index) {
+                const job = window.fetchedAdminJobs[index];
+                if (!job) return;
+
+                // Track current job globally for the toggle button
+                window.currentJobModalIndex = index;
+                window.currentJobModalId = job.id;
+
+                // Title
+                document.getElementById('jd-modal-title').textContent = job.title;
+
+                // Banner + toggle button
+                renderJobModalStatus(job);
+
+                // Meta fields
+                document.getElementById('jd-company').textContent = job.company || '—';
+                document.getElementById('jd-location').textContent = job.location || '—';
+                document.getElementById('jd-type').textContent = job.type || '—';
+                document.getElementById('jd-salary').textContent = job.salary || '—';
+                document.getElementById('jd-experience').textContent = job.experience || '—';
+                document.getElementById('jd-posted').textContent = job.posted || '—';
+
+                // Apply URL
+                const applyEl = document.getElementById('jd-apply');
+                if (job.apply_url) {
+                    applyEl.innerHTML = job.apply_url.includes('@')
+                        ? `<a href="mailto:${job.apply_url}" style="color:var(--primary-color);">${job.apply_url}</a>`
+                        : `<a href="${job.apply_url}" target="_blank" style="color:var(--primary-color);">${job.apply_url}</a>`;
+                    document.getElementById('jd-apply-group').style.display = 'block';
+                } else {
+                    document.getElementById('jd-apply-group').style.display = 'none';
+                }
+
+                // Description
+                document.getElementById('jd-description').textContent = job.description || 'No description provided.';
+
+                jobDetailModal.classList.add('active');
+            };
+
+            // Renders the status banner + Approve/Reject toggle button
+            function renderJobModalStatus(job) {
+                const banner = document.getElementById('jd-status-banner');
+                const toggleBtn = document.getElementById('jd-toggle-btn');
+                toggleBtn.disabled = false;
+
+                if (job.is_algorithm) {
+                    if (job.ai_approved) {
+                        banner.style.cssText = 'display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1rem;border-radius:8px;font-weight:600;font-size:0.9rem;background:rgba(16,185,129,0.1);color:#10b981;border:1px solid rgba(16,185,129,0.3);';
+                        banner.innerHTML = '<i class="fas fa-check-circle"></i> AI Moderation: APPROVED — This job passed the Algorithm check.';
+                        toggleBtn.style.cssText = 'display:inline-flex;align-items:center;gap:0.4rem;padding:6px 16px;border-radius:20px;font-size:0.88rem;font-weight:600;font-family:inherit;cursor:pointer;border:none;background:rgba(197,81,44,0.12);color:#c5512c;';
+                        toggleBtn.innerHTML = '<i class="fas fa-ban"></i> Reject';
+                    } else {
+                        banner.style.cssText = 'display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1rem;border-radius:8px;font-weight:600;font-size:0.9rem;background:rgba(197,81,44,0.08);color:#c5512c;border:1px solid rgba(197,81,44,0.3);';
+                        banner.innerHTML = '<i class="fas fa-ban"></i> AI Moderation: REJECTED — This job was flagged as spam or unprofessional.';
+                        toggleBtn.style.cssText = 'display:inline-flex;align-items:center;gap:0.4rem;padding:6px 16px;border-radius:20px;font-size:0.88rem;font-weight:600;font-family:inherit;cursor:pointer;border:none;background:rgba(16,185,129,0.12);color:#10b981;';
+                        toggleBtn.innerHTML = '<i class="fas fa-check-circle"></i> Approve';
+                    }
+                } else {
+                    banner.style.display = 'none';
+                    toggleBtn.style.display = 'none';
+                }
+            }
+
+            // Toggle Approve <-> Reject via PATCH, update UI live
+            window.toggleJobApproval = async function () {
+                const jobId = window.currentJobModalId;
+                const index = window.currentJobModalIndex;
+                if (!jobId) return;
+
+                const toggleBtn = document.getElementById('jd-toggle-btn');
+                toggleBtn.disabled = true;
+                toggleBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+                try {
+                    const res = await fetch(`/api/admin/jobs/${jobId}/toggle`, { method: 'PATCH' });
+                    const data = await res.json();
+
+                    if (data.status === 'success') {
+                        // Update the in-memory job object
+                        window.fetchedAdminJobs[index].ai_approved = data.ai_approved;
+
+                        // Re-render modal banner + button instantly
+                        renderJobModalStatus(window.fetchedAdminJobs[index]);
+
+                        // Update the Source badge on the table row instantly (no reload)
+                        const row = document.querySelector(`tr[data-jobindex="${index}"]`);
+                        if (row) {
+                            const sourceTd = row.querySelectorAll('td')[5];
+                            if (sourceTd) {
+                                sourceTd.innerHTML = data.ai_approved
+                                    ? `<span style="background:rgba(16,185,129,0.1);color:#10b981;padding:4px 8px;border-radius:4px;font-size:0.85rem;font-weight:600;"><i class="fas fa-check-circle"></i> Approved</span>`
+                                    : `<span style="background:rgba(197,81,44,0.1);color:#c5512c;padding:4px 8px;border-radius:4px;font-size:0.85rem;font-weight:600;"><i class="fas fa-ban"></i> Rejected</span>`;
+                            }
+                        }
+                    } else {
+                        alert('Error: ' + data.message);
+                        renderJobModalStatus(window.fetchedAdminJobs[index]);
+                    }
+                } catch (e) {
+                    alert('Failed to reach server.');
+                    renderJobModalStatus(window.fetchedAdminJobs[index]);
+                }
+            };
 
             function attachRowListeners() {
                 const rows = document.querySelectorAll('.message-table tbody tr');

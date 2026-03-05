@@ -1,12 +1,14 @@
-from flask import Flask, send_file, request, jsonify, render_template
+from flask import Flask, send_file, request, jsonify, render_template, session, redirect, url_for
 import webbrowser
 import threading
 import os
 import math
+from functools import wraps
 from urllib.parse import urlencode
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timezone, timedelta
+from authlib.integrations.flask_client import OAuth
 
 load_dotenv()
 
@@ -29,6 +31,30 @@ logging.getLogger('werkzeug').addFilter(HideAdminLinkFilter())
 
 # Initialize Flask app
 app = Flask(__name__)
+app.secret_key = os.environ.get('SECRET_KEY', 'fallback-secret-key-change-me')
+
+# ----- Google OAuth Setup (Authlib) -----
+GOOGLE_CLIENT_ID     = os.environ.get('GOOGLE_CLIENT_ID')
+GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET')
+ALLOWED_ADMINS       = [e.strip() for e in os.environ.get('admins', '').split(',') if e.strip()]
+
+oauth = OAuth(app)
+google = oauth.register(
+    name='google',
+    client_id=GOOGLE_CLIENT_ID,
+    client_secret=GOOGLE_CLIENT_SECRET,
+    server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
+    client_kwargs={'scope': 'openid email profile'},
+)
+
+# ----- Admin Session Guard -----
+def admin_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if not session.get('admin_logged_in'):
+            return redirect(url_for('admin_login'))
+        return f(*args, **kwargs)
+    return decorated
 
 # Database configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
@@ -55,11 +81,24 @@ class Job(db.Model):
     description = db.Column(db.Text, nullable=False)
     apply_url = db.Column(db.String(500), nullable=True)
     is_algorithm = db.Column(db.Boolean, default=False, nullable=False)
+    ai_approved = db.Column(db.Boolean, server_default='true', nullable=False)
 
 with app.app_context():
-    # Because sqlite is rigid, adding a default False value to existing rows might require dropping the table or setting server_default.
-    # Since it's development, we'll let SQLAlchemy manage it or add a try/except for the migration if Xata handles it.
     db.create_all()
+    # ── Column Migration: add ai_approved if it doesn't exist yet ──
+    # db.create_all() only creates NEW tables; it won't ALTER existing ones.
+    # This raw SQL safely adds the column to the existing Xata PostgreSQL table.
+    try:
+        from sqlalchemy import text
+        with db.engine.connect() as conn:
+            conn.execute(text(
+                "ALTER TABLE job ADD COLUMN IF NOT EXISTS ai_approved BOOLEAN NOT NULL DEFAULT TRUE"
+            ))
+            conn.commit()
+        print("[DB Migration] ai_approved column ensured on job table.")
+    except Exception as e:
+        print(f"[DB Migration] Skipped (likely already exists): {e}")
+
 import json
 
 @app.route('/')
@@ -107,7 +146,11 @@ def usa_jobs_page():
             work_models = [m.strip() for m in workmodel_query.split(',')]
 
         # Fetch live jobs from the database (newest first!)
-        all_jobs = Job.query.order_by(Job.id.desc()).all()
+        # Only show: bulk-uploaded jobs (is_algorithm=False) OR AI-approved jobs (ai_approved=True)
+        # Rejected jobs (is_algorithm=True AND ai_approved=False) are hidden from public
+        all_jobs = Job.query.filter(
+            (Job.is_algorithm == False) | (Job.ai_approved == True)
+        ).order_by(Job.id.desc()).all()
         filtered_jobs = []
         
         # Apply filters server-side
@@ -346,10 +389,26 @@ def api_submit_job():
         
         if not is_approved:
             print(f"[REJECTED FLAG] User tried to post fake/spam job: {title}")
+            # Save to DB as rejected so admin can audit it — but hidden from public
+            rejected_job = Job(
+                title=title,
+                company=company,
+                location=location,
+                job_type=data.get('job_type', 'Full-time'),
+                experience=data.get('experience', 'Not specified'),
+                salary=data.get('salary', 'Competitive'),
+                posted=datetime.now(timezone(timedelta(hours=-5), 'EST')).strftime("%d/%m/%Y EST"),
+                description=description,
+                apply_url=data.get('apply_url', ''),
+                is_algorithm=True,
+                ai_approved=False  # ← Flagged as rejected
+            )
+            db.session.add(rejected_job)
+            db.session.commit()
             return jsonify({
-                "status": "error", 
-                "message": "Error 403: Your job posting was flagged as invalid or unprofessional by our automated AI system."
-            }), 403
+                "status": "pending",
+                "message": "Your job posting has been received and is currently Pending Approval by our admin team."
+            }), 202
             
         new_job = Job(
             title=title,
@@ -458,12 +517,67 @@ def job_detail():
     except FileNotFoundError:
         return "job_detail.html not found", 404
 
+# ── Admin Login Page (shown at secret ADMIN_PATH URL) ──
 @app.route(f'/{ADMIN_PATH}')
-def admin():
-    # Secret route to access the admin panel
-    return render_template('admin.html')
+def admin_login():
+    # If already logged in as admin, go straight to the dashboard
+    if session.get('admin_logged_in'):
+        return redirect(url_for('admin_dashboard'))
+    return render_template('loginbyadmin.html')
+
+# ── Start Google OAuth flow ──
+@app.route('/auth/google')
+def auth_google():
+    redirect_uri = url_for('auth_google_callback', _external=True)
+    return google.authorize_redirect(redirect_uri)
+
+# ── Google OAuth Callback ──
+@app.route('/auth/google/callback')
+def auth_google_callback():
+    try:
+        token = google.authorize_access_token()
+        user_info = token.get('userinfo')
+        if not user_info:
+            return render_template('loginbyadmin.html', error='Could not retrieve user info from Google.'), 403
+
+        user_email = user_info.get('email', '').lower().strip()
+        allowed = [e.lower().strip() for e in ALLOWED_ADMINS]
+
+        if user_email not in allowed:
+            # Not an admin — show login page with error message
+            session.clear()
+            return render_template('loginbyadmin.html', error=f'Access Denied. {user_email} is not an authorised admin.'), 403
+
+        # Email matched — grant admin session
+        session['admin_logged_in'] = True
+        session['admin_email'] = user_email
+        session['admin_name'] = user_info.get('name', 'Admin')
+        session['admin_picture'] = user_info.get('picture', '')
+        return redirect(url_for('admin_dashboard'))
+
+    except Exception as e:
+        print(f"[OAuth Error] {e}")
+        return render_template('loginbyadmin.html', error='Google sign-in failed. Please try again.'), 500
+
+# ── Protected Admin Dashboard ──
+@app.route('/admin-dashboard')
+@admin_required
+def admin_dashboard():
+    return render_template(
+        'admin.html',
+        admin_name=session.get('admin_name', 'Admin'),
+        admin_picture=session.get('admin_picture', ''),
+        admin_email=session.get('admin_email', '')
+    )
+
+# ── Admin Logout ──
+@app.route('/admin-logout')
+def admin_logout():
+    session.clear()
+    return redirect(url_for('admin_login'))
 
 @app.route('/api/admin/messages', methods=['GET'])
+@admin_required
 def get_admin_messages():
     try:
         messages = ContactMessage.query.order_by(ContactMessage.created_at.desc()).all()
@@ -480,6 +594,7 @@ def get_admin_messages():
         return jsonify({"status": "error", "message": str(e)}), 500
 
 @app.route('/api/admin/messages/<int:msg_id>', methods=['DELETE'])
+@admin_required
 def delete_admin_message(msg_id):
     try:
         msg = db.session.get(ContactMessage, msg_id)
@@ -494,6 +609,7 @@ def delete_admin_message(msg_id):
         return jsonify({"status": "error", "message": str(e)}), 500
 
 @app.route('/api/admin/jobs', methods=['GET'])
+@admin_required
 def get_admin_jobs():
     try:
         jobs = Job.query.order_by(Job.id.desc()).all()
@@ -504,13 +620,34 @@ def get_admin_jobs():
             "location": j.location,
             "posted": j.posted,
             "type": j.job_type,
-            "is_algorithm": j.is_algorithm
+            "experience": j.experience,
+            "salary": j.salary,
+            "apply_url": j.apply_url or "",
+            "description": j.description,
+            "is_algorithm": j.is_algorithm,
+            "ai_approved": j.ai_approved
         } for j in jobs]
         return jsonify({"status": "success", "jobs": job_list})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
+# ── Admin Manual Override: Toggle ai_approved True ↔ False ──
+@app.route('/api/admin/jobs/<int:job_id>/toggle', methods=['PATCH'])
+@admin_required
+def toggle_job_approval(job_id):
+    try:
+        job = db.session.get(Job, job_id)
+        if not job:
+            return jsonify({"status": "error", "message": "Job not found"}), 404
+        job.ai_approved = not job.ai_approved  # Flip the value
+        db.session.commit()
+        return jsonify({"status": "success", "ai_approved": job.ai_approved})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"status": "error", "message": str(e)}), 500
+
 @app.route('/api/admin/jobs/<int:job_id>', methods=['DELETE'])
+@admin_required
 def delete_admin_job(job_id):
     try:
         job = db.session.get(Job, job_id)

@@ -85,7 +85,10 @@
 
         .alert-btn-danger {
             background-color: #ef4444;
-            /* Red for rejections */
+        }
+
+        .alert-btn-warning {
+            background-color: var(--logo-color-4, #eaa22c);
         }
 
         .alert-btn:hover {
@@ -149,7 +152,8 @@
     <nav class="navbar">
         <div class="nav-container">
             <a href="/" class="nav-logo">
-                <img src="{{ url_for('static', filename='Logo.png') }}" alt="Portal Logo" class="logo-img" onerror="this.style.display='none'">
+                <img src="{{ url_for('static', filename='Logo.png') }}" alt="Portal Logo" class="logo-img"
+                    onerror="this.style.display='none'">
                 <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
                         class="color-3">A</span><span class="color-4">1</span></span>
             </a>
@@ -257,7 +261,8 @@
         <div class="footer-content">
             <div class="footer-col">
                 <a href="/" class="nav-logo">
-                    <img src="{{ url_for('static', filename='Logo.png') }}" alt="Portal Logo" class="logo-img-footer" onerror="this.style.display='none'">
+                    <img src="{{ url_for('static', filename='Logo.png') }}" alt="Portal Logo" class="logo-img-footer"
+                        onerror="this.style.display='none'">
                     <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
                             class="color-3">A</span><span class="color-4">1</span></span>
                 </a>
@@ -293,13 +298,13 @@
         </div>
     </div>
 
-    <!-- AI Rejection Modal -->
+    <!-- AI Pending Modal (Formerly Rejection) -->
     <div id="errorModal" class="alert-modal">
         <div class="alert-content">
-            <i class="fas fa-exclamation-triangle alert-icon" style="color: #ef4444;"></i>
-            <h3 class="alert-title" style="color: #ef4444;">Posting Rejected</h3>
-            <p class="alert-message" id="errorMessageText">Your job was flagged by our system.</p>
-            <button class="alert-btn alert-btn-danger" id="closeErrorBtn">Understood</button>
+            <i class="fas fa-clock alert-icon" style="color: var(--logo-color-4, #eaa22c);"></i>
+            <h3 class="alert-title" style="color: var(--logo-color-4, #eaa22c);">Pending Approval</h3>
+            <p class="alert-message" id="errorMessageText">Your job has been submitted and is awaiting admin review.</p>
+            <button class="alert-btn alert-btn-warning" id="closeErrorBtn">Understood</button>
         </div>
     </div>
 
@@ -376,18 +381,20 @@
                         const result = await response.json();
 
                         if (response.ok) {
-                            document.getElementById('successMessageText').innerText = result.message;
-                            document.getElementById('successModal').classList.add('active');
-                            form.reset();
-                        } else {
-                            if (response.status === 403) {
-                                // AI Rejection UI 
+                            if (response.status === 202) {
+                                // 202 Accepted = AI flagged it for manual admin approval
                                 document.getElementById('errorMessageText').innerText = result.message;
                                 document.getElementById('errorModal').classList.add('active');
+                                form.reset();
                             } else {
-                                // Standard Fallback Pop
-                                alert('Error: ' + result.message);
+                                // 200 OK = Instantly live
+                                document.getElementById('successMessageText').innerText = result.message;
+                                document.getElementById('successModal').classList.add('active');
+                                form.reset();
                             }
+                        } else {
+                            // Real error (500, etc)
+                            alert('Error: ' + result.message);
                         }
                     } catch (error) {
                         console.error('Error submitting job:', error);
@@ -404,8 +411,8 @@
             if (closeBtn) {
                 closeBtn.addEventListener('click', () => {
                     document.getElementById('successModal').classList.remove('active');
-                    // Force a full server refresh so the new job appears immediately 
-                    window.location.replace('/#jobs');
+                    // Redirect to the jobs page
+                    window.location.replace('/browse_jobs');
                 });
             }
 
