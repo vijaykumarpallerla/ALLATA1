@@ -14,6 +14,7 @@ load_dotenv()
 
 import logging
 from Algorithm import moderate_job_post
+from adminpost import call_with_rotation
 
 ADMIN_PATH = os.environ.get('ADMIN_PATH', 'admin')
 
@@ -82,6 +83,10 @@ class Job(db.Model):
     apply_url = db.Column(db.String(500), nullable=True)
     is_algorithm = db.Column(db.Boolean, default=False, nullable=False)
     ai_approved = db.Column(db.Boolean, server_default='true', nullable=False)
+    admin_email = db.Column(db.String(120), nullable=True)
+    admin_name = db.Column(db.String(100), nullable=True)
+    admin_picture = db.Column(db.Text, nullable=True)
+
 
 with app.app_context():
     db.create_all()
@@ -92,10 +97,13 @@ with app.app_context():
         from sqlalchemy import text
         with db.engine.connect() as conn:
             conn.execute(text(
-                "ALTER TABLE job ADD COLUMN IF NOT EXISTS ai_approved BOOLEAN NOT NULL DEFAULT TRUE"
+                "ALTER TABLE job ADD COLUMN IF NOT EXISTS ai_approved BOOLEAN NOT NULL DEFAULT TRUE, "
+                "ADD COLUMN IF NOT EXISTS admin_email VARCHAR(120), "
+                "ADD COLUMN IF NOT EXISTS admin_name VARCHAR(100), "
+                "ADD COLUMN IF NOT EXISTS admin_picture TEXT"
             ))
             conn.commit()
-        print("[DB Migration] ai_approved column ensured on job table.")
+        print("[DB Migration] ai_approved and admin user columns ensured on job table.")
     except Exception as e:
         print(f"[DB Migration] Skipped (likely already exists): {e}")
 
@@ -467,9 +475,11 @@ def job_detail():
         html = html.replace('<!-- JOB_SALARY -->', job.salary if job.salary else "Competitive")
         html = html.replace('<!-- JOB_EXPERIENCE -->', job.experience)
         
-        # Replace line breaks with <br> for HTML rendering
-        desc_html = job.description.replace('\n', '<br>')
-        html = html.replace('<!-- JOB_DESCRIPTION -->', desc_html)
+        # Pass description securely as JSON string so marked.js can parse it cleanly
+        import json
+        desc_json = json.dumps(job.description)
+        html = html.replace('<!-- JOB_DESCRIPTION_JSON -->', desc_json)
+        
         html = html.replace('<!-- JOB_POSTED -->', job.posted)
         
         if getattr(job, 'apply_url', None) and job.apply_url.strip():
@@ -625,7 +635,11 @@ def get_admin_jobs():
             "apply_url": j.apply_url or "",
             "description": j.description,
             "is_algorithm": j.is_algorithm,
-            "ai_approved": j.ai_approved
+            "ai_approved": j.ai_approved,
+            "admin_email": j.admin_email,
+            "admin_name": j.admin_name,
+            "admin_picture": j.admin_picture
+
         } for j in jobs]
         return jsonify({"status": "success", "jobs": job_list})
     except Exception as e:
@@ -657,6 +671,54 @@ def delete_admin_job(job_id):
         db.session.delete(job)
         db.session.commit()
         return jsonify({"status": "success"})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route('/api/admin/generate_guide', methods=['POST'])
+@admin_required
+def generate_career_guide():
+    data = request.json
+    jd_text = data.get('jd_text', '').strip()
+    if not jd_text:
+        return jsonify({"status": "error", "message": "No Job Description provided."}), 400
+    
+    try:
+        result = call_with_rotation(jd_text)
+        if result:
+            parsed_result = json.loads(result)
+            return jsonify({"status": "success", "guide": parsed_result})
+        else:
+            return jsonify({"status": "error", "message": "All API keys failed or rate limits exceeded."}), 500
+    except json.JSONDecodeError:
+        return jsonify({"status": "error", "message": "AI did not return valid JSON format."}), 500
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route('/api/admin/post_generated_job', methods=['POST'])
+@admin_required
+def post_generated_job():
+    data = request.json
+    try:
+        new_job = Job(
+            title=str(data.get('title', 'Unknown Title'))[:200],
+            company=str(data.get('company', 'Unknown Company'))[:200],
+            location=str(data.get('location', 'Location not specified'))[:200],
+            job_type=str(data.get('job_type', 'Full-time'))[:100],
+            experience=str(data.get('experience', 'Not specified'))[:100],
+            salary=str(data.get('salary', 'Competitive'))[:100],
+            posted=datetime.now(timezone(timedelta(hours=-5), 'EST')).strftime("%d/%m/%Y EST"),
+            description=data.get('description', 'No description provided.'),
+            apply_url=str(data.get('apply_url', ''))[:500],
+            is_algorithm=True, # Generated via the AI Career Guide
+            ai_approved=True,   # Admin explicitly approved it
+            admin_email=session.get('admin_email'),
+            admin_name=session.get('admin_name'),
+            admin_picture=session.get('admin_picture')
+        )
+        db.session.add(new_job)
+        db.session.commit()
+        return jsonify({"status": "success", "message": f"Job '{new_job.title}' successfully posted to the website!"})
     except Exception as e:
         db.session.rollback()
         return jsonify({"status": "error", "message": str(e)}), 500

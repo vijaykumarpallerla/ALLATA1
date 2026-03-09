@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         .admin-layout {
             display: flex;
@@ -456,6 +457,28 @@
         </div>
     </div>
 
+    <!-- Admin Info Modal -->
+    <div id="adminInfoModal" class="modal">
+        <div class="modal-content"
+            style="max-width: 400px; text-align: center; border-radius: 12px; padding: 2rem; position: relative;">
+            <span class="close-modal" onclick="document.getElementById('adminInfoModal').classList.remove('active')"
+                style="position: absolute; right: 15px; top: 15px;">&times;</span>
+            <div id="admin-info-pic-container" style="margin-bottom: 1rem;">
+                <img id="admin-info-pic" src="" alt="Admin Profile"
+                    style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary-color); display: none; margin: 0 auto;">
+                <i id="admin-info-icon" class="fas fa-user-circle"
+                    style="font-size: 5rem; color: var(--text-muted); display: none;"></i>
+            </div>
+            <h3 id="admin-info-name" style="color: var(--primary-dark); margin-bottom: 0.5rem;"></h3>
+            <a id="admin-info-email" href=""
+                style="color: var(--primary-color); text-decoration: none; font-size: 0.9rem;"></a>
+            <div
+                style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); font-size: 0.85rem; color: var(--text-muted);">
+                <i class="fas fa-robot"></i> Job posted via AI Job Poster
+            </div>
+        </div>
+    </div>
+
     <!-- ── Job Detail Modal ── -->
     <div id="jobDetailModal" class="modal">
         <div class="modal-content" style="max-width: 680px;">
@@ -692,7 +715,11 @@
             window.loadManageJobs = async (mode = 'all') => {
                 resetNav();
                 navJobs.classList.add('active');
-                localStorage.setItem('activeAdminTab', mode === 'algo' ? 'nav-jobs-algo' : 'nav-jobs-all');
+
+                let activeTab = 'nav-jobs-all';
+                if (mode === 'algo') activeTab = 'nav-jobs-algo';
+                if (mode === 'post') activeTab = 'nav-jobs-post';
+                localStorage.setItem('activeAdminTab', activeTab);
 
                 const btnStyle = (isActive) => `font-size: 1.1rem; font-weight: 700; border-radius: 6px; padding: 10px 20px; cursor: pointer; border: ${isActive ? 'none' : '1px solid var(--border-color)'}; background: ${isActive ? 'var(--primary-color)' : 'transparent'}; color: ${isActive ? '#fff' : 'var(--text-main)'}; transition: all 0.2s;`;
 
@@ -700,8 +727,32 @@
                     <div style="display: flex; gap: 1rem; align-items: center;">
                         <button onclick="window.loadManageJobs('all')" style="${btnStyle(mode === 'all')}" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">ALL JOBS</button>
                         <button onclick="window.loadManageJobs('algo')" style="${btnStyle(mode === 'algo')}" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'"><i class="fas fa-robot"></i> ALGORITHM JOBS</button>
+                        <button onclick="window.loadManageJobs('post')" style="${btnStyle(mode === 'post')} margin-left:1.5rem; display:flex; align-items:center; gap:8px;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+                            <i class="fas fa-plus"></i> POST A JOB
+                        </button>
                     </div>
                 `;
+
+                if (mode === 'post') {
+                    contentArea.innerHTML = `
+                        <div style="display: flex; flex-direction: column; height: 100%; min-height: 500px; padding: 0.5rem; position: relative;">
+                            <div id="post-chat-window" style="flex: 1; overflow-y: auto; margin-bottom: 2rem; border-radius: 8px; padding: 1rem; padding-bottom: 80px; background: var(--bg-main); border: 1px solid var(--border-color);">
+                                <div style="text-align: center; color: var(--text-muted); margin-top: 5rem;" id="post-chat-placeholder">
+                                    <i class="fas fa-magic" style="font-size: 3rem; margin-bottom: 1rem; color: var(--primary-color);"></i>
+                                    <h2>AI Job Poster</h2>
+                                    <p>Paste a Job Description here and I'll generate the Career Guide automatically.</p>
+                                </div>
+                            </div>
+                            <div style="position: absolute; bottom: 10px; left: 10px; right: 10px; display: flex; gap: 0.5rem; align-items: center;">
+                                <textarea id="post-chat-input" placeholder="Paste Job Description here..." style="flex: 1; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-family: inherit; font-size: 1rem; resize: none; height: 60px; box-shadow: var(--shadow-sm);"></textarea>
+                                <button onclick="window.submitPostJob()" style="background-color: var(--primary-color); color: white; padding: 0 25px; height: 60px; border-radius: 8px; font-weight: 700; font-size: 1.1rem; border: none; cursor: pointer; box-shadow: var(--shadow-sm); transition: opacity 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+                                    <i class="fas fa-paper-plane"></i> Send
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
 
                 contentArea.innerHTML = `
                     <div class="center-placeholder">
@@ -778,7 +829,10 @@
                                     <td style="white-space:nowrap;"><span style="background: var(--bg-body); padding: 4px 8px; border-radius: 4px; font-size: 0.85rem;">${job.type}</span></td>
                                     ${sourceBadge}
                                     <td class="action-cell">
-                                        <button class="action-btn" style="color: #ef4444;" onclick="event.stopPropagation(); openJobDeleteModal(event, ${job.id})"><i class="fas fa-trash"></i></button>
+                                        <div style="display:flex; align-items:center;">
+                                            ${job.admin_email ? `<button class="action-btn" style="color: var(--primary-dark);" title="View Admin Details" onclick="event.stopPropagation(); window.showAdminInfo('${job.admin_name}', '${job.admin_email}', '${job.admin_picture}')"><i class="fas fa-user-lock"></i></button>` : ''}
+                                            <button class="action-btn" style="color: #ef4444;" onclick="event.stopPropagation(); openJobDeleteModal(event, ${job.id})"><i class="fas fa-trash"></i></button>
+                                        </div>
                                     </td>
                                 </tr>
                             `;
@@ -803,6 +857,25 @@
                 e.preventDefault();
                 window.loadManageJobs('all');
             });
+
+            window.showAdminInfo = function (name, email, pic) {
+                document.getElementById('adminInfoModal').classList.add('active');
+                document.getElementById('admin-info-name').innerText = name || 'Admin User';
+                document.getElementById('admin-info-email').innerText = email;
+                document.getElementById('admin-info-email').href = "mailto:" + email;
+
+                const picEl = document.getElementById('admin-info-pic');
+                const iconEl = document.getElementById('admin-info-icon');
+
+                if (pic && pic !== 'null' && pic !== 'undefined' && pic.trim() !== '') {
+                    picEl.src = pic;
+                    picEl.style.display = 'block';
+                    iconEl.style.display = 'none';
+                } else {
+                    picEl.style.display = 'none';
+                    iconEl.style.display = 'inline-block';
+                }
+            };
 
             // ── Job Detail Modal Logic ──
             const jobDetailModal = document.getElementById('jobDetailModal');
@@ -1009,6 +1082,8 @@
                 window.loadManageJobs('algo');
             } else if (savedTabId === 'nav-jobs-all') {
                 window.loadManageJobs('all');
+            } else if (savedTabId === 'nav-jobs-post') {
+                window.loadManageJobs('post');
             } else if (savedTabId) {
                 const tabToLoad = document.getElementById(savedTabId);
                 if (tabToLoad) {
@@ -1020,6 +1095,139 @@
                 navMessages.click();
             }
         });
+
+        // --- AI Job Poster Logic ---
+        window.submitPostJob = async () => {
+            const inputField = document.getElementById('post-chat-input');
+            const chatWindow = document.getElementById('post-chat-window');
+            const placeholder = document.getElementById('post-chat-placeholder');
+            const jdText = inputField.value.trim();
+
+            if (!jdText) return;
+
+            if (placeholder) {
+                placeholder.style.display = 'none';
+            }
+
+            // Append User Message
+            const userMsg = document.createElement('div');
+            userMsg.style.cssText = "background: rgba(33, 150, 243, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; align-self: flex-end; max-width: 90%; margin-left: auto; border: 1px solid rgba(33, 150, 243, 0.2); font-size: 0.95rem;";
+            userMsg.innerHTML = `<span style="font-weight: 600; display: block; margin-bottom: 0.5rem; color: var(--primary-color);"><i class="fas fa-user-circle"></i> You:</span><div style="white-space: pre-wrap;">${jdText}</div>`;
+            chatWindow.appendChild(userMsg);
+
+            // Clear input
+            inputField.value = '';
+
+            // Append Loading Indicator
+            const loadingMsg = document.createElement('div');
+            loadingMsg.id = 'chat-loading-indicator';
+            loadingMsg.style.cssText = "background: #fff; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; align-self: flex-start; max-width: 90%; border: 1px solid var(--border-color); color: var(--text-muted);";
+            loadingMsg.innerHTML = `<i class="fas fa-spinner fa-spin" style="color: var(--primary-color);"></i> AI is generating Career Guide...`;
+            chatWindow.appendChild(loadingMsg);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+
+            try {
+                const res = await fetch('/api/admin/generate_guide', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ jd_text: jdText })
+                });
+                const data = await res.json();
+
+                // Remove Loading
+                const indicator = document.getElementById('chat-loading-indicator');
+                if (indicator) indicator.remove();
+
+                const aiMsg = document.createElement('div');
+                aiMsg.style.cssText = "background: #fff; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; align-self: flex-start; max-width: 95%; width: 100%; border: 1px solid var(--primary-color); box-shadow: 0 4px 15px rgba(33, 150, 243, 0.15);";
+
+                if (data.status === 'success') {
+                    const job = data.guide;
+                    const htmlResponse = marked.parse(job.description);
+
+                    // Create a unique ID for the button to disable it after clicking
+                    const uniqueJobId = 'job-post-btn-' + Date.now();
+
+                    // Store the raw job object in the window to access on click
+                    window[`jobData_${uniqueJobId}`] = job;
+
+                    aiMsg.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border-color); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+                            <span style="font-weight: 700; color: var(--ext-dark, #203a45); font-size: 1.4rem;"><i class="fas fa-robot" style="color: var(--primary-color);"></i> AI Job Preview</span>
+                            <button id="${uniqueJobId}" onclick="window.approveAndPostJob('${uniqueJobId}')" style="background-color: #10b981; color: white; padding: 10px 25px; border-radius: 6px; font-weight: 700; font-size: 1.1rem; border: none; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2); transition: all 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+                                <i class="fas fa-check-circle"></i> APPROVE & POST
+                            </button>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; background: var(--bg-body); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                            <div><strong style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Job Title</strong><div style="font-weight: 600; font-size: 1.1rem;">${job.title}</div></div>
+                            <div><strong style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Company</strong><div>${job.company}</div></div>
+                            <div><strong style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Location</strong><div>${job.location}</div></div>
+                            <div><strong style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Type</strong><div>${job.job_type}</div></div>
+                            <div><strong style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Experience</strong><div>${job.experience}</div></div>
+                            <div><strong style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Salary</strong><div>${job.salary}</div></div>
+                            <div style="grid-column: 1 / -1;"><strong style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Apply URL / Email</strong><div style="color: var(--primary-color); word-break: break-all;">${job.apply_url || '<em>None found</em>'}</div></div>
+                        </div>
+
+                        <div style="border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
+                            <h3 style="margin-top: 0; color: var(--primary-dark); margin-bottom: 1rem;">Generated Career Guide</h3>
+                            <div class="markdown-body" style="line-height: 1.6; font-size: 1rem; overflow-x: auto; background: white; padding: 1.5rem; border: 1px solid var(--border-color); border-radius: 8px;">${htmlResponse}</div>
+                        </div>
+                    `;
+                } else {
+                    aiMsg.innerHTML = `<span style="color: red;"><i class="fas fa-exclamation-triangle"></i> Error: ${data.message}</span>`;
+                }
+                chatWindow.appendChild(aiMsg);
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+
+            } catch (error) {
+                const indicator = document.getElementById('chat-loading-indicator');
+                if (indicator) indicator.remove();
+
+                const aiMsg = document.createElement('div');
+                aiMsg.style.cssText = "background: #fff; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; align-self: flex-start; max-width: 90%; border: 1px solid red;";
+                aiMsg.innerHTML = `<span style="color: red;"><i class="fas fa-exclamation-triangle"></i> Network error connecting to backend API.</span>`;
+                chatWindow.appendChild(aiMsg);
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+            }
+        };
+
+        window.approveAndPostJob = async (btnId) => {
+            const btn = document.getElementById(btnId);
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Posting...';
+            btn.disabled = true;
+            btn.style.opacity = '0.7';
+
+            const jobData = window[`jobData_${btnId}`];
+
+            try {
+                const res = await fetch('/api/admin/post_generated_job', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(jobData)
+                });
+                const data = await res.json();
+
+                if (data.status === 'success') {
+                    btn.innerHTML = '<i class="fas fa-check"></i> Posted Successfully!';
+                    btn.style.backgroundColor = '#059669';
+                    setTimeout(() => {
+                        window.loadManageJobs('all'); // Redirect back to job overview
+                    }, 1000);
+                } else {
+                    alert('Error posting job: ' + data.message);
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    btn.style.opacity = '1';
+                }
+            } catch (error) {
+                alert('Network Error while posting job.');
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                btn.style.opacity = '1';
+            }
+        };
     </script>
 </body>
 

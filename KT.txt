@@ -110,7 +110,7 @@ The ALL AT A1 Job Portal is a frontend web application with a Flask backend desi
 - **Focused Hero Layout:** Stripped the secondary duplicate "Browse USA Jobs" button from the main [index.html](cci:7://file:///C:/Users/Palle/OneDrive/Desktop/ALLATA1/templates/index.html:0:0-0:0) hero container payload, strictly enforcing that the user’s centered focal point remains 100% on the internal tech blog content.
 
 
-## Latest Updates (as of 05/03/2026)
+## Latest Updates (as of 05/03/2026) Part-1 
 - **Admin Login Gate (loginbyadmin.html):** Created a dedicated, branded admin login page at `templates/loginbyadmin.html`. The page matches the site 4-color theme (Blue/Teal/Red/Orange accent stripe), uses Outfit font, and features a shield icon, animated card, and a styled "Continue with Google" button with the official Google SVG logo.
 - **Google OAuth Integration:** Integrated Google OAuth 2.0 login using the `Authlib` library. Registered the OAuth client in `app.py` using credentials stored in `.env` (`GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`). Added two new Flask routes: `/auth/google` (redirects to Google) and `/auth/google/callback` (handles token exchange and email verification).
 - **Admin Email Whitelist:** The OAuth callback reads the `admins` variable from `.env` (comma-separated list of allowed emails). If the logged-in Google email does NOT match the whitelist, the session is cleared and a red "Access Denied" error banner is shown on the login page. Only vijayypallerla@gmail.com and pallerlavijay315@gmail.com are authorised.
@@ -130,3 +130,57 @@ The ALL AT A1 Job Portal is a frontend web application with a Flask backend desi
 - **User-Friendly Feedback:** The frontend `job.html` now intercepts this `202` response and displays a yellow/orange "Pending Approval" alert modal instead of a generic rejection message. Users are informed their post was received and is awaiting admin review (reducing friction and confusion).
 - **Post-Submission Redirection:** Fixed the success modal on `job.html` to instantly redirect users to the `/browse_jobs` endpoint after a successful job post instead of just returning to the hash route.
 - **Admin Polish:** Changed the "Source" column header in the Admin Dashboard jobs table to "Status" for much clearer UX representation of whether a job is scraped, approved, or rejected.
+
+==============================================================================
+UPDATE: 05/03/2026 Part-2 
+==============================================================================
+
+- **Pending Approval UI (Post a Job):** When the AI flags/rejects a job submission, instead of showing a red "Error 403: Rejected" message, the user now sees a friendly yellow/orange "Pending Approval" modal with a clock icon. The backend still saves the job as ai_approved=False for admin review. The frontend detects the 202 HTTP status code to trigger this modal. No change to the backend logic.
+
+- **Post-Submission Redirect:** After a successful job post (AI approved), clicking "Awesome" on the success modal now redirects users directly to /browse_jobs instead of the home page or /#jobs hash.
+
+- **Admin Table: Source → Status:** Renamed the "Source" column header in the Admin Dashboard jobs table to "Status" for clearer UX representation.
+
+- **Browse Jobs Navigation Fix:** All HTML templates that previously used href="/#jobs" for the Browse Jobs nav link have been updated to href="/browse_jobs" to point to the correct dedicated jobs page.
+
+- **Home → Tech Insights:** The "Home" navigation label in the navbar was renamed to "Tech Insights" across all 17 HTML template files to match the homepage's new branding.
+
+- **Job Detail Page Cleanup:** Removed an incorrectly placed "Students" link that appeared next to the "Back to Jobs" button in job_detail.html (introduced by the automated script). Also fixed the "Back to Jobs" URL from /browse_jobs#jobs to /browse_jobs.
+
+- **Post a Job Button Fixes:** Added onclick="window.location.href='/job.html'" to the "Post a Job" navbar buttons in terms.html, privacy.html, contact.html, and job_detail.html which were missing the click handler (the button was visible but non-functional).
+
+- **Removed Dummy "Job Alerts" Footer Link:** Removed the placeholder <a href="#">Job Alerts</a> footer link from all 12 HTML pages where it appeared, as it had no functionality.
+
+- **Legal Agreements Dropdown URL Fix:** Changed href="#", href="#legal", and href="/#legal" on the Legal Agreements dropdown trigger to href="javascript:void(0)" across all 17 HTML templates, so the browser no longer shows a destination URL in the status bar when hovering over this dropdown button.
+
+- **Students Nav Link Added Back:** The "Students" navigation link (with graduation cap icon and orange color) was missing from 11 pages. Added it back into the navbar for: 404.html, aboutus.html, contact.html, job.html, job_detail.html, privacy.html, terms.html, and all student sub-pages.
+
+- **Mobile Responsive Design (Full Site):**
+  - Added a Hamburger Menu icon (☰) via <div class="menu-toggle"> into all 19 HTML template navbars. On mobile screens (<768px), the nav links are hidden and replaced by this toggle button.
+  - Added mobile toggle JS to script.js: clicking the hamburger opens/closes the nav-menu with the .active class.
+  - Added comprehensive mobile CSS to styles.css:
+    - html, body: overflow-x: hidden + max-width: 100% to prevent horizontal scroll globally.
+    - .hero: reduced font sizes (h1: 1.6rem), word-wrap: break-word, overflow: hidden.
+    - .container: 100% width on mobile.
+    - .search-form: stacks vertically on mobile (column direction).
+    - .job-card: word-wrap, overflow-wrap, min-width: 0, overflow: hidden so content stays in bounds.
+    - .job-footer: stacks vertically on mobile, Apply Now button becomes full-width.
+    - .footer-content: stacks as column on mobile.
+    - .job-detail-container, .job-meta-list, .contact-container, .projects-grid: all adjusted for single-column mobile layout.
+    - .nav-menu: absolute positioned dropdown on mobile, hidden by default, shown when .active class is toggled.
+
+==============================================================================
+UPDATE: 09/03/2026
+==============================================================================
+
+- **Database Migration (Xata to Supabase):** Xata free trial ended causing website to go down. Migrated to Supabase (supabase.com) which is completely free with no trial period and no compute hour limits. Session Pooler URL used for Vercel IPv4 compatibility: aws-1-ap-southeast-1.pooler.supabase.com:5432. Updated DATABASE_URL in local .env and Vercel environment variables. Old Xata job data was lost but jobs are re-scraped by Algorithm.py. Supabase Project ID: wsjzyivfppjxensdusez.
+
+- **Backup AI Keys (Yashi_Key_1, Yashi_Key_2):** Two Groq API keys stored in .env file under Yashi_Key_1 and Yashi_Key_2. These are NOT used anywhere in the production website or Algorithm.py. They are personal backup keys stored for future manual use only. Both keys verified as active and working with model openai/gpt-oss-120b.
+
+- **AI Job Poster (Admin Dashboard):** Built a new "Post a Job" feature into the Admin Dashboard (`admin.html`) which has a ChatGPT-like AI interface. The Admin can paste raw scraped Job Descriptions (JDs) into a chat box. Created a new backend integration (`adminpost.py` and endpoints `/api/admin/generate_guide`, `/api/admin/post_generated_job` in `app.py`).
+  - Uses the `openai/gpt-oss-120b` model via Groq API, securely rotating across 8 backup API keys (Yashi, Vivek, Vijay keys) stored in `.env` randomly.
+  - The AI acts as a Data Extractor & Career Consultant, structured to return valid JSON with metadata (Job Title, Company, Location, Apply URL/Email) and a fully formatted Markdown `description`.
+  - The Markdown output specifically avoids AI clichés and includes a "Human-Style Intro", "Top 3 Critical Skills Table", "Interview Prep", "Resume Optimization", and "Career Roadmap".
+  - **Preview & Approve Workflow:** The Admin UI renders the extracted job metadata and markdown response in a rich preview card using `marked.js`. If it looks good, the Admin taps an **APPROVE & POST** button, which auto-saves the complete entry into the PostgreSQL database, instantly pushing the job live to the portal.
+  - **Job Posting Fixes:** Re-styled the markdown rendering directly with CSS in `job_detail.html` instead of using a custom `marked.js` override that conflicted with its newer versions (fixes `[object Object]` bug). Also added String truncation `[:200]` during SQLAlchemy insertion in `app.py` to prevent database 500 errors if the AI extracts strings longer than the database limits.
+  - **Admin Tracking:** When an Admin creates a layout through the AI Job Poster, their Google Avatar, Email, and Name is extracted from their secure session and embedded into the database. In the "ALL JOBS" tab of the Admin layout, Jobs posted by an Admin now display a `fa-user-lock` icon, which clicking triggers an `adminInfoModal` displaying exactly who posted it.

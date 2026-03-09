@@ -147,9 +147,11 @@
 
             <div class="job-detail-body">
                 <h3>Job Description & Details</h3>
-                <p>
-                    <!-- JOB_DESCRIPTION -->
-                </p>
+
+                <div id="rendered-job-description" class="markdown-body"
+                    style="line-height: 1.8; color: var(--text-main); font-size: 1.05rem;">
+                    <!-- Javascript will inject parsed markdown here -->
+                </div>
             </div>
 
             <div class="job-detail-footer" id="apply-section">
@@ -190,6 +192,69 @@
         </div>
     </footer>
 
+    <div id="raw-description-json" style="display:none;"><!-- JOB_DESCRIPTION_JSON --></div>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        const rawJsonElement = document.getElementById('raw-description-json').textContent;
+        let rawMarkdown = "";
+        try {
+            rawMarkdown = JSON.parse(rawJsonElement);
+        } catch (e) {
+            rawMarkdown = rawJsonElement;
+        }
+
+        marked.setOptions({
+            breaks: true, // Converts single newlines to <br> if needed
+            gfm: true     // Enables GitHub Flavored Markdown (tables)
+        });
+
+        // Parse markdown to HTML
+        const htmlContent = marked.parse(rawMarkdown);
+        document.getElementById('rendered-job-description').innerHTML = htmlContent;
+    </script>
+    <style>
+        /* Markdown generated content styles */
+        .markdown-body h1,
+        .markdown-body h2,
+        .markdown-body h3 {
+            color: var(--primary-dark);
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            font-size: 1.4rem;
+        }
+
+        .markdown-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+            text-align: left;
+            font-size: 0.95rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .markdown-body thead {
+            background-color: var(--bg-card);
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .markdown-body th,
+        .markdown-body td {
+            padding: 12px;
+            border-right: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .markdown-body ul {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+
+        .markdown-body li {
+            margin-bottom: 0.5rem;
+        }
+    </style>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 
