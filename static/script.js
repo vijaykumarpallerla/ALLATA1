@@ -124,7 +124,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
             const queryString = searchParams.toString() ? '?' + searchParams.toString() : '';
-            window.location.href = '/' + queryString + '#jobs';
+            window.location.href = window.location.pathname + queryString + '#jobs';
         });
     }
 
@@ -209,10 +209,23 @@ window.applyJob = function (title) {
 document.addEventListener('DOMContentLoaded', () => {
     const mobileMenu = document.getElementById('mobile-menu');
     const navMenu = document.getElementById('nav-menu');
-    
+
     if (mobileMenu && navMenu) {
         mobileMenu.addEventListener('click', () => {
             navMenu.classList.toggle('active');
         });
     }
+
+    // Dropdown toggle for mobile
+    const dropdownLinks = document.querySelectorAll('.nav-dropdown > .nav-link');
+    dropdownLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768) {
+                e.preventDefault();
+                e.stopPropagation();
+                const parent = link.closest('.nav-dropdown');
+                parent.classList.toggle('active');
+            }
+        });
+    });
 });

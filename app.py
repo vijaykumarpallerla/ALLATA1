@@ -301,7 +301,7 @@ def usa_jobs_page():
                 query_string = urlencode(page_args)
                 
                 active_class = ' active' if p == current_page else ''
-                pagination_html += f'<a href="/?{query_string}#jobs" class="btn-page{active_class}" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">{p}</a>\n'
+                pagination_html += f'<a href="/browse_jobs?{query_string}#jobs" class="btn-page{active_class}" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">{p}</a>\n'
                 
         # Perform Server-Side Rendering (SSR) by injecting the HTML strings directly
         html_content = html_content.replace('<!-- Job cards will be populated by JavaScript -->', jobs_html)
@@ -485,7 +485,7 @@ def job_detail():
         if getattr(job, 'apply_url', None) and job.apply_url.strip():
             if '@' in job.apply_url:
                 apply_btn = f'''
-                <div style="display: flex; align-items: center; gap: 15px;">
+                <div class="apply-btn-container" style="display: flex; align-items: center; gap: 15px;">
                     <span id="job-detail-email-found" style="font-size: 1rem; color: var(--primary-color); font-weight: 600;">Email ID Found &rarr;</span>
                     <button type="button" id="job-detail-apply-btn" class="btn btn-primary btn-large" style="padding: 1rem 3rem; font-size: 1.1rem;" onclick="revealAndCopyEmail('{job.apply_url.strip()}')">Apply Now</button>
                     <a href="mailto:{job.apply_url.strip()}" id="job-detail-email-reveal" style="display: none; font-size: 1.1rem; font-weight: 600; color: var(--primary-dark); text-decoration: none;"><i class="far fa-envelope"></i> {job.apply_url.strip()}</a>

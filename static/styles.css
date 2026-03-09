@@ -958,10 +958,23 @@ footer {
         text-align: center;
     }
 
-    .nav-dropdown:hover .dropdown-content,
+    /* Disable hover on mobile to prevent sticky touch states */
+    .nav-dropdown:hover .dropdown-content {
+        display: none;
+    }
+
     .nav-dropdown.active .dropdown-content {
         display: flex;
         flex-direction: column;
+    }
+
+    /* Force icon to obey JavaScript rotation, disable hover rotation */
+    .nav-dropdown:hover .dropdown-icon {
+        transform: none;
+    }
+
+    .nav-dropdown.active .dropdown-icon {
+        transform: rotate(180deg);
     }
 
     /* Fix hero overflow */
@@ -997,7 +1010,9 @@ footer {
     /* Fix search form */
     .search-container {
         width: 100%;
-        padding: 0 0.5rem;
+        padding: 0;
+        border-radius: var(--radius-md);
+        overflow: hidden;
     }
 
     .search-form {

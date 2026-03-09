@@ -88,6 +88,42 @@
             text-align: center;
             margin-top: 4px;
         }
+
+        @media (max-width: 768px) {
+            .job-detail-container {
+                margin: 1rem auto;
+                padding: 1.2rem 1rem;
+            }
+
+            .markdown-body table {
+                display: block;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                white-space: nowrap;
+            }
+
+            .markdown-body th,
+            .markdown-body td {
+                white-space: normal;
+                min-width: 100px;
+            }
+
+            .job-detail-footer {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+
+            .apply-btn-container {
+                flex-direction: column !important;
+                gap: 1rem !important;
+                width: 100%;
+            }
+
+            .apply-btn-container .btn {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 
