@@ -295,13 +295,39 @@ def usa_jobs_page():
             # Construct a base query dictionary excluding 'page' to keep filter params
             base_args = request.args.to_dict()
             
-            for p in range(1, total_pages + 1):
+            # Helper to build URL
+            def build_page_url(p):
                 page_args = base_args.copy()
                 page_args['page'] = p
-                query_string = urlencode(page_args)
-                
+                return f"/browse_jobs?{urlencode(page_args)}#jobs"
+
+            # 1. Previous Button
+            if current_page > 1:
+                pagination_html += f'<a href="{build_page_url(current_page - 1)}" class="btn-page" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;"><i class="fas fa-chevron-left"></i></a>\n'
+            
+            # Determine range of exactly 3 pages to show
+            if total_pages <= 3:
+                start_page = 1
+                end_page = total_pages
+            else:
+                if current_page == 1:
+                    start_page = 1
+                    end_page = 3
+                elif current_page == total_pages:
+                    start_page = total_pages - 2
+                    end_page = total_pages
+                else:
+                    start_page = current_page - 1
+                    end_page = current_page + 1
+
+            # 2. Page Numbers
+            for p in range(start_page, end_page + 1):
                 active_class = ' active' if p == current_page else ''
-                pagination_html += f'<a href="/browse_jobs?{query_string}#jobs" class="btn-page{active_class}" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">{p}</a>\n'
+                pagination_html += f'<a href="{build_page_url(p)}" class="btn-page{active_class}" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">{p}</a>\n'
+
+            # 3. Next Button
+            if current_page < total_pages:
+                pagination_html += f'<a href="{build_page_url(current_page + 1)}" class="btn-page" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;"><i class="fas fa-chevron-right"></i></a>\n'
                 
         # Perform Server-Side Rendering (SSR) by injecting the HTML strings directly
         html_content = html_content.replace('<!-- Job cards will be populated by JavaScript -->', jobs_html)
