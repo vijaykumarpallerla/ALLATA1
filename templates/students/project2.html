@@ -146,7 +146,7 @@
             right: 15%;
             transform: translateY(-50%);
             width: 80px;
-            height: 120px;
+            height: 250px;
             background: #1e293b;
             border: 2px solid #3b82f6;
             border-radius: 8px;
@@ -154,6 +154,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            gap: 10px;
             color: white;
             z-index: 5;
             box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
@@ -163,7 +164,6 @@
             width: 60%;
             height: 4px;
             background: #3b82f6;
-            margin: 5px 0;
             border-radius: 2px;
         }
 
@@ -193,6 +193,7 @@
         .bn-scout {
             top: 20%;
             left: 15%;
+            transform: translateY(-50%);
         }
 
         .bn-strike {
@@ -204,11 +205,14 @@
         .bn-alert {
             top: 80%;
             left: 15%;
+            transform: translateY(-50%);
         }
 
         .bot-label {
             position: absolute;
             left: 60px;
+            top: 50%;
+            transform: translateY(8px);
             color: var(--text-muted);
             font-family: monospace;
             font-size: 0.8rem;
@@ -226,16 +230,17 @@
 
         .ps-1 {
             top: 20%;
-            transform: translateY(20px);
+            transform: translateY(-50%);
         }
 
         .ps-2 {
             top: 50%;
+            transform: translateY(-50%);
         }
 
         .ps-3 {
             top: 80%;
-            transform: translateY(-20px);
+            transform: translateY(-50%);
         }
 
         .data-packet {
@@ -335,7 +340,8 @@
                 <a href="/" class="nav-link">Tech Insights</a>
                 <a href="/projects.html" class="nav-link">Projects</a>
                 <div class="nav-dropdown">
-                    <a href="javascript:void(0)" class="nav-link">Legal Agreements <i class="fas fa-chevron-down dropdown-icon"></i></a>
+                    <a href="javascript:void(0)" class="nav-link">Legal Agreements <i
+                            class="fas fa-chevron-down dropdown-icon"></i></a>
                     <div class="dropdown-content">
                         <a href="terms.html">Terms and Conditions</a>
                         <a href="privacy.html">Privacy Policy</a>
@@ -424,7 +430,8 @@
                         and executes "Safe Attacks". It injects <code>' OR 1=1 --</code> into login forms to test for
                         <strong>SQL Injection</strong> weaknesses, and runs
                         <code>&lt;script&gt;alert('test')&lt;/script&gt;</code> to audit for <strong>XSS
-                            vulnerabilities</strong>.</p>
+                            vulnerabilities</strong>.
+                    </p>
                 </div>
             </div>
 
@@ -448,7 +455,8 @@
                 <p>A junior developer's bot will accidentally spam the company server with 10,000 requests a second,
                     causing an accidental DDoS attack. A Senior Architect writes the swarm to intentionally
                     <em>Throttle</em> its request cycles (e.g., 2 requests per second), proving you natively understand
-                    Network Traffic Management and Cloud Costs.</p>
+                    Network Traffic Management and Cloud Costs.
+                </p>
             </div>
 
             <h2 class="section-title"><i class="fas fa-briefcase"></i> Why This Secures High-Paying Offers</h2>
