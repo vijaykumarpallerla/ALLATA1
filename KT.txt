@@ -195,3 +195,17 @@ UPDATE: 09/03/2026
 - **Tech Insights Overhaul & Humanization:** Substantially rewrote Blog 4 (AI Replacing Engineers) in `blogs.json` to leverage 100% unique human-synthesized phrasing to pass Google AdSense plagiarism/duplication gatekeeper scans. Successfully bypassed text previously matching identical viral LinkedIn posts.
 - **Dynamic Blog Conclusions:** Engineered custom `employer_text` rendering logic inside `blog_post.html`. The "Why Employers Pay For This" footer is no longer generic and hardcoded. Each insight renders a bespoke takeaway drawn dynamically from `blogs.json`, gracefully reverting to a Jinja2 string generator `| default(...)` fallback if a future blog lacks one.
 - **Content Expansion (LinkedIn Integration):** Successfully ingested a massive wave of raw LinkedIn posts and deeply restructured them into 100% humanized, AdSense-proof Tech Insights. Kept identical `.bg-gradient` UI formatting and appended them all into `blogs.json` with fresh `<p>`, `<ul>`, and `<h2>` HTML tags. Currently sitting at 13 total blogs.
+
+===========================================================================================================================================================================================================================================================
+                 BLOGS PROMPT
+Role: Senior Web Architect & Google AdSense Compliance Expert.
+Task: I am building a high-authority tech blog for 2026. I need you to take my existing blog drafts and semantically restructure them so they pass human and algorithmic "Duplicate Content" checks.
+The Data: I will provide the text of existing blogs or LinkedIn posts. 
+
+Instructions for the Overhaul:
+1. Metaphor Replacement: Identify every analogy used. Delete them. Replace them with brand new, highly specific 2026-relevant tech analogies.
+2. Structural Pivot: Do not follow the original list order. If a post is a "Level 1 to 5" list, rewrite it as a "Comparative Analysis" or a "Modern System Blueprint." 
+3. E-E-A-T Injection: Add mentions of specific modern tools into the logic of the post to prove technical expertise (e.g., Pinecone, FastAPI, Docker). 
+4. Meaning & Unique Insights: DO NOT just replace synonyms. Inject a completely new "Unique Insight" or argument that the original post never considered, fundamentally shifting the semantic conclusion of the text to defeat AI similarity scanners.
+5. Tone Check: Ensure the English remains in extremely simple, conversational 10th-grade English. Be incredibly readable for humans, but aggressively eliminate all robotic AI "filler" summary sentences.
+============================================================================================================================================================================================================================================================
