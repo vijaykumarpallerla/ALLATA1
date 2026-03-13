@@ -87,6 +87,13 @@ class Job(db.Model):
     admin_name = db.Column(db.String(100), nullable=True)
     admin_picture = db.Column(db.Text, nullable=True)
 
+class ResearchRequest(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(120), nullable=False)
+    topic = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+
 
 with app.app_context():
     db.create_all()
@@ -480,6 +487,22 @@ def api_contact():
         db.session.rollback()
         return jsonify({"status": "error", "message": str(e)}), 500
 
+@app.route('/api/research', methods=['POST'])
+def api_research():
+    data = request.json
+    try:
+        new_req = ResearchRequest(
+            name=data.get('name', 'Unknown'),
+            email=data.get('email'),
+            topic=data.get('topic')
+        )
+        db.session.add(new_req)
+        db.session.commit()
+        return jsonify({"status": "success", "message": "Your research request has been formally saved into the database!"})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"status": "error", "message": str(e)}), 500
+
 @app.route('/job')
 def job_detail():
     job_id = request.args.get('jobid')
@@ -638,6 +661,37 @@ def delete_admin_message(msg_id):
             return jsonify({"status": "error", "message": "Message not found"}), 404
         
         db.session.delete(msg)
+        db.session.commit()
+        return jsonify({"status": "success"})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route('/api/admin/researches', methods=['GET'])
+@admin_required
+def get_admin_researches():
+    try:
+        reqs = ResearchRequest.query.order_by(ResearchRequest.created_at.desc()).all()
+        req_list = [{
+            "id": r.id,
+            "name": r.name,
+            "email": r.email,
+            "topic": r.topic,
+            "created_at": r.created_at.strftime('%Y-%m-%d %H:%M') if r.created_at else "Unknown"
+        } for r in reqs]
+        return jsonify({"status": "success", "requests": req_list})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route('/api/admin/researches/<int:req_id>', methods=['DELETE'])
+@admin_required
+def delete_admin_research(req_id):
+    try:
+        req = db.session.get(ResearchRequest, req_id)
+        if not req:
+            return jsonify({"status": "error", "message": "Request not found"}), 404
+        
+        db.session.delete(req)
         db.session.commit()
         return jsonify({"status": "success"})
     except Exception as e:
@@ -811,6 +865,10 @@ def crack2026_page():
 @app.route('/promptai.html')
 def promptai_page():
     return render_template('students/promptai.html')
+
+@app.route('/research')
+def research_page():
+    return render_template('research.html')
 
 if __name__ == '__main__':
     # Function to automatically open the browser

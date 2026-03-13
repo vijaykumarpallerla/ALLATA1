@@ -209,3 +209,27 @@ Instructions for the Overhaul:
 4. Meaning & Unique Insights: DO NOT just replace synonyms. Inject a completely new "Unique Insight" or argument that the original post never considered, fundamentally shifting the semantic conclusion of the text to defeat AI similarity scanners.
 5. Tone Check: Ensure the English remains in extremely simple, conversational 10th-grade English. Be incredibly readable for humans, but aggressively eliminate all robotic AI "filler" summary sentences.
 ============================================================================================================================================================================================================================================================
+
+==============================================================================
+UPDATE: 13/03/2026
+==============================================================================
+- **Deep-Dive Research Desk (Front-End & JSON Integration):** Created a brand new `/research` portal intended to boost AdSense time-on-page and drive user engagement. Users can submit custom topics they want deeply researched by the ALLATA1 tech team. 
+  - **Static JSON Gallery:** Implemented a `researches.json` architectural pattern mimicking the Blog's `.json` logic to bypass expensive runtime SQL reads. The frontend securely parses this static JSON on load to display two initial beautifully-rendered tech research cards.
+  - **Dynamic Modal Engine:** Clicking any "Research Title" card gracefully invokes an animated overlay Modal Window which parses the deeper HTML `<p>` tag contents contained natively inside `researches.json`, creating a single-page seamless reading experience engineered to bypass AdSense multi-page index limits. 
+
+- **Backend Supabase Research Integration:** 
+  - **SQLAlchemy Schema:** Added a new PostgreSQL database table model named `ResearchRequest` within `app.py`. The model safely handles raw user `name`, `email`, and `topic` fields dynamically mapped with native DateTime stamps using `db.Column(db.DateTime, default=datetime.utcnow)`.
+  - **Automated Routing:** Connected `/api/research` via `POST` protocol to intercept form emissions via Fetch API.
+
+- **Frontend Security & UI Loading States:** 
+  - Substituted standard vanilla `HTML` form navigation actions with heavily-optimized JavaScript `fetch()` API handling to eliminate hard page reloading.
+  - While data is being verified to the Supabase Postgres instance, the UI button invokes a visual CSS lock (`display: flex; opacity: 0.7`) combined with an active FontAwesome `<i class="fas fa-spinner fa-spin">` spinner to deter simultaneous spam submissions.
+  - Instead of standard invisible text resets, successful db writes trigger a custom animated `SlideIn` Success Modal overlay window dynamically darkening the entire background so users easily acknowledge submission success.
+
+- **Admin Dashboard Real-time Engine Expansion:**
+  - Integrated the `ResearchRequest` database live natively into the `admin.html` web application with total security. 
+  - Spun up a new `<aside>` Sidebar `<a href="#" class="admin-nav-item" id="nav-researches">` navigator seamlessly switching LocalStorage tracking states.
+  - Engineered `/api/admin/researches` and `DELETE /api/admin/researches/<id>` endpoints natively into `app.py` forcing stringent `@admin_required` session validations prior to data parsing.
+  - Admins can now visualize an entire UI-rendered Table Matrix of raw incoming topic requests.
+  - Extended the "Message Details Modal" logic inside the Admin screen to dynamically overwrite its `innerHTML` Header Titles. Tapping any "Research Request" row automatically populates a modal parsing the User Name, `mailto:` linked Email, and un-truncated Request Topic strings.
+  - **Admin Table Hover Polish:** Injected native CSS row listeners (`cursor: pointer;`) inside the dynamically generated javascript template strings mapping `data-index="${index}"` to safely bridge raw API data mappings into DOM rendering elements without breaking XSS bounds.

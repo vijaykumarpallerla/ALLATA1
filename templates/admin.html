@@ -400,10 +400,15 @@
                 gap: 1rem;
                 align-items: flex-start;
                 padding: 1.2rem;
+                width: 100%;
+                box-sizing: border-box;
+                overflow: hidden;
             }
 
             .admin-header h1 {
                 font-size: 1.4rem;
+                width: 100%;
+                margin: 0;
             }
 
             .admin-content {
@@ -474,6 +479,9 @@
                 <a href="#" class="admin-nav-item active" id="nav-messages">
                     <i class="fas fa-envelope"></i> Messages
                 </a>
+                <a href="#" class="admin-nav-item" id="nav-researches">
+                    <i class="fas fa-flask"></i> Research Requests
+                </a>
                 <a href="#" class="admin-nav-item">
                     <i class="fas fa-cog"></i> Settings
                 </a>
@@ -515,7 +523,7 @@
     <div id="messageModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Message Details</h3>
+                <h3 id="modal-header-title">Message Details</h3>
                 <span class="close-modal" id="closeMessageModal">&times;</span>
             </div>
             <div class="modal-body">
@@ -531,11 +539,11 @@
                     <div class="modal-detail-value" id="modal-date"></div>
                 </div>
                 <div class="modal-detail-group">
-                    <div class="modal-detail-label">Subject</div>
+                    <div class="modal-detail-label" id="modal-subject-label">Subject</div>
                     <div class="modal-detail-value" id="modal-subject" style="font-weight: 600;"></div>
                 </div>
                 <div class="modal-detail-group">
-                    <div class="modal-detail-label">Message Body</div>
+                    <div class="modal-detail-label" id="modal-body-label">Message Body</div>
                     <div class="modal-detail-value" id="modal-body" style="min-height: 120px;"></div>
                 </div>
             </div>
@@ -678,6 +686,7 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             const navMessages = document.getElementById('nav-messages');
+            const navResearches = document.getElementById('nav-researches');
             const navDashboard = document.getElementById('nav-dashboard');
             const contentArea = document.getElementById('admin-content-area');
             const navJobs = document.getElementById('nav-jobs');
@@ -795,6 +804,85 @@
                 }
             });
 
+            // Load Research Requests from DB
+            navResearches.addEventListener('click', async (e) => {
+                e.preventDefault();
+                resetNav();
+                navResearches.classList.add('active');
+                localStorage.setItem('activeAdminTab', 'nav-researches');
+                pageTitle.innerText = "Research Requests";
+
+                contentArea.innerHTML = `
+                    <div class="center-placeholder">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--primary-color);"></i>
+                        <p style="margin-top: 1rem;">Fetching research requests from Database...</p>
+                    </div>
+                `;
+
+                try {
+                    const response = await fetch('/api/admin/researches');
+                    const data = await response.json();
+
+                    if (data.status === 'success') {
+                        if (data.requests.length === 0) {
+                            contentArea.innerHTML = `
+                                <div class="center-placeholder">
+                                    <i class="fas fa-flask" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
+                                    <h2>No research requests yet</h2>
+                                    <p>When users submit a topic, it will appear here.</p>
+                                </div>
+                            `;
+                            return;
+                        }
+
+                        let tableHTML = `
+                            <table class="message-table" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Topic</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                        `;
+
+                        window.fetchedResearches = data.requests;
+
+                        data.requests.forEach((req, index) => {
+                            tableHTML += `
+                                <tr class="research-row" data-index="${index}" style="cursor: pointer;">
+                                    <td style="white-space: nowrap; color: var(--text-muted); font-size: 0.9rem;">${req.created_at}</td>
+                                    <td style="font-weight: 500;">${req.name}</td>
+                                    <td><a href="mailto:${req.email}" style="color: var(--primary-color); text-decoration: none;" onclick="event.stopPropagation();">${req.email}</a></td>
+                                    <td class="msg-body" style="white-space: normal; max-width: 400px;">${req.topic}</td>
+                                    <td class="action-cell" onclick="event.stopPropagation();">
+                                        <button class="action-btn" onclick="toggleDropdown(event, 'res-${index}')"><i class="fas fa-ellipsis-v"></i></button>
+                                        <div class="action-dropdown" id="dropdown-res-${index}">
+                                            <div class="action-dropdown-item" onclick="openResearchDeleteModal(event, ${req.id})">
+                                                <i class="fas fa-trash"></i> Delete
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            `;
+                        });
+
+                        tableHTML += `</tbody></table>`;
+                        contentArea.innerHTML = tableHTML;
+
+                        attachResearchRowListeners();
+                    } else {
+                        contentArea.innerHTML = `<p style="color: red;">Error loading requests: ${data.message}</p>`;
+                    }
+                } catch (error) {
+                    contentArea.innerHTML = `<p style="color: red;">Failed to connect to the server.</p>`;
+                    console.error("Error fetching researches:", error);
+                }
+            });
+
             // --- Modal Logic ---
             const messageModal = document.getElementById('messageModal');
             const closeBtn = document.getElementById('closeMessageModal');
@@ -821,10 +909,10 @@
                 if (mode === 'post') activeTab = 'nav-jobs-post';
                 localStorage.setItem('activeAdminTab', activeTab);
 
-                const btnStyle = (isActive) => `font-size: 1.1rem; font-weight: 700; border-radius: 6px; padding: 10px 20px; cursor: pointer; border: ${isActive ? 'none' : '1px solid var(--border-color)'}; background: ${isActive ? 'var(--primary-color)' : 'transparent'}; color: ${isActive ? '#fff' : 'var(--text-main)'}; transition: all 0.2s;`;
+                const btnStyle = (isActive) => `font-size: 1.1rem; flex: 0 0 auto; white-space: nowrap; font-weight: 700; border-radius: 6px; padding: 10px 20px; cursor: pointer; border: ${isActive ? 'none' : '1px solid var(--border-color)'}; background: ${isActive ? 'var(--primary-color)' : 'transparent'}; color: ${isActive ? '#fff' : 'var(--text-main)'}; transition: all 0.2s;`;
 
                 pageTitle.innerHTML = `
-                    <div class="admin-tab-header">
+                    <div class="admin-tab-header" style="display: flex; overflow-x: auto; gap: 10px; flex-wrap: nowrap; max-width: 100%; padding-bottom: 8px; -webkit-overflow-scrolling: touch; scrollbar-width: none;">
                         <button onclick="window.loadManageJobs('all')" style="${btnStyle(mode === 'all')}" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">ALL JOBS</button>
                         <button onclick="window.loadManageJobs('algo')" style="${btnStyle(mode === 'algo')}" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'"><i class="fas fa-robot"></i> ALGORITHM JOBS</button>
                         <button onclick="window.loadManageJobs('post')" style="${btnStyle(mode === 'post')}" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
@@ -1097,6 +1185,11 @@
                         const index = this.getAttribute('data-index');
                         const msg = window.fetchedMessages[index];
 
+                        // Reset labels for standard messages
+                        document.getElementById('modal-header-title').innerText = "Message Details";
+                        document.getElementById('modal-subject-label').innerText = "Subject";
+                        document.getElementById('modal-body-label').innerText = "Message Body";
+
                         // Populate Modal
                         document.getElementById('modal-name').innerText = msg.name;
 
@@ -1110,6 +1203,39 @@
                         // Use textContent for safety, then apply white-space: pre-wrap in CSS
                         const bodyEl = document.getElementById('modal-body');
                         bodyEl.textContent = msg.body;
+
+                        // Show Modal
+                        messageModal.classList.add('active');
+                    });
+                });
+            }
+
+            function attachResearchRowListeners() {
+                const rows = document.querySelectorAll('.research-row');
+                rows.forEach(row => {
+                    row.addEventListener('click', function () {
+                        const index = this.getAttribute('data-index');
+                        const req = window.fetchedResearches[index];
+
+                        // Set custom labels for Research Requests
+                        document.getElementById('modal-header-title').innerText = "Research Request Details";
+                        document.getElementById('modal-subject-label').innerText = "Topic";
+                        document.getElementById('modal-body-label').innerText = "Requested Topic Details";
+
+                        // Populate Modal
+                        document.getElementById('modal-name').innerText = req.name;
+
+                        const emailEl = document.getElementById('modal-email');
+                        emailEl.innerText = req.email;
+                        emailEl.href = "mailto:" + req.email;
+
+                        document.getElementById('modal-date').innerText = req.created_at;
+
+                        // We use the topic field for the body to expand, and leave subject empty or abbreviated
+                        document.getElementById('modal-subject').innerText = "Deep-Dive Request";
+
+                        const bodyEl = document.getElementById('modal-body');
+                        bodyEl.textContent = req.topic;
 
                         // Show Modal
                         messageModal.classList.add('active');
@@ -1134,6 +1260,14 @@
                 document.querySelector('.delete-modal-text').innerText = "Are you sure you want to permanently delete this job posting from the site?";
             }
 
+            window.openResearchDeleteModal = function (event, id) {
+                event.stopPropagation();
+                messageToDeleteId = id;
+                currentDeleteType = 'research';
+                document.getElementById('deleteModal').classList.add('active');
+                document.querySelector('.delete-modal-text').innerText = "Are you sure you want to delete this research request? This action is permanent.";
+            }
+
             // --- Delete Confirmation Logic ---
             const deleteModal = document.getElementById('deleteModal');
             document.getElementById('cancelDeleteBtn').addEventListener('click', () => {
@@ -1147,7 +1281,9 @@
                 try {
                     let url = currentDeleteType === 'job'
                         ? `/api/admin/jobs/${messageToDeleteId}`
-                        : `/api/admin/messages/${messageToDeleteId}`;
+                        : currentDeleteType === 'research'
+                            ? `/api/admin/researches/${messageToDeleteId}`
+                            : `/api/admin/messages/${messageToDeleteId}`;
 
                     const response = await fetch(url, { method: 'DELETE' });
                     const data = await response.json();
