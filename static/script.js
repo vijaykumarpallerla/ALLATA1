@@ -128,6 +128,27 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
+    // Toggle Mobile Filters
+    const mobileFilterBtn = document.getElementById('mobileFilterBtn');
+    const sidebar = document.getElementById('sidebar');
+    const filterChevron = document.getElementById('filterChevron');
+
+    if (mobileFilterBtn && sidebar) {
+        mobileFilterBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            const isActive = sidebar.classList.contains('active');
+            
+            // Update button text and icon
+            if (isActive) {
+                mobileFilterBtn.querySelector('span').innerHTML = '<i class="fas fa-filter"></i> Hide Filters';
+                if (filterChevron) filterChevron.style.transform = 'rotate(180deg)';
+            } else {
+                mobileFilterBtn.querySelector('span').innerHTML = '<i class="fas fa-filter"></i> Show Filters';
+                if (filterChevron) filterChevron.style.transform = 'rotate(0deg)';
+            }
+        });
+    }
+
     // Attach listener to Apply Filters button
     const applyFiltersBtn = document.getElementById('applyFiltersBtn');
     if (applyFiltersBtn) {

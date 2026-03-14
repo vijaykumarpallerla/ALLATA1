@@ -266,3 +266,53 @@ UPDATE: 14/03/2026
   - Standardized the main company logo links globally to point to the root / URL for clean navigation.
   - Integrated high-quality WhatsApp and LinkedIn social icons into the footer of all 20+ HTML template files.
   - Added hover-effect styling in styles.css (WhatsApp Green/LinkedIn Blue) with FontAwesome integration to drive community engagement and professional credibility.
+
+- **Mobile Viewport Enhancement (Filters):** 
+  - Fixed a critical UX issue where the job filters sidebar was inaccessible on mobile devices (hidden at <992px).
+  - Engineered a custom **Mobile Filter Toggle** button that appears only on tablet/mobile screens.
+  - Added CSS animations (slideDown) and JavaScript state management to toggle the .sidebar.active class, allowing users to expand/collapse filters seamlessly without jumping down the page.
+  - Optimized the sidebar for mobile by forcing it to 100% width and disabling sticky positioning of the ilter-card when active, ensuring it flows naturally with the mobile viewport.
+
+- **Legal Terms Update (Job Enhancement Rights):** 
+  - Updated 	erms.html to include a new Section 1: "Job Enhancement & Expert Insights."
+  - Explicitly stated that ALL AT A1 reserves the right to enrich all recruiter-submitted jobs with expert technical analysis (Top 3 Skills, Interview Prep, Resume Optimization, etc.).
+  - Added a "Strict Requirement" clause: Employers must agree to these expert-curated value-adds to use the platform, ensuring the high-quality reputation of the portal is maintained.
+
+- **Legal Terms Numbering Fix:** 
+  - Restored "Acceptance of Terms" as **Section 1**.
+  - Re-positioned the "Job Enhancement & Expert Insights" as **Section 10**.
+  - Set "Contact Us" as the final **Section 11**.
+
+- **Privacy Policy Update:** 
+  - Removed Section 3: "Cookies and Google AdSense" from privacy.html.
+  - Replaced it with a transparent Section 3: "Cookies and Analytics" which avoids mentioning AdSense since it's not yet active.
+  - Updated the "Last Updated" date to March 14, 2026.
+
+- **Privacy Policy Cleanup (Minimalism):** 
+  - Substantially stripped down privacy.html to match the platform's non-login, non-tracking nature.
+  - Removed all references to: Cookies, Google AdSense, reCAPTCHA, and GDPR/CCPA data editing rights.
+  - Clearly stated that: No user accounts are required, no personal data is stored, and no third-party tracking is utilized.
+
+- **Privacy Policy Expansion (Blogs & Data Integrity):** 
+  - Further refined privacy.html to address educational content (Blogs/Student resources).
+  - Added a strict **"No Selling or Sharing"** commitment across two key areas:
+    - **Contact Us:** Guaranteed that names/emails from general inquiries are never sold to marketing agencies.
+    - **Recruiter Data:** Guaranteed that recruiter email IDs and professional details from job postings are never shared with third-party apps or links.
+  - Positioned the platform as a secure, open-access resource that respects the privacy of its student audience.
+
+- **Legal Terms Expansion (Educational Content):** 
+  - Substantially upgraded 	erms.html to reflect the platform's role as a Career Hub & Educational Platform.
+  - **Section 2 Re-design:** Broadened the "Nature of Service" to include Student Resources (roadmaps, technical guides) and Tech Insights (Blogs).
+  - **New Section 4 (Intellectual Property):** Added clear protection for original blog content and guide metaphors, prohibiting commercial reproduction.
+  - **Refined Section 6 & 9 (Usage):** Explicitly prohibited the scraping of blog posts and educational roadmaps to protect the site's unique content.
+
+- **Final T&C Architecture (13 Points):** 
+  - Substantially polished 	erms.html to combine the aggregate job search engine patterns with the new educational roadmap protections.
+  - **Restored Expert Enhancement List (Section 10):** Re-injected the detailed bullet points for Job Summary, Skills Tables, Interview Prep, Resume Optimization, Application Strategy, and Career Roadmaps.
+  - **New Mandatory Policy (Section 11):** Explicitly stated that these enhancements are non-negotiable for recruiters using the platform.
+  - **Clean Numbering:** Document now flows from **1. Acceptance of Terms** to **13. Contact Us**, seamlessly integrating Students and Blogs in between.
+
+- **T&C Refinement (Recruiter Rights):** 
+  - Merged Section 11 into Section 10 to create a singular, comprehensive "Job Enhancement" clause.
+  - Specifically targeted recruiters with the warning: "If you are not comfortable with your job listing being enriched... please do not use our services."
+  - Streamlined the document to 12 logically ordered points, ensuring "Contact Us" remains the final anchor (Section 12).

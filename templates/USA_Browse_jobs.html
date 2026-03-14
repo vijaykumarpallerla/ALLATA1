@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -67,9 +67,17 @@
 
     <!-- Main Content -->
     <main class="container" id="jobs">
+        <!-- Mobile Filter Toggle -->
+        <div class="mobile-filter-container">
+            <button class="btn btn-outline" id="mobileFilterBtn" style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 1rem; margin-bottom: 1rem;">
+                <span><i class="fas fa-filter"></i> Show Filters</span>
+                <i class="fas fa-chevron-down" id="filterChevron"></i>
+            </button>
+        </div>
+
         <div class="content-wrapper">
             <!-- Sidebar Filters -->
-            <aside class="sidebar">
+            <aside class="sidebar" id="sidebar">
                 <div class="filter-card">
                     <h3>Filters</h3>
 
