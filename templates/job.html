@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -135,7 +135,7 @@
 
         select.form-control {
             appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
             background-repeat: no-repeat;
             background-position: right 1.2rem center;
             background-size: 1.2em;
@@ -143,6 +143,42 @@
 
         .form-group label span {
             color: #ef4444;
+        }
+
+        .terms-group {
+            margin: 1.5rem 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            text-align: left;
+        }
+
+        .terms-group input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            min-width: 22px;
+            margin-top: 3px;
+            cursor: pointer;
+            accent-color: var(--primary-color);
+        }
+
+        .terms-group label {
+            font-size: 1rem !important;
+            font-weight: 500 !important;
+            color: var(--text-muted);
+            line-height: 1.5;
+            cursor: pointer;
+            margin-bottom: 0 !important;
+        }
+
+        .terms-group label a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .terms-group label a:hover {
+            text-decoration: underline;
         }
 
         @media (max-width: 768px) {
@@ -259,6 +295,13 @@
                             placeholder="e.g. jobs@company.com or https://..." required>
                     </div>
 
+                    <div class="terms-group">
+                        <input type="checkbox" id="agreeTerms" required>
+                        <label for="agreeTerms">
+                            I agree to the <a href="terms.html" target="_blank">Terms and Conditions</a> and acknowledge that ALL AT A1 has the right to enhance my job posting with expert insights. <span>*</span>
+                        </label>
+                    </div>
+
                     <button type="submit" class="btn btn-primary btn-block">Submit Job <i
                             class="fas fa-paper-plane"></i></button>
                 </form>
@@ -348,6 +391,12 @@
 
             if (form) {
                 form.addEventListener('submit', async function (e) {
+                    // Check checkbox manually if needed, though 'required' attribute handles it
+                    const agreeTerms = document.getElementById('agreeTerms');
+                    if (!agreeTerms || !agreeTerms.checked) {
+                        return; // Let browser handle the validation message
+                    }
+
                     e.preventDefault();
 
                     const title = document.getElementById('jobTitle').value;

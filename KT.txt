@@ -316,3 +316,23 @@ UPDATE: 14/03/2026
   - Merged Section 11 into Section 10 to create a singular, comprehensive "Job Enhancement" clause.
   - Specifically targeted recruiters with the warning: "If you are not comfortable with your job listing being enriched... please do not use our services."
   - Streamlined the document to 12 logically ordered points, ensuring "Contact Us" remains the final anchor (Section 12).
+
+- **Automated Recruiter Job Enhancement (14-03-2026):** 
+  - **Key Separation:** Dedicated 'Recruiter' keys (Vardhan, Charan, Vishnu, Vidyadhar, Santhosh) now handle all public UI submissions. 'Admin' keys (Vivek, Vijay) are reserved for backend tools.
+  - **Instant Transformation:** The /api/submit-job route now automaticallyModerates AND Enhances every approved job post.
+  - **Career Guide Integration:** Publicly posted jobs are now automatically converted into high-value Career Guides (Job Summary, Skills Tables, Interview Prep, Resume Keywords, Roadmaps).
+  - **UI Interaction:** Updated success message to: "Job is Done and the Job will be Shown in the UI in 5 minutes."
+  - **Legal Compliance:** Integrated the required T&C checkbox in job.html to ensure recruiters agree to this transformation.
+
+- **Async Job Enrichment Architecture (14-03-2026):** 
+  - **Fast Submission:** Moved AI enrichment to a background thread (ackground_enrich_job) to prevent UI hanging.
+  - **Instant Feedback:** Users now receive a success message in ~1 second after the moderation check passes.
+  - **Background Polishing:** The system silently rewrites the JD in the background while the user sees the "Posted in 5 minutes" confirmation.
+  - **Threading Context:** Used Flask pp_context() to allow background threads to safely perform database commits outside the main request cycle.
+
+- **Bulk Cleanup by Date (14-03-2026):** 
+  - **New Admin Feature:** Added a "BY DATE" tab in the Admin Jobs section.
+  - **Unique Date Scanner:** Specialized backend logic automatically identifies every unique date string present in the non-AI job collection.
+  - **Three-Dots Menu:** Each date row features a professional dropdown menu with a "Delete" option.
+  - **Central Confirmation:** Triggering a delete opens a center-aligned modal (OK/Cancel) to confirm the bulk action.
+  - **Preservation Logic:** Deleting jobs by date ONLY removes standard/scraped jobs. Your 'Algorithm' jobs and specifically posted jobs are protected and will never be accidentally deleted.

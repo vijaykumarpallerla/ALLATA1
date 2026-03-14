@@ -14,7 +14,7 @@ import difflib
 load_dotenv()
 
 import logging
-from Algorithm import moderate_job_post
+from Algorithm import moderate_job_post, enhance_job_post
 from adminpost import call_with_rotation
 
 ADMIN_PATH = os.environ.get('ADMIN_PATH', 'admin')
@@ -467,6 +467,34 @@ def api_jobs():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
+def background_enrich_job(job_id, title, company, location, description, raw_experience):
+    """Refines the job posting with AI in the background after the user has submitted."""
+    with app.app_context():
+        try:
+            print(f"[Background Task] Starting enrichment for Job ID: {job_id}")
+            full_jd_raw = f"{title}\n{company}\n{location}\n{description}"
+            ai_result_raw = enhance_job_post(full_jd_raw)
+            
+            if ai_result_raw:
+                ai_data = json.loads(ai_result_raw)
+                job = Job.query.get(job_id)
+                if job:
+                    # Update the job with AI-polished content
+                    job.title = str(ai_data.get('title', job.title))[:200]
+                    raw_co = (ai_data.get('company') or '').strip()
+                    job.company = "Not Disclosed" if (not raw_co or raw_co.lower() == 'confidential' or not raw_co) else raw_co[:200]
+                    job.location = str(ai_data.get('location', job.location))[:200]
+                    job.description = ai_data.get('description', job.description)
+                    job.experience = str(ai_data.get('experience', raw_experience))[:200]
+                    
+                    db.session.commit()
+                    print(f"[Background Task] Success: Job {job_id} has been enhanced.")
+            else:
+                print(f"[Background Task] Failed: AI returned no result for Job {job_id}.")
+        except Exception as e:
+            db.session.rollback()
+            print(f"[Background Task] Error during enrichment for Job {job_id}: {e}")
+
 @app.route('/api/submit-job', methods=['POST'])
 def api_submit_job():
     data = request.json
@@ -503,21 +531,36 @@ def api_submit_job():
                 "message": "Your job posting has been received and is currently Pending Approval by our admin team."
             }), 202
             
+        # 🛡️ Step 1: Create the initial job entry immediately (Fast)
+        raw_exp = data.get('experience', 'Not specified')
         new_job = Job(
             title=title,
             company=company,
             location=location,
             job_type=data.get('job_type', 'Full-time'),
-            experience=data.get('experience', 'Not specified'),  # Maps to skills
+            experience=raw_exp,
             salary=data.get('salary', 'Competitive'),
             posted=datetime.now(timezone(timedelta(hours=-5), 'EST')).strftime("%d/%m/%Y EST"),
             description=description,
             apply_url=data.get('apply_url', ''),
-            is_algorithm=True # Marks that it was passed through Algorithm.py via UI
+            is_algorithm=True 
         )
         db.session.add(new_job)
         db.session.commit()
-        return jsonify({"status": "success", "message": f"Job '{new_job.title}' has been successfully submitted!"})
+
+        # 🚀 Step 2: Start background enrichment (Silent)
+        # This runs in the background while the user sees the success message
+        threading.Thread(
+            target=background_enrich_job, 
+            args=(new_job.id, title, company, location, description, raw_exp),
+            daemon=True
+        ).start()
+
+        # 🏁 Step 3: Return instant success message
+        return jsonify({
+            "status": "success", 
+            "message": "Job is Done and the Job will be Shown in the UI in 5 minutes."
+        })
     except Exception as e:
         db.session.rollback()
         return jsonify({"status": "error", "message": str(e)}), 500
@@ -803,6 +846,37 @@ def delete_admin_job(job_id):
         db.session.delete(job)
         db.session.commit()
         return jsonify({"status": "success"})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route('/api/admin/job-dates', methods=['GET'])
+@admin_required
+def get_job_dates():
+    try:
+        # Get unique dates and count of ALL jobs for each date (including AI ones)
+        from sqlalchemy import func
+        results = db.session.query(
+            Job.posted, 
+            func.count(Job.id)
+        ).group_by(Job.posted).all()
+        
+        dates = [{"date": r[0], "count": r[1]} for r in results]
+        return jsonify({"status": "success", "dates": dates})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route('/api/admin/jobs/delete-by-date', methods=['DELETE'])
+@admin_required
+def delete_jobs_by_date():
+    date_str = request.args.get('date')
+    if not date_str:
+        return jsonify({"status": "error", "message": "Date parameter is required"}), 400
+    try:
+        # Delete ALL jobs for the given date (AI and regular)
+        deleted_count = Job.query.filter_by(posted=date_str).delete()
+        db.session.commit()
+        return jsonify({"status": "success", "deleted_count": deleted_count})
     except Exception as e:
         db.session.rollback()
         return jsonify({"status": "error", "message": str(e)}), 500

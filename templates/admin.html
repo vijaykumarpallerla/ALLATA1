@@ -656,16 +656,16 @@
     <script>
         let messageToDeleteId = null;
 
-        function toggleDropdown(event, index) {
+        function toggleDropdown(event, id) {
             event.stopPropagation();
 
             // Close all other dropdowns
             document.querySelectorAll('.action-dropdown').forEach(d => {
-                if (d.id !== `dropdown-${index}`) d.classList.remove('active');
+                if (d.id !== `dropdown-${id}`) d.classList.remove('active');
             });
 
-            const dropdown = document.getElementById(`dropdown-${index}`);
-            dropdown.classList.toggle('active');
+            const dropdown = document.getElementById(`dropdown-${id}`);
+            if (dropdown) dropdown.classList.toggle('active');
         }
 
         function openDeleteModal(event, id) {
@@ -970,7 +970,46 @@
                             return;
                         }
 
-                        let tableHTML = `
+                        let dateCleanupHTML = '';
+                        if (mode === 'all') {
+                            try {
+                                const dateRes = await fetch('/api/admin/job-dates');
+                                const dateData = await dateRes.json();
+                                if (dateData.status === 'success' && dateData.dates.length > 0) {
+                                    dateCleanupHTML = `
+                                        <div style="margin-bottom: 2rem; max-width: 400px;">
+                                            <label style="display: block; font-weight: 700; color: var(--ext-dark, #203a45); margin-bottom: 0.6rem; font-size: 1.1rem;">Cleanup By Date <span style="color: #ef4444;">*</span></label>
+                                            <div style="position: relative;">
+                                                <div id="date-cleanup-trigger" onclick="toggleDropdown(event, 'main-cleanup')" style="display: flex; align-items: center; justify-content: space-between; background: #fff; border: 1.5px solid #d1d5db; padding: 12px 18px; border-radius: 10px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: border-color 0.2s; user-select: none;" onmouseover="this.style.borderColor='#9ca3af'" onmouseout="this.style.borderColor='#d1d5db'">
+                                                    <span style="color: #4b5563; font-size: 1rem;">Select a date to delete</span>
+                                                    <i class="fas fa-chevron-down" style="font-size: 0.9rem; color: #1f2937;"></i>
+                                                </div>
+
+                                                <div class="action-dropdown" id="dropdown-main-cleanup" style="top: calc(100% + 5px); left: 0; right: 0; min-width: 100%; padding: 0.4rem; max-height: 350px; overflow-y: auto; border: 1.5px solid #d1d5db; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); background: #fff; z-index: 1000;">
+                                    `;
+                                    dateData.dates.forEach((d, idx) => {
+                                        dateCleanupHTML += `
+                                            <div class="action-dropdown-item" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; border-radius: 8px; margin-bottom: 2px; border: none; transition: background 0.2s;" onmouseover="this.style.background='#f3f4f6';" onmouseout="this.style.background='transparent';">
+                                                <div style="display: flex; flex-direction: column;">
+                                                    <span style="font-weight: 600; color: #111827; font-size: 0.95rem;">${d.date}</span>
+                                                    <span style="font-size: 0.75rem; color: #6b7280;">${d.count} Jobs</span>
+                                                </div>
+                                                <div style="display: flex; align-items: center; gap: 8px;">
+                                                    <button onclick="event.stopPropagation(); window.confirmDeleteByDate('${d.date}', ${d.count})" style="background: transparent; color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); padding: 5px 10px; border-radius: 6px; font-weight: 600; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: all 0.2s;" onmouseover="this.style.background='#ef4444'; this.style.color='#fff';" onmouseout="this.style.background='transparent'; this.style.color='#ef4444';">
+                                                        <i class="fas fa-trash-alt"></i> Delete
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        `;
+                                    });
+                                    dateCleanupHTML += `</div></div></div>`;
+                                }
+                            } catch (e) {
+                                console.error("Error loading cleanup dates", e);
+                            }
+                        }
+
+                        let tableHTML = dateCleanupHTML + `
                             <table class="message-table" style="width: 100%;">
                                 <thead>
                                     <tr>
@@ -1038,6 +1077,18 @@
                     contentArea.innerHTML = `<p style="color: red;">Failed to connect to the server.</p>`;
                     console.error("Error fetching jobs:", error);
                 }
+            };
+
+            window.confirmDeleteByDate = (date, count) => {
+                document.getElementById('deleteModal').classList.add('active');
+                document.querySelector('.delete-modal-text').innerHTML = `Are you sure you want to permanently delete <strong>all ${count} jobs</strong> posted on <strong>${date}</strong>? <br><br> (This will remove everything from this day in the "All Jobs" tab).`;
+                
+                // Track special delete type
+                window.bulkDeleteDate = date;
+                currentDeleteType = 'bulk-date';
+                
+                // Close dropdown
+                document.querySelectorAll('.action-dropdown').forEach(d => d.classList.remove('active'));
             };
 
             // Sidebar Event Listener links directly to 'all' subtab
@@ -1276,6 +1327,23 @@
             });
 
             document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
+                if (currentDeleteType === 'bulk-date') {
+                    const dateStr = window.bulkDeleteDate;
+                    try {
+                        const res = await fetch(`/api/admin/jobs/delete-by-date?date=${encodeURIComponent(dateStr)}`, { method: 'DELETE' });
+                        const data = await res.json();
+                        if (data.status === 'success') {
+                            deleteModal.classList.remove('active');
+                            window.loadManageJobs('all'); // Refresh the view
+                        } else {
+                            alert("Error: " + data.message);
+                        }
+                    } catch (e) {
+                        alert("Failed to communicate with server.");
+                    }
+                    return;
+                }
+
                 if (!messageToDeleteId) return;
 
                 try {
@@ -1441,7 +1509,7 @@
         window.approveAndPostJob = async (btnId) => {
             const btn = document.getElementById(btnId);
             const originalText = btn.innerHTML;
-            
+
             // Read possibly EDITED values from the contenteditable divs
             const jobData = window[`jobData_${btnId}`];
             jobData.title = document.getElementById(`edit-title-${btnId}`).innerText.trim();
