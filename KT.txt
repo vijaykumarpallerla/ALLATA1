@@ -240,3 +240,29 @@ UPDATE: 13/03/2026
   - **Polyglot Coding Blueprints:** Integrated localized code snippets for Python (`map(int, input().split())`) and Java (`Scanner sc`), providing a single-source-of-truth for students to handle complex TCS standard I/O streams.
   - **Pattern Mapping:** Documented the 20 most frequent coding patterns (e.g., Longest Equal Binary Subarray, Stock Buy Sell, Anagram Indices) mapped to their specific algorithmic solutions (Sliding Window, Prefix Sum, etc.).
   - **Paper Prediction Engine:** Added a predictive breakdown of Part A (Foundation) vs. Part B (Advanced) thresholds to drive higher user retention and "Time on Page" metrics.
+
+
+
+==============================================================================
+UPDATE: 14/03/2026 
+==============================================================================
+
+- **AI Force-Sanitization ("Not Disclosed"):** 
+  - Permanently solved the "Confidential" company name bug. Replaced all fallback labels with the user-preferred "Not Disclosed" string globally.
+  - **Backend Hard-Rule:** Added a Python-level safety net in app.py that intercepts AI responses. If the model returns "Confidential" or an empty string, the server forcefully overwrites it to "Not Disclosed" before it ever reaches the user's browser.
+  - **Prompt Engineering:** Rewrote the SYSTEM_PROMPT in adminpost.py with an ultra-strict constraint: "DO NOT use 'Confidential'. IF NO COMPANY IS MENTIONED, you MUST USE exactly 'Not Disclosed'."
+
+- **Interactive AI Job Preview (Admin Dashboard):**
+  - Upgraded the Admin AI Poster with "Real-time Manual Correction." Every field in the generated job preview (Title, Company, Location, Type, Experience, Salary, and Apply URL) is now contenteditable="true".
+  - Admins can now simply click and type directly on the AI's generated card to fix typos, add missing links, or perfect formatting manually before clicking APPROVE & POST.
+  - Engineered the JavaScript approveAndPostJob function to capture these manual edits from the DOM, guaranteeing that the final database entry reflects the admin's human corrections.
+
+- **Smart "Fuzzy" Search Engine:**
+  - Upgraded the Browse Jobs search from a simple "Exact Match" system to a high-intelligence Fuzzy Matching engine using Python's difflib.SequenceMatcher. 
+  - The search bar now gracefully handles user typos and abbreviations (e.g., searching for "Jav Develper" or "Artifical Ebnginear" will successfully find "Java Developer" or "Artificial Intelligence Engineer").
+  - Set a 60% similarity threshold to balance between finding typos and maintaining relevant results, significantly improving the UX for mobile users who frequentley make input errors.
+
+- **Global Footer Consistency:**
+  - Standardized the main company logo links globally to point to the root / URL for clean navigation.
+  - Integrated high-quality WhatsApp and LinkedIn social icons into the footer of all 20+ HTML template files.
+  - Added hover-effect styling in styles.css (WhatsApp Green/LinkedIn Blue) with FontAwesome integration to drive community engagement and professional credibility.

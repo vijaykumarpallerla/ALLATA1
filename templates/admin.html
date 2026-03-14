@@ -1381,6 +1381,12 @@
                     const job = data.guide;
                     const htmlResponse = marked.parse(job.description);
 
+                    // Sanitize Company from AI immediately so preview is correct
+                    let rawCompany = (job.company || '').trim();
+                    if (!rawCompany || rawCompany.toLowerCase() === 'confidential') {
+                        job.company = 'Not Disclosed';
+                    }
+
                     // Create a unique ID for the button to disable it after clicking
                     const uniqueJobId = 'job-post-btn-' + Date.now();
 
@@ -1395,14 +1401,18 @@
                             </button>
                         </div>
                         
+                        <div style="background: rgba(33, 150, 243, 0.05); padding: 0.8rem; border-radius: 6px; margin-bottom: 1.5rem; font-size: 0.85rem; border: 1px solid rgba(33, 150, 243, 0.2); color: var(--primary-dark);">
+                            <strong>Tip:</strong> You can click on any field below (Title, Company, URL, etc.) to <strong>edit it manually</strong> before posting if AI missed anything!
+                        </div>
+                        
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; background: var(--bg-body); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
-                            <div><strong style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Job Title</strong><div style="font-weight: 600; font-size: 1.1rem;">${job.title}</div></div>
-                            <div><strong style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Company</strong><div>${job.company}</div></div>
-                            <div><strong style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Location</strong><div>${job.location}</div></div>
-                            <div><strong style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Type</strong><div>${job.job_type}</div></div>
-                            <div><strong style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Experience</strong><div>${job.experience}</div></div>
-                            <div><strong style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Salary</strong><div>${job.salary}</div></div>
-                            <div style="grid-column: 1 / -1;"><strong style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Apply URL / Email</strong><div style="color: var(--primary-color); word-break: break-all;">${job.apply_url || '<em>None found</em>'}</div></div>
+                            <div><strong style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Job Title</strong><div id="edit-title-${uniqueJobId}" contenteditable="true" style="font-weight: 600; font-size: 1.1rem; border: 1px solid transparent; padding: 2px; border-radius: 4px;" onfocus="this.style.background='#fff'; this.style.borderColor='var(--primary-color)'" onblur="this.style.background='transparent'; this.style.borderColor='transparent'">${job.title}</div></div>
+                            <div><strong style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Company</strong><div id="edit-company-${uniqueJobId}" contenteditable="true" style="border: 1px solid transparent; padding: 2px; border-radius: 4px;" onfocus="this.style.background='#fff'; this.style.borderColor='var(--primary-color)'" onblur="this.style.background='transparent'; this.style.borderColor='transparent'">${job.company}</div></div>
+                            <div><strong style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Location</strong><div id="edit-location-${uniqueJobId}" contenteditable="true" style="border: 1px solid transparent; padding: 2px; border-radius: 4px;" onfocus="this.style.background='#fff'; this.style.borderColor='var(--primary-color)'" onblur="this.style.background='transparent'; this.style.borderColor='transparent'">${job.location}</div></div>
+                            <div><strong style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Type</strong><div id="edit-type-${uniqueJobId}" contenteditable="true" style="border: 1px solid transparent; padding: 2px; border-radius: 4px;" onfocus="this.style.background='#fff'; this.style.borderColor='var(--primary-color)'" onblur="this.style.background='transparent'; this.style.borderColor='transparent'">${job.job_type}</div></div>
+                            <div><strong style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Experience</strong><div id="edit-exp-${uniqueJobId}" contenteditable="true" style="border: 1px solid transparent; padding: 2px; border-radius: 4px;" onfocus="this.style.background='#fff'; this.style.borderColor='var(--primary-color)'" onblur="this.style.background='transparent'; this.style.borderColor='transparent'">${job.experience}</div></div>
+                            <div><strong style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Salary</strong><div id="edit-salary-${uniqueJobId}" contenteditable="true" style="border: 1px solid transparent; padding: 2px; border-radius: 4px;" onfocus="this.style.background='#fff'; this.style.borderColor='var(--primary-color)'" onblur="this.style.background='transparent'; this.style.borderColor='transparent'">${job.salary}</div></div>
+                            <div style="grid-column: 1 / -1;"><strong style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Apply URL / Email</strong><div id="edit-apply-${uniqueJobId}" contenteditable="true" style="color: var(--primary-color); word-break: break-all; border: 1px solid transparent; padding: 2px; border-radius: 4px;" onfocus="this.style.background='#fff'; this.style.borderColor='var(--primary-color)'" onblur="this.style.background='transparent'; this.style.borderColor='transparent'">${job.apply_url || ''}</div></div>
                         </div>
 
                         <div style="border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
@@ -1431,11 +1441,20 @@
         window.approveAndPostJob = async (btnId) => {
             const btn = document.getElementById(btnId);
             const originalText = btn.innerHTML;
+            
+            // Read possibly EDITED values from the contenteditable divs
+            const jobData = window[`jobData_${btnId}`];
+            jobData.title = document.getElementById(`edit-title-${btnId}`).innerText.trim();
+            jobData.company = document.getElementById(`edit-company-${btnId}`).innerText.trim();
+            jobData.location = document.getElementById(`edit-location-${btnId}`).innerText.trim();
+            jobData.job_type = document.getElementById(`edit-type-${btnId}`).innerText.trim();
+            jobData.experience = document.getElementById(`edit-exp-${btnId}`).innerText.trim();
+            jobData.salary = document.getElementById(`edit-salary-${btnId}`).innerText.trim();
+            jobData.apply_url = document.getElementById(`edit-apply-${btnId}`).innerText.trim();
+
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Posting...';
             btn.disabled = true;
             btn.style.opacity = '0.7';
-
-            const jobData = window[`jobData_${btnId}`];
 
             try {
                 const res = await fetch('/api/admin/post_generated_job', {

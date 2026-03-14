@@ -24,12 +24,12 @@ The user will provide a raw Job Description text. Your task is to extract job me
 
 You MUST return a valid JSON object with the following keys and values:
 - "title": The extracted Job title.
-- "company": The company name (if not found, guess or use "Confidential").
+- "company": The EXACT company name. IF NO COMPANY IS MENTIONED, you MUST USE the exact phrase "Not Disclosed". DO NOT use "Confidential". DO NOT guess or hallucinate.
 - "location": The extracted Job location.
 - "job_type": e.g., "Full-time", "Contract", "Remote", etc.
 - "experience": Brief summary of required experience/skills (MAX 100 characters. e.g., "5+ years, Java").
 - "salary": The extracted salary or "Competitive".
-- "apply_url": Any email address or URL found in the text for applying. (If none found, leave empty string "")
+- "apply_url": The primary URL or email address found in the text for applying. Look specifically for links following keywords like "Apply Here:", "Link:", "LinkedIn:", or "Application:". NEVER omit an application URL if one is present. If multiple are found, pick the most direct one. If none found, leave as empty string "".
 - "description": The rewritten, unique Career Guide in Markdown format.
 
 The "description" string MUST follow this EXACT sequence and Markdown structure. ALWAYS use `#` for H1 headings where specified below:

@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timezone, timedelta
 from authlib.integrations.flask_client import OAuth
+import difflib
 
 load_dotenv()
 
@@ -17,6 +18,47 @@ from Algorithm import moderate_job_post
 from adminpost import call_with_rotation
 
 ADMIN_PATH = os.environ.get('ADMIN_PATH', 'admin')
+
+def is_fuzzy_search_match(search_query, *target_texts, threshold=0.60):
+    """
+    Checks if a search_query matches any of the target_texts with some fuzziness.
+    Handles 'Java Developr' matching 'Java Developer'.
+    """
+    # Normalize query
+    q = search_query.strip().lower()
+    if not q: return True
+    
+    q_words = [w for w in q.split() if len(w) >= 2]
+    if not q_words:
+        # If query is a single character, just do exact check
+        for text in target_texts:
+            if q in text.lower(): return True
+        return False
+        
+    for text in target_texts:
+        t = text.lower()
+        if q in t: return True # Exact substring match
+        
+        # Check if individual words are close
+        t_words = t.split()
+        match_count = 0
+        for qw in q_words:
+            # Substring exact check first
+            if qw in t:
+                match_count += 1
+                continue
+            
+            # Fuzzy check against each word in the text
+            for tw in t_words:
+                if difflib.SequenceMatcher(None, qw, tw).ratio() >= threshold:
+                    match_count += 1
+                    break
+        
+        # If most words match, we call it a hit
+        if match_count >= len(q_words):
+            return True
+            
+    return False
 
 # Hide Secret Admin Link from Console Logs
 class HideAdminLinkFilter(logging.Filter):
@@ -114,6 +156,20 @@ with app.app_context():
     except Exception as e:
         print(f"[DB Migration] Skipped (likely already exists): {e}")
 
+    # ── Data Fix: rename 'Confidential' / blank company to 'Not Disclosed' ──
+    try:
+        from sqlalchemy import text
+        with db.engine.connect() as conn:
+            result = conn.execute(text(
+                "UPDATE job SET company = 'Not Disclosed' "
+                "WHERE company = 'Confidential' OR company = '' OR company IS NULL"
+            ))
+            conn.commit()
+            if result.rowcount > 0:
+                print(f"[DB Migration] Updated {result.rowcount} job(s): company set to 'Not Disclosed'.")
+    except Exception as e:
+        print(f"[DB Migration] Company name fix skipped: {e}")
+
 import json
 
 @app.route('/')
@@ -188,12 +244,8 @@ def usa_jobs_page():
                 
             search_match = True
             if search_query:
-                # Search across title, company, and skills (experience)
-                search_match = (
-                    search_query in job.title.lower() or 
-                    search_query in job.company.lower() or 
-                    search_query in job.experience.lower()
-                )
+                # Fuzzy search across title, company, and skills (experience)
+                search_match = is_fuzzy_search_match(search_query, job.title, job.company, job.experience)
                 
             loc_match = True
             if location_query:
@@ -371,7 +423,7 @@ def api_jobs():
                 # even if the scraping script misspells a key or forgets one!
                 new_job = Job(
                     title=job_data.get('title') or 'Unknown Title',
-                    company=job_data.get('company') or 'Unknown Company',
+                    company=job_data.get('company') or 'Not Disclosed',
                     location=job_data.get('location') or 'Location not specified',
                     job_type=job_data.get('job_type') or job_data.get('type') or 'Full-time',
                     experience=job_data.get('experience') or 'Not specified',
@@ -420,7 +472,7 @@ def api_submit_job():
     data = request.json
     try:
         title = data.get('title', 'Unknown Title')
-        company = data.get('company', 'Unknown Company')
+        company = data.get('company') or 'Not Disclosed'
         location = data.get('location', 'Location not specified')
         description = data.get('description', 'No description provided.')
         
@@ -767,6 +819,12 @@ def generate_career_guide():
         result = call_with_rotation(jd_text)
         if result:
             parsed_result = json.loads(result)
+            
+            # Force sanitization directly on the backend before even sending to the browser
+            raw_company = (parsed_result.get('company') or '').strip()
+            if not raw_company or raw_company.lower() == 'confidential':
+                parsed_result['company'] = 'Not Disclosed'
+
             return jsonify({"status": "success", "guide": parsed_result})
         else:
             return jsonify({"status": "error", "message": "All API keys failed or rate limits exceeded."}), 500
@@ -780,10 +838,16 @@ def generate_career_guide():
 def post_generated_job():
     data = request.json
     try:
+        # Sanitize company name — replace AI fallbacks like "Confidential" with "Not Disclosed"
+        raw_company = (data.get('company') or '').strip()
+        if not raw_company or raw_company.lower() == 'confidential':
+            raw_company = 'Not Disclosed'
+
         new_job = Job(
             title=str(data.get('title', 'Unknown Title'))[:200],
-            company=str(data.get('company', 'Unknown Company'))[:200],
+            company=raw_company[:200],
             location=str(data.get('location', 'Location not specified'))[:200],
+
             job_type=str(data.get('job_type', 'Full-time'))[:100],
             experience=str(data.get('experience', 'Not specified'))[:100],
             salary=str(data.get('salary', 'Competitive'))[:100],
