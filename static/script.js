@@ -19,9 +19,6 @@ function generateJobCard(job) {
                         <span class="company-name">${job.company}</span>
                     </div>
                 </div>
-                <button class="job-save" aria-label="Save job" onclick="toggleSave(this)">
-                    <i class="far fa-bookmark"></i>
-                </button>
             </div>
             
             <div class="job-details">
@@ -137,7 +134,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         mobileFilterBtn.addEventListener('click', () => {
             sidebar.classList.toggle('active');
             const isActive = sidebar.classList.contains('active');
-            
+
             // Update button text and icon
             if (isActive) {
                 mobileFilterBtn.querySelector('span').innerHTML = '<i class="fas fa-filter"></i> Hide Filters';
@@ -208,18 +205,6 @@ function applyFilters() {
 }
 
 // Interactive functions
-window.toggleSave = function (btn) {
-    const icon = btn.querySelector('i');
-    if (icon.classList.contains('far')) {
-        icon.classList.remove('far');
-        icon.classList.add('fas');
-        btn.style.color = 'var(--primary-color)';
-    } else {
-        icon.classList.remove('fas');
-        icon.classList.add('far');
-        btn.style.color = 'var(--text-muted)';
-    }
-};
 
 window.applyJob = function (title) {
     alert("You have started applying for the '" + title + "' position. Good luck!");

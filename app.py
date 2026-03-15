@@ -293,9 +293,6 @@ def usa_jobs_page():
                             <span class="company-name">{job.company}</span>
                         </div>
                     </div>
-                    <button class="job-save" aria-label="Save job" onclick="event.stopPropagation(); toggleSave(this)">
-                        <i class="far fa-bookmark"></i>
-                    </button>
                 </div>
                 
                 <div class="job-details">
