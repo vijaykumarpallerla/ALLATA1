@@ -10,6 +10,8 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timezone, timedelta
 from authlib.integrations.flask_client import OAuth
 import difflib
+import requests
+import json
 
 load_dotenv()
 
@@ -937,6 +939,56 @@ def post_generated_job():
     except Exception as e:
         db.session.rollback()
         return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route('/api/admin/ai-keys', methods=['GET'])
+@admin_required
+def get_ai_keys():
+    # Define the key mapping
+    key_groups = {
+        "Admin Keys": ["Vivek_Key_1", "Vivek_Key_2", "Vivek_Key_3", "Vivek_Key_4", "Vijay_Key_1", "Vijay_Key_2", "Vijay_Key_3", "Vijay_Key_4"],
+        "Public Keys": ["Vardhan_API_Key", "Charan_API_Key", "Vishnu_API_Key", "Vidyadhar_API_Key", "Santhosh_API_Key"],
+        "Backup Keys": ["Yashi_Key_1", "Yashi_Key_2"]
+    }
+    
+    response_keys = []
+    for group, names in key_groups.items():
+        for name in names:
+            key_val = os.environ.get(name)
+            if key_val:
+                response_keys.append({
+                    "name": name,
+                    "use": group.replace(" Keys", ""),
+                    "status": "Pending" 
+                })
+    return jsonify({"status": "success", "keys": response_keys})
+
+@app.route('/api/admin/check-ai-key', methods=['POST'])
+@admin_required
+def check_ai_key():
+    data = request.json
+    key_name = data.get('key_name')
+    if not key_name:
+        return jsonify({"status": "error", "message": "Key name missing"}), 400
+        
+    api_key = os.environ.get(key_name)
+    if not api_key:
+        return jsonify({"status": "error", "message": "Key not found in environment"}), 404
+        
+    # Test the key by making a minimal request to Groq
+    url = "https://api.groq.com/openai/v1/models"
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json"
+    }
+    
+    try:
+        resp = requests.get(url, headers=headers, timeout=5)
+        if resp.status_code == 200:
+            return jsonify({"status": "success", "key_status": "Active"})
+        else:
+            return jsonify({"status": "success", "key_status": "Invalid", "error": f"HTTP {resp.status_code}"})
+    except Exception as e:
+        return jsonify({"status": "success", "key_status": "Invalid", "error": str(e)})
 
 @app.errorhandler(404)
 def page_not_found(e):

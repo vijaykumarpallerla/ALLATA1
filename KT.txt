@@ -336,3 +336,20 @@ UPDATE: 14/03/2026
   - **Three-Dots Menu:** Each date row features a professional dropdown menu with a "Delete" option.
   - **Central Confirmation:** Triggering a delete opens a center-aligned modal (OK/Cancel) to confirm the bulk action.
   - **Preservation Logic:** Deleting jobs by date ONLY removes standard/scraped jobs. Your 'Algorithm' jobs and specifically posted jobs are protected and will never be accidentally deleted.
+
+==========================================================================
+16-03-2026
+==========================================================================
+
+- **Admin Dashboard UI Overhaul (16-03-2026):** 
+  - **Fixed-Height Box Layout:** Transformed the entire admin page into a professional dashboard style with `100vh` constraint.
+  - **Internal Scrolling:** Replaced the "unlimited" page scroll with a fixed content box. Data (Jobs, Messages, etc.) now scrolls smoothly inside the container while keeping the sidebar and header sticky.
+  - **Professional Scrollbar:** Implemented a custom, thin scrollbar themed to the site's primary colors for a premium look.
+  - **Mobile Preservation:** Integrated a hybrid CSS layout that automatically switches back to overflow-scrolling on mobile to maintain perfect usability on small screens.
+
+- **AI Key Management System (16-03-2026):** 
+  - **Settings Tab Implementation:** Fully built out the previously placeholder 'Settings' section with a functional AI Management suite.
+  - **Key Inventory Dashboard:** Added a secure table that scans and lists all environment keys (Vivek, Vijay, Vardhan, Charan, etc.) with their designated usage (Admin vs. Public).
+  - **Live Health Check:** Developed an interactive "Check keys" feature that pings the Groq API for each key one-by-one, providing real-time "Active" or "Invalid" status updates.
+  - **Accordion Interface:** Used a collapsible accordion design to keep the settings page clean while providing deep-dive management tools.
+  - **Secure Backend Bridge:** Built specialized Flask routes (`/api/admin/ai-keys` and `/api/admin/check-ai-key`) to facilitate key testing without ever exposing raw API secrets to the browser.

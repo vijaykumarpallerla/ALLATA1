@@ -12,8 +12,8 @@
     <style>
         .admin-layout {
             display: flex;
-            min-height: calc(100vh - 80px);
-            /* Subtract footer/header height if any */
+            height: calc(100vh - 84px);
+            overflow: hidden;
             background-color: var(--bg-main);
         }
 
@@ -22,6 +22,8 @@
             background-color: var(--bg-card);
             border-right: 1px solid var(--border-color);
             padding: 2rem 1rem;
+            height: 100%;
+            overflow-y: auto;
         }
 
         .admin-nav {
@@ -73,6 +75,9 @@
             flex: 1;
             padding: 2rem;
             background-color: var(--bg-main);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
         .admin-header {
@@ -85,6 +90,7 @@
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow-sm);
             border: 1px solid var(--border-color);
+            flex-shrink: 0;
         }
 
         .admin-header h1 {
@@ -104,8 +110,20 @@
             border-radius: var(--radius-lg);
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow-sm);
-            min-height: 400px;
+            flex: 1;
+            overflow-y: auto;
             color: var(--text-main);
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-color) transparent;
+        }
+
+        .admin-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .admin-content::-webkit-scrollbar-thumb {
+            background-color: var(--primary-color);
+            border-radius: 10px;
         }
 
         .center-placeholder {
@@ -364,6 +382,8 @@
         @media (max-width: 768px) {
             .admin-layout {
                 flex-direction: column;
+                height: auto;
+                overflow: visible;
             }
 
             .admin-sidebar {
@@ -393,6 +413,8 @@
 
             .admin-main {
                 padding: 1rem;
+                height: auto;
+                overflow: visible;
             }
 
             .admin-header {
@@ -482,7 +504,7 @@
                 <a href="#" class="admin-nav-item" id="nav-researches">
                     <i class="fas fa-flask"></i> Research Requests
                 </a>
-                <a href="#" class="admin-nav-item">
+                <a href="#" class="admin-nav-item" id="nav-settings">
                     <i class="fas fa-cog"></i> Settings
                 </a>
             </div>
@@ -690,6 +712,7 @@
             const navDashboard = document.getElementById('nav-dashboard');
             const contentArea = document.getElementById('admin-content-area');
             const navJobs = document.getElementById('nav-jobs');
+            const navSettings = document.getElementById('nav-settings');
             const pageTitle = document.getElementById('admin-page-title');
             const navItems = document.querySelectorAll('.admin-nav-item');
 
@@ -803,6 +826,142 @@
                     console.error("Error fetching messages:", error);
                 }
             });
+
+            // Load Settings
+            navSettings.addEventListener('click', (e) => {
+                e.preventDefault();
+                resetNav();
+                navSettings.classList.add('active');
+                localStorage.setItem('activeAdminTab', 'nav-settings');
+                pageTitle.innerText = "Settings";
+                
+                contentArea.innerHTML = `
+                    <div class="settings-container" style="animation: slideIn 0.3s ease-out; padding: 10px;">
+                        <div class="settings-accordion-item" style="background: white; border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden; margin-bottom: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+                            <!-- Accordion Header -->
+                            <div class="accordion-header" style="padding: 1.5rem; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: background 0.2s;" onclick="toggleAccordion(this)">
+                                <div style="display: flex; align-items: center; gap: 15px; flex: 1;">
+                                    <h3 style="margin: 0; font-size: 1.1rem; color: var(--primary-dark); letter-spacing: 0.5px; text-transform: uppercase;">AI MANAGEMENT</h3>
+                                    <button onclick="event.stopPropagation(); checkAllAIKeys(this);" class="btn btn-primary" style="padding: 8px 16px; font-size: 0.85rem; border-radius: 6px; display: flex; align-items: center; gap: 8px;">
+                                        <i class="fas fa-sync-alt"></i> Check keys
+                                    </button>
+                                </div>
+                                <i class="fas fa-chevron-down accordion-arrow" style="transition: transform 0.3s; color: var(--text-muted);"></i>
+                            </div>
+
+                            <!-- Accordion Content -->
+                            <div class="accordion-content" style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out;">
+                                <div style="padding: 0 1.5rem 1.5rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+                                    <div style="overflow-x: auto;">
+                                        <table style="width: 100%; border-collapse: collapse; min-width: 500px;">
+                                            <thead>
+                                                <tr style="text-align: left; border-bottom: 2px solid var(--bg-main);">
+                                                    <th style="padding: 12px; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;">Key Name</th>
+                                                    <th style="padding: 12px; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;">Use</th>
+                                                    <th style="padding: 12px; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;">Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="ai-keys-table-body">
+                                                <tr id="ai-keys-loading">
+                                                    <td colspan="3" style="padding: 2rem; text-align: center; color: var(--text-muted);">
+                                                        <i class="fas fa-spinner fa-spin"></i> Loading keys...
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                fetchAIKeys();
+            });
+
+            window.toggleAccordion = function(header) {
+                const content = header.nextElementSibling;
+                const arrow = header.querySelector('.accordion-arrow');
+                if (content.style.maxHeight === '0px' || !content.style.maxHeight) {
+                    content.style.maxHeight = '2000px'; // Allow expansion
+                    arrow.style.transform = 'rotate(180deg)';
+                    header.style.background = 'var(--bg-main)';
+                } else {
+                    content.style.maxHeight = '0';
+                    arrow.style.transform = 'rotate(0)';
+                    header.style.background = 'none';
+                }
+            };
+
+            async function fetchAIKeys() {
+                try {
+                    const res = await fetch('/api/admin/ai-keys');
+                    const data = await res.json();
+                    const tbody = document.getElementById('ai-keys-table-body');
+                    
+                    if (data.status === 'success') {
+                        tbody.innerHTML = '';
+                        data.keys.forEach(key => {
+                            const tr = document.createElement('tr');
+                            tr.style.borderBottom = '1px solid var(--bg-main)';
+                            tr.innerHTML = `
+                                <td style="padding: 12px; font-weight: 500; font-family: monospace;">${key.name}</td>
+                                <td style="padding: 12px;">
+                                    <span style="background: var(--bg-main); padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">${key.use}</span>
+                                </td>
+                                <td style="padding: 12px;" id="status-cell-${key.name}">
+                                    <span class="status-badge" style="background: #f1f5f9; color: #64748b; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">Pending</span>
+                                </td>
+                            `;
+                            tbody.appendChild(tr);
+                        });
+                        
+                        // Automatically expand if mobile isn't too small, or leave collapsed
+                        // For now let's leave it to user click or if we feel nice
+                    }
+                } catch (error) {
+                    console.error("Error fetching AI keys:", error);
+                }
+            }
+
+            window.checkAllAIKeys = async function(btn) {
+                const originalContent = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
+                btn.disabled = true;
+                
+                const tableBody = document.getElementById('ai-keys-table-body');
+                const rowNames = Array.from(tableBody.querySelectorAll('tr')).map(tr => {
+                    const nameCell = tr.querySelector('td');
+                    return nameCell ? nameCell.innerText.trim() : null;
+                }).filter(name => name);
+
+                for (const keyName of rowNames) {
+                    const statusCell = document.getElementById(`status-cell-${keyName}`);
+                    statusCell.innerHTML = '<i class="fas fa-circle-notch fa-spin" style="color: var(--primary-color);"></i>';
+                    
+                    try {
+                        const res = await fetch('/api/admin/check-ai-key', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ key_name: keyName })
+                        });
+                        const data = await res.json();
+                        
+                        if (data.key_status === 'Active') {
+                            statusCell.innerHTML = '<span style="background: #dcfce7; color: #166534; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 800;"><i class="fas fa-check-circle"></i> Active</span>';
+                        } else {
+                            statusCell.innerHTML = '<span style="background: #fee2e2; color: #991b1b; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 800;"><i class="fas fa-times-circle"></i> Invalid</span>';
+                        }
+                    } catch (e) {
+                        statusCell.innerHTML = '<span style="background: #fee2e2; color: #991b1b; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 800;">Error</span>';
+                    }
+                    // Small delay to make it look like it's actually checking one by one
+                    await new Promise(r => setTimeout(r, 300));
+                }
+                
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+            };
 
             // Load Research Requests from DB
             navResearches.addEventListener('click', async (e) => {
@@ -1388,6 +1547,8 @@
                 window.loadManageJobs('all');
             } else if (savedTabId === 'nav-jobs-post') {
                 window.loadManageJobs('post');
+            } else if (savedTabId === 'nav-settings') {
+                navSettings.click();
             } else if (savedTabId) {
                 const tabToLoad = document.getElementById(savedTabId);
                 if (tabToLoad) {
