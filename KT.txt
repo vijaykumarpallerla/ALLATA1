@@ -353,3 +353,10 @@ UPDATE: 14/03/2026
   - **Live Health Check:** Developed an interactive "Check keys" feature that pings the Groq API for each key one-by-one, providing real-time "Active" or "Invalid" status updates.
   - **Accordion Interface:** Used a collapsible accordion design to keep the settings page clean while providing deep-dive management tools.
   - **Secure Backend Bridge:** Built specialized Flask routes (`/api/admin/ai-keys` and `/api/admin/check-ai-key`) to facilitate key testing without ever exposing raw API secrets to the browser.
+
+- **Real-time Active User Tracking (16-03-2026):** 
+  - **In-Memory Analytics:** Implemented a ultra-fast, database-free tracking system using Python's threading and memory.
+  - **Live Dashboard Card:** Added a dynamic "Active Users" card in the Admin Overview with a pulse animation.
+  - **Smart Filtering:** Built logic to automatically exclude Admin sessions, static files, and authentication paths from the count to ensure 100% accurate student-only stats.
+  - **Auto-Refreshing UI:** Integrated a 30-second polling heartbeat that updates the live count without page reloads.
+  - **Privacy-First Tracking:** Uses session-based unique IDs to count distinct visitors even on the same Wi-Fi, without collecting personally identifiable data.

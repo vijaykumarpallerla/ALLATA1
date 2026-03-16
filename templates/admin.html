@@ -465,6 +465,12 @@
                 font-size: 1.1rem !important;
             }
         }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
     </style>
 </head>
 
@@ -732,13 +738,54 @@
                 localStorage.setItem('activeAdminTab', 'nav-dashboard');
                 pageTitle.innerText = "Overview";
                 contentArea.innerHTML = `
-                    <div class="center-placeholder">
-                        <i class="fas fa-chart-line" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
-                        <h2>Dashboard</h2>
-                        <p>Analytics and overview will appear here.</p>
+                    <div class="dashboard-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; padding: 5px;">
+                        <!-- Active Users Card -->
+                        <div class="stat-card" style="background: white; padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 1.5rem; transition: transform 0.2s;">
+                            <div style="width: 56px; height: 56px; background: rgba(16, 185, 129, 0.1); color: #10b981; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem;">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div style="flex: 1;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+                                    <h3 style="margin: 0; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Active Users (Real-time)</h3>
+                                    <span class="pulse-dot" style="width: 8px; height: 8px; background: #10b981; border-radius: 50%; display: inline-block; animation: pulse 2s infinite;"></span>
+                                </div>
+                                <div style="display: flex; align-items: baseline; gap: 8px;">
+                                    <span id="active-users-count" style="font-size: 2.2rem; font-weight: 800; color: var(--primary-dark);">0</span>
+                                    <span style="font-size: 0.9rem; color: #10b981; font-weight: 600;">online</span>
+                                </div>
+                                <p style="margin: 0; font-size: 0.75rem; color: var(--text-muted);">Updated every 30 seconds</p>
+                            </div>
+                        </div>
+
                     </div>
                 `;
+                
+                // Trigger immediate update
+                updateActiveUsers();
             });
+
+            // Polling for active users
+            async function updateActiveUsers() {
+                const countElement = document.getElementById('active-users-count');
+                if (!countElement) return;
+
+                try {
+                    const res = await fetch('/api/admin/active-users');
+                    const data = await res.json();
+                    if (data.status === 'success') {
+                        countElement.innerText = data.active_count;
+                    }
+                } catch (e) {
+                    console.error("Error updating active users:", e);
+                }
+            }
+
+            // Polling interval
+            setInterval(() => {
+                if (localStorage.getItem('activeAdminTab') === 'nav-dashboard') {
+                    updateActiveUsers();
+                }
+            }, 30000);
 
             // Load Messages from Xata DB
             navMessages.addEventListener('click', async (e) => {
@@ -834,7 +881,7 @@
                 navSettings.classList.add('active');
                 localStorage.setItem('activeAdminTab', 'nav-settings');
                 pageTitle.innerText = "Settings";
-                
+
                 contentArea.innerHTML = `
                     <div class="settings-container" style="animation: slideIn 0.3s ease-out; padding: 10px;">
                         <div class="settings-accordion-item" style="background: white; border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden; margin-bottom: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
@@ -879,7 +926,7 @@
                 fetchAIKeys();
             });
 
-            window.toggleAccordion = function(header) {
+            window.toggleAccordion = function (header) {
                 const content = header.nextElementSibling;
                 const arrow = header.querySelector('.accordion-arrow');
                 if (content.style.maxHeight === '0px' || !content.style.maxHeight) {
@@ -898,7 +945,7 @@
                     const res = await fetch('/api/admin/ai-keys');
                     const data = await res.json();
                     const tbody = document.getElementById('ai-keys-table-body');
-                    
+
                     if (data.status === 'success') {
                         tbody.innerHTML = '';
                         data.keys.forEach(key => {
@@ -915,7 +962,7 @@
                             `;
                             tbody.appendChild(tr);
                         });
-                        
+
                         // Automatically expand if mobile isn't too small, or leave collapsed
                         // For now let's leave it to user click or if we feel nice
                     }
@@ -924,11 +971,11 @@
                 }
             }
 
-            window.checkAllAIKeys = async function(btn) {
+            window.checkAllAIKeys = async function (btn) {
                 const originalContent = btn.innerHTML;
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
                 btn.disabled = true;
-                
+
                 const tableBody = document.getElementById('ai-keys-table-body');
                 const rowNames = Array.from(tableBody.querySelectorAll('tr')).map(tr => {
                     const nameCell = tr.querySelector('td');
@@ -938,7 +985,7 @@
                 for (const keyName of rowNames) {
                     const statusCell = document.getElementById(`status-cell-${keyName}`);
                     statusCell.innerHTML = '<i class="fas fa-circle-notch fa-spin" style="color: var(--primary-color);"></i>';
-                    
+
                     try {
                         const res = await fetch('/api/admin/check-ai-key', {
                             method: 'POST',
@@ -946,7 +993,7 @@
                             body: JSON.stringify({ key_name: keyName })
                         });
                         const data = await res.json();
-                        
+
                         if (data.key_status === 'Active') {
                             statusCell.innerHTML = '<span style="background: #dcfce7; color: #166534; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 800;"><i class="fas fa-check-circle"></i> Active</span>';
                         } else {
@@ -958,7 +1005,7 @@
                     // Small delay to make it look like it's actually checking one by one
                     await new Promise(r => setTimeout(r, 300));
                 }
-                
+
                 btn.innerHTML = originalContent;
                 btn.disabled = false;
             };
@@ -1241,11 +1288,11 @@
             window.confirmDeleteByDate = (date, count) => {
                 document.getElementById('deleteModal').classList.add('active');
                 document.querySelector('.delete-modal-text').innerHTML = `Are you sure you want to permanently delete <strong>all ${count} jobs</strong> posted on <strong>${date}</strong>? <br><br> (This will remove everything from this day in the "All Jobs" tab).`;
-                
+
                 // Track special delete type
                 window.bulkDeleteDate = date;
                 currentDeleteType = 'bulk-date';
-                
+
                 // Close dropdown
                 document.querySelectorAll('.action-dropdown').forEach(d => d.classList.remove('active'));
             };

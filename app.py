@@ -2,6 +2,8 @@ from flask import Flask, send_file, request, jsonify, render_template, session, 
 import webbrowser
 import threading
 import os
+import uuid
+import time
 import math
 from functools import wraps
 from urllib.parse import urlencode
@@ -76,6 +78,35 @@ logging.getLogger('werkzeug').addFilter(HideAdminLinkFilter())
 
 # Initialize Flask app
 app = Flask(__name__)
+
+# --- In-Memory Active User Tracking ---
+active_users = {} # {visitor_id: last_active_timestamp}
+active_users_lock = threading.Lock()
+
+@app.before_request
+def track_active_users():
+    # 1. If you are an admin, NEVER count yourself anywhere!
+    if session.get('admin_logged_in'):
+        return
+
+    path = request.path
+    # 2. Exclude admin, auth, and system paths
+    if f"/{ADMIN_PATH}" in path or \
+       "/admin-dashboard" in path or \
+       "/auth/" in path or \
+       "/api/admin" in path or \
+       path.startswith('/static') or \
+       path == '/favicon.ico':
+        return
+
+    # Use a visitor_id in session to track unique browsers/sessions
+    if 'visitor_id' not in session:
+        session['visitor_id'] = str(uuid.uuid4())
+    
+    vid = session['visitor_id']
+    with active_users_lock:
+        active_users[vid] = time.time()
+
 app.secret_key = os.environ.get('SECRET_KEY', 'fallback-secret-key-change-me')
 
 # ----- Google OAuth Setup (Authlib) -----
@@ -989,6 +1020,18 @@ def check_ai_key():
             return jsonify({"status": "success", "key_status": "Invalid", "error": f"HTTP {resp.status_code}"})
     except Exception as e:
         return jsonify({"status": "success", "key_status": "Invalid", "error": str(e)})
+
+@app.route('/api/admin/active-users', methods=['GET'])
+@admin_required
+def get_active_users_count():
+    now = time.time()
+    with active_users_lock:
+        # Cleanup users who haven't been active in the last 60 seconds
+        expired = [vid for vid, last_seen in active_users.items() if now - last_seen > 60]
+        for vid in expired:
+            del active_users[vid]
+        active_count = len(active_users)
+    return jsonify({"status": "success", "active_count": active_count})
 
 @app.errorhandler(404)
 def page_not_found(e):
