@@ -360,3 +360,12 @@ UPDATE: 14/03/2026
   - **Smart Filtering:** Built logic to automatically exclude Admin sessions, static files, and authentication paths from the count to ensure 100% accurate student-only stats.
   - **Auto-Refreshing UI:** Integrated a 30-second polling heartbeat that updates the live count without page reloads.
   - **Privacy-First Tracking:** Uses session-based unique IDs to count distinct visitors even on the same Wi-Fi, without collecting personally identifiable data.
+
+
+==========================================================================
+17-03-2026
+==========================================================================
+
+- **Google Search Console Verification (17-03-2026):**
+  - **Domain Verification Route:** Added a dedicated Flask route ([/google57b6f02c4dd10a3a.html](cci:7://file:///c:/Users/Palle/OneDrive/Desktop/ALLATA1/templates/google57b6f02c4dd10a3a.html:0:0-0:0)) to [app.py](cci:7://file:///c:/Users/Palle/OneDrive/Desktop/ALLATA1/app.py:0:0-0:0) to serve the Google Search Console verification file.
+  - **Template Mapping:** Configured the route to use `render_template` to return the [google57b6f02c4dd10a3a.html](cci:7://file:///c:/Users/Palle/OneDrive/Desktop/ALLATA1/templates/google57b6f02c4dd10a3a.html:0:0-0:0) file from the `templates/` directory, allowing Google to verify ownership of the `all-at-a1.in` domain.

@@ -215,6 +215,10 @@ def home():
         blogs = []
     return render_template('index.html', blogs=blogs)
 
+@app.route('/google57b6f02c4dd10a3a.html')
+def google_verification():
+    return render_template('google57b6f02c4dd10a3a.html')
+
 @app.route('/blog/<blog_id>')
 def read_blog(blog_id):
     try:
