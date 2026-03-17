@@ -369,3 +369,12 @@ UPDATE: 14/03/2026
 - **Google Search Console Verification (17-03-2026):**
   - **Domain Verification Route:** Added a dedicated Flask route ([/google57b6f02c4dd10a3a.html](cci:7://file:///c:/Users/Palle/OneDrive/Desktop/ALLATA1/templates/google57b6f02c4dd10a3a.html:0:0-0:0)) to [app.py](cci:7://file:///c:/Users/Palle/OneDrive/Desktop/ALLATA1/app.py:0:0-0:0) to serve the Google Search Console verification file.
   - **Template Mapping:** Configured the route to use `render_template` to return the [google57b6f02c4dd10a3a.html](cci:7://file:///c:/Users/Palle/OneDrive/Desktop/ALLATA1/templates/google57b6f02c4dd10a3a.html:0:0-0:0) file from the `templates/` directory, allowing Google to verify ownership of the `all-at-a1.in` domain.
+
+==========================================================================
+17-03-2026 (SEO Update)
+==========================================================================
+
+- **SEO & Google Indexing Infrastructure:**
+  - **Dynamic Sitemap Engine:** Built a custom XML generator route (`/sitemap.xml`) in [app.py](cci:7://file:///c:/Users/Palle/OneDrive/Desktop/ALLATA1/app.py:0:0-0:0) that automatically lists all static pages, all blogs from [blogs.json](cci:7://file:///c:/Users/Palle/OneDrive/Desktop/ALLATA1/static/data/blogs.json:0:0-0:0), and all live job postings from the database.
+  - **Robots.txt Implementation:** Created an automated `/robots.txt` route that instructs search engine crawlers to Allow all paths and directs them specifically to the new sitemap URL.
+  - **Indexing Strategy:** Successfully configured the platform for deep-content indexing to improve Google Search visibility for both career blogs and job listings.

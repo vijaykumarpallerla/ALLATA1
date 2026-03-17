@@ -232,6 +232,64 @@ def read_blog(blog_id):
         pass
     return "Blog not found", 404
 
+@app.route('/sitemap.xml')
+def sitemap():
+    """Generate dynamic sitemap.xml"""
+    pages = []
+    base_url = "https://all-at-a1.in"
+
+    # 1. Static Pages
+    static_paths = [
+        '/',
+        '/browse_jobs',
+        '/contact',
+        '/aboutus',
+        '/projects',
+        '/DSAAI',
+        '/crack2026',
+        '/promptai',
+        '/terms',
+        '/privacy'
+    ]
+    for path in static_paths:
+        pages.append({"loc": f"{base_url}{path}"})
+
+    # 2. Dynamic Blog Pages
+    try:
+        json_path = os.path.join(app.root_path, 'static', 'data', 'blogs.json')
+        with open(json_path, 'r', encoding='utf-8') as f:
+            blogs = json.load(f)
+            for blog in blogs:
+                pages.append({"loc": f"{base_url}/blog/{blog['id']}"})
+    except:
+        pass
+
+    # 3. Dynamic Job Detail Pages
+    try:
+        jobs = Job.query.all()
+        for job in jobs:
+            # Note: /job?jobid=X
+            pages.append({"loc": f"{base_url}/job?jobid={job.id}"})
+    except:
+        pass
+
+    # Build XML
+    xml_output = '<?xml version="1.0" encoding="UTF-8"?>\n'
+    xml_output += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    for page in pages:
+        xml_output += f'  <url>\n    <loc>{page["loc"]}</loc>\n    <changefreq>daily</changefreq>\n  </url>\n'
+    xml_output += '</urlset>'
+
+    return xml_output, 200, {'Content-Type': 'application/xml'}
+
+@app.route('/robots.txt')
+def robots():
+    """Generate robots.txt"""
+    content = "User-agent: *\n"
+    content += "Allow: /\n"
+    content += f"Sitemap: https://all-at-a1.in/sitemap.xml\n"
+    return content, 200, {'Content-Type': 'text/plain'}
+
 @app.route('/browse_jobs')
 def usa_jobs_page():
     # Read the main job portal HTML
