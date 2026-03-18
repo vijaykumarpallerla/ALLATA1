@@ -513,3 +513,24 @@ loginbyadmin.html
 admin.html
 , and Google verification files) were excluded from these UI/navigation updates as per instructions.
 
+
+Project Knowledge Transfer (KT) - March 18, 2026 Database Connectivity & Stability Fix (Vercel/Supabase)
+
+1. OBJECTIVE: Resolving common "MaxClientsReached" connection errors when deploying a Flask/SQLAlchemy app to Vercel (serverless) using a Supabase database.
+
+2. INFRASTRUCTURE UPDATES:
+
+Port Change: Switched the DATABASE_URL connection port from 5432 (Session Mode) to 6543 (Transaction Mode).
+Mode Rationale: Port 6543 uses Supabase's transaction pooler, which automatically releases and reuses database connections as soon as a query is finished, preventing connection exhaustion in serverless environments.
+DSN Format: Corrected the connection string format for psycopg2 by removing the ?pgbouncer=true parameter, as it is not needed for Python's backend driver on port 6543.
+3. SOFTWARE CONFIGURATION (app.py): Added SQLALCHEMY_ENGINE_OPTIONS to the Flask configuration to optimize pooling for serverless execution:
+
+pool_size: 1: Limits each serverless instance to exactly 1 database connection.
+max_overflow: 0: Prevents instances from opening any extra connections beyond the one specified.
+pool_recycle: 280: Automatically refreshes connections to prevent timeout issues.
+4. MIGRATION LOGIC: Ensured that manual column migrations (e.g., ai_approved, duration, and admin user fields) are handled via safe IF NOT EXISTS raw SQL inside the app.app_context() to ensure the database schema stays updated without causing deployment errors on new instances.
+
+5. DEPLOYMENT CRITICALITY: These changes must be pushed to GitHub to take effect on the Vercel server. Without the pool_size: 1 setting in 
+
+app.py
+, multiple serverless instances will continue to compete for database connections, leading to potential stability issues under heavy traffic.
