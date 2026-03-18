@@ -153,6 +153,7 @@ class Job(db.Model):
     job_type = db.Column(db.String(100), nullable=False)
     experience = db.Column(db.String(100), nullable=False)
     salary = db.Column(db.String(100), nullable=False)
+    duration = db.Column(db.String(100), nullable=True) # New Field: e.g. 6 Months
     posted = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=False)
     apply_url = db.Column(db.String(500), nullable=True)
@@ -182,7 +183,8 @@ with app.app_context():
                 "ALTER TABLE job ADD COLUMN IF NOT EXISTS ai_approved BOOLEAN NOT NULL DEFAULT TRUE, "
                 "ADD COLUMN IF NOT EXISTS admin_email VARCHAR(120), "
                 "ADD COLUMN IF NOT EXISTS admin_name VARCHAR(100), "
-                "ADD COLUMN IF NOT EXISTS admin_picture TEXT"
+                "ADD COLUMN IF NOT EXISTS admin_picture TEXT, "
+                "ADD COLUMN IF NOT EXISTS duration VARCHAR(100) DEFAULT 'Not Specified'"
             ))
             conn.commit()
         print("[DB Migration] ai_approved and admin user columns ensured on job table.")
@@ -266,7 +268,7 @@ def sitemap():
 
     # 3. Dynamic Job Detail Pages
     try:
-        jobs = Job.query.all()
+        jobs = db.session.query(Job).all()
         for job in jobs:
             # Note: /job?jobid=X
             pages.append({"loc": f"{base_url}/job?jobid={job.id}"})
@@ -314,7 +316,7 @@ def usa_jobs_page():
         # Fetch live jobs from the database (newest first!)
         # Only show: bulk-uploaded jobs (is_algorithm=False) OR AI-approved jobs (ai_approved=True)
         # Rejected jobs (is_algorithm=True AND ai_approved=False) are hidden from public
-        all_jobs = Job.query.filter(
+        all_jobs = db.session.query(Job).filter(
             (Job.is_algorithm == False) | (Job.ai_approved == True)
         ).order_by(Job.id.desc()).all()
         filtered_jobs = []
@@ -398,6 +400,10 @@ def usa_jobs_page():
                     <div class="job-detail-badge">
                         <i class="fas fa-briefcase"></i>
                         <span>{job.job_type}</span>
+                    </div>
+                    <div class="job-detail-badge">
+                        <i class="fas fa-clock"></i>
+                        <span>{job.duration if job.duration else "Not Specified"}</span>
                     </div>'''
             
             if job.salary and job.salary != 'Competitive':
@@ -543,7 +549,7 @@ def api_jobs():
         
     try:
         # Fetch ordered by newest first
-        jobs = Job.query.order_by(Job.id.desc()).all()
+        jobs = db.session.query(Job).order_by(Job.id.desc()).all()
         jobs_list = [{
             "id": j.id,
             "title": j.title,
@@ -569,13 +575,14 @@ def background_enrich_job(job_id, title, company, location, description, raw_exp
             
             if ai_result_raw:
                 ai_data = json.loads(ai_result_raw)
-                job = Job.query.get(job_id)
+                job = db.session.get(Job, job_id)
                 if job:
                     # Update the job with AI-polished content
                     job.title = str(ai_data.get('title', job.title))[:200]
                     raw_co = (ai_data.get('company') or '').strip()
                     job.company = "Not Disclosed" if (not raw_co or raw_co.lower() == 'confidential' or not raw_co) else raw_co[:200]
                     job.location = str(ai_data.get('location', job.location))[:200]
+                    job.duration = str(ai_data.get('duration', 'Not Specified'))[:100]
                     job.description = ai_data.get('description', job.description)
                     job.experience = str(ai_data.get('experience', raw_experience))[:200]
                     
@@ -597,12 +604,37 @@ def api_submit_job():
         description = data.get('description', 'No description provided.')
         
         # 🛡️ AI CONTENT MODERATION ALGORITHM 🛡️
-        # We pass the raw text to the Algorithm.py script to determine if it is spam or real
+        # decision can be: True (Approved), False (Spam) or None (API/Key Error)
         is_approved = moderate_job_post(title, company, location, description)
         
-        if not is_approved:
-            print(f"[REJECTED FLAG] User tried to post fake/spam job: {title}")
-            # Save to DB as rejected so admin can audit it — but hidden from public
+        # Scenario: AI Key Error or Rate Limit (is_approved is None)
+        # Goal: Hide from public BUT show "Success" message to user
+        if is_approved is None:
+            print(f"[AI ERROR FLAG] AI Key/System Fail for job: {title}. Saving as HIDDEN for manual check.")
+            job_error = Job(
+                title=title,
+                company=company,
+                location=location,
+                job_type=data.get('job_type', 'Full-time'),
+                experience=data.get('experience', 'Not specified'),
+                salary=data.get('salary', 'Competitive'),
+                posted=datetime.now(timezone(timedelta(hours=-5), 'EST')).strftime("%d/%m/%Y EST"),
+                description=description,
+                apply_url=data.get('apply_url', ''),
+                is_algorithm=True,
+                ai_approved=False  # ← Hide from public until Admin approves manually
+            )
+            db.session.add(job_error)
+            db.session.commit()
+            return jsonify({
+                "status": "success", 
+                "message": "Job is Done and the Job will be Shown in the UI in 5 minutes."
+            })
+            
+        # Scenario: AI Explicitly decided this is SPAM (False)
+        # Goal: Hide from public and show "Pending" message to user
+        if is_approved is False:
+            print(f"[REJECTED FLAG] AI clearly identified spam: {title}")
             rejected_job = Job(
                 title=title,
                 company=company,
@@ -614,7 +646,7 @@ def api_submit_job():
                 description=description,
                 apply_url=data.get('apply_url', ''),
                 is_algorithm=True,
-                ai_approved=False  # ← Flagged as rejected
+                ai_approved=False  # ← Hide from public
             )
             db.session.add(rejected_job)
             db.session.commit()
@@ -709,6 +741,7 @@ def job_detail():
         html = html.replace('<!-- JOB_LOCATION -->', job.location)
         html = html.replace('<!-- JOB_TYPE -->', job.job_type)
         html = html.replace('<!-- JOB_SALARY -->', job.salary if job.salary else "Competitive")
+        html = html.replace('<!-- JOB_DURATION -->', job.duration if job.duration else "Not Specified")
         html = html.replace('<!-- JOB_EXPERIENCE -->', job.experience)
         
         # Pass description securely as JSON string so marked.js can parse it cleanly
@@ -826,7 +859,7 @@ def admin_logout():
 @admin_required
 def get_admin_messages():
     try:
-        messages = ContactMessage.query.order_by(ContactMessage.created_at.desc()).all()
+        messages = db.session.query(ContactMessage).order_by(ContactMessage.created_at.desc()).all()
         msg_list = [{
             "id": m.id,
             "name": m.name,
@@ -858,7 +891,7 @@ def delete_admin_message(msg_id):
 @admin_required
 def get_admin_researches():
     try:
-        reqs = ResearchRequest.query.order_by(ResearchRequest.created_at.desc()).all()
+        reqs = db.session.query(ResearchRequest).order_by(ResearchRequest.created_at.desc()).all()
         req_list = [{
             "id": r.id,
             "name": r.name,
@@ -889,7 +922,7 @@ def delete_admin_research(req_id):
 @admin_required
 def get_admin_jobs():
     try:
-        jobs = Job.query.order_by(Job.id.desc()).all()
+        jobs = db.session.query(Job).order_by(Job.id.desc()).all()
         job_list = [{
             "id": j.id,
             "title": j.title,
@@ -899,6 +932,7 @@ def get_admin_jobs():
             "type": j.job_type,
             "experience": j.experience,
             "salary": j.salary,
+            "duration": j.duration or "Not Specified",
             "apply_url": j.apply_url or "",
             "description": j.description,
             "is_algorithm": j.is_algorithm,
@@ -966,7 +1000,7 @@ def delete_jobs_by_date():
         return jsonify({"status": "error", "message": "Date parameter is required"}), 400
     try:
         # Delete ALL jobs for the given date (AI and regular)
-        deleted_count = Job.query.filter_by(posted=date_str).delete()
+        deleted_count = db.session.query(Job).filter_by(posted=date_str).delete()
         db.session.commit()
         return jsonify({"status": "success", "deleted_count": deleted_count})
     except Exception as e:
@@ -1017,6 +1051,7 @@ def post_generated_job():
             job_type=str(data.get('job_type', 'Full-time'))[:100],
             experience=str(data.get('experience', 'Not specified'))[:100],
             salary=str(data.get('salary', 'Competitive'))[:100],
+            duration=str(data.get('duration', 'Not Specified'))[:100],
             posted=datetime.now(timezone(timedelta(hours=-5), 'EST')).strftime("%d/%m/%Y EST"),
             description=data.get('description', 'No description provided.'),
             apply_url=str(data.get('apply_url', ''))[:500],

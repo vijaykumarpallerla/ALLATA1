@@ -655,6 +655,10 @@
                         <div class="modal-detail-value" id="jd-salary"></div>
                     </div>
                     <div class="modal-detail-group">
+                        <div class="modal-detail-label">Duration</div>
+                        <div class="modal-detail-value" id="jd-duration"></div>
+                    </div>
+                    <div class="modal-detail-group">
                         <div class="modal-detail-label">Experience / Skills</div>
                         <div class="modal-detail-value" id="jd-experience"></div>
                     </div>
@@ -1350,6 +1354,7 @@
                 document.getElementById('jd-location').textContent = job.location || '—';
                 document.getElementById('jd-type').textContent = job.type || '—';
                 document.getElementById('jd-salary').textContent = job.salary || '—';
+                document.getElementById('jd-duration').textContent = job.duration || '—';
                 document.getElementById('jd-experience').textContent = job.experience || '—';
                 document.getElementById('jd-posted').textContent = job.posted || '—';
 

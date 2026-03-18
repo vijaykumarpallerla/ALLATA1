@@ -378,3 +378,39 @@ UPDATE: 14/03/2026
   - **Dynamic Sitemap Engine:** Built a custom XML generator route (`/sitemap.xml`) in [app.py](cci:7://file:///c:/Users/Palle/OneDrive/Desktop/ALLATA1/app.py:0:0-0:0) that automatically lists all static pages, all blogs from [blogs.json](cci:7://file:///c:/Users/Palle/OneDrive/Desktop/ALLATA1/static/data/blogs.json:0:0-0:0), and all live job postings from the database.
   - **Robots.txt Implementation:** Created an automated `/robots.txt` route that instructs search engine crawlers to Allow all paths and directs them specifically to the new sitemap URL.
   - **Indexing Strategy:** Successfully configured the platform for deep-content indexing to improve Google Search visibility for both career blogs and job listings.
+
+
+
+--- ALL AT A1 | Knowledge Transfer (KT) ---
+Date: March 18, 2026
+
+1. 🛡️ AI FAIL-SAFE & ERROR HANDLING (New!)
+   - SYSTEM: Updated Algorithm.py to return 'None' on API/Key errors (Rate limits, Invalid keys, etc.).
+   - UI BEHAVIOR: 
+     - If AI Error occurs, Recruiter sees "Success" (Silent Success).
+     - Website hides the job (ai_approved=False).
+     - Admin must manually Approve the job in the Admin Dashboard.
+   - PENDING STATUS: Explicit AI Rejections (Spam/Fake) still show "Pending Approval" to the user.
+
+2. ⏱️ JOB DURATION INTEGRATION (New!)
+   - DB SCHEMA: Added 'duration' column (VARCHAR) to Job table with auto-migration.
+   - AI EXTRACTION: Both Algorithm.py (Moderation) and adminpost.py (Manual Post) now extract "Duration" (e.g., "6 Months", "Long-term").
+   - UI UPDATES: Added Clock icons and Duration badges to:
+     - USA_Browse_jobs.html (Search Cards)
+     - job_detail.html (Main Job Page)
+     - admin.html (Moderation Modal)
+
+3. 🔍 SEO & SEARCH ENGINE UPDATES
+   - Sitemaps: Dynamic sitemap.xml created at https://all-at-a1.in/sitemap.xml (includes Blogs and Jobs).
+   - Robots: Created robots.txt to guide search engines.
+   - Google Verification: Added verification route for Search Console.
+
+4. 🧹 CODE MODERNIZATION (Clean Logs)
+   - REFACTORED: Updated SQLAlchemy from Legacy patterns (Query.get) to modern Session.get().
+   - TERMINAL: Cleared all yellow "LegacyAPIWarning" messages for a cleaner dev terminal.
+
+5. 🔑 LOCAL AI KEY SECURITY
+   - DEV SETTINGS: Using single 'AI_Key' from .env for both Algorithm.py and adminpost.py.
+   - NO LEAKS: Code is set up to never push these local keys to Git or Vercel.
+
+--- END OF KT ---

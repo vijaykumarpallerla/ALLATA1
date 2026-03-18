@@ -37,15 +37,9 @@ def extract_json(response_string):
     return ""
 
 def get_recruiter_keys():
-    """Returns the set of keys dedicated to the UI/Recruiter public submissions."""
-    ai_keys = {
-        "Vardhan": os.environ.get("Vardhan_API_Key"),
-        "Charan": os.environ.get("Charan_API_Key"),
-        "Vishnu": os.environ.get("Vishnu_API_Key"),
-        "Vidyadhar": os.environ.get("Vidyadhar_API_Key"),
-        "Santhosh": os.environ.get("Santhosh_API_Key")
-    }
-    return [k for k in ai_keys.values() if k]
+    """Returns the main active local Groq API Key."""
+    key = os.environ.get("AI_Key")
+    return [key] if key else []
 
 def moderate_job_post(title, company, location, description):
     """
@@ -82,10 +76,14 @@ def moderate_job_post(title, company, location, description):
             decision = parsed_data.get('decision', 'REJECT').upper()
             print(f"[AI Moderator] Decision: {decision}")
             return decision == 'APPROVE'
-        return True
+        
+        # If status code is not 200 (e.g., 401 Unauthorized, 429 Too Many Requests)
+        print(f"[AI Moderator] API Error: {response.status_code} - {response.text}")
+        return None 
+        
     except Exception as e:
-        print(f"[AI Moderator] Error: {e}")
-        return True
+        print(f"[AI Moderator] System Error: {e}")
+        return None
 
 # --- ENHANCEMENT LOGIC ---
 ENHANCEMENT_PROMPT = """You are a Senior Career Consultant, Technical Recruiter, and Data Extractor.
@@ -98,6 +96,7 @@ You MUST return a valid JSON object with the following keys and values:
 - "job_type": e.g., "Full-time", "Contract", "Remote", etc.
 - "experience": Brief summary of required experience/skills (MAX 100 characters. e.g., "5+ years, Java").
 - "salary": The extracted salary or "Competitive".
+- "duration": The project/contract duration (e.g. "6 Months", "Long-term"). Extracted from text.
 - "apply_url": The primary URL or email address found in the text for applying.
 - "description": The rewritten, unique Career Guide in Markdown format.
 

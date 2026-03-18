@@ -7,16 +7,9 @@ load_dotenv()
 
 MODEL = "openai/gpt-oss-120b"
 
-# All available keys with names and rotation
+# Local/Admin only key
 API_KEYS = [
-    ("Vivek_Key_1", os.getenv("Vivek_Key_1")),
-    ("Vivek_Key_2", os.getenv("Vivek_Key_2")),
-    ("Vivek_Key_3", os.getenv("Vivek_Key_3")),
-    ("Vivek_Key_4", os.getenv("Vivek_Key_4")),
-    ("Vijay_Key_1", os.getenv("Vijay_Key_1")),
-    ("Vijay_Key_2", os.getenv("Vijay_Key_2")),
-    ("Vijay_Key_3", os.getenv("Vijay_Key_3")),
-    ("Vijay_Key_4", os.getenv("Vijay_Key_4")),
+    ("Main_AI_Key", os.getenv("AI_Key")),
 ]
 
 SYSTEM_PROMPT = """You are a Senior Career Consultant, Technical Recruiter, and Data Extractor.
@@ -29,6 +22,7 @@ You MUST return a valid JSON object with the following keys and values:
 - "job_type": e.g., "Full-time", "Contract", "Remote", etc.
 - "experience": Brief summary of required experience/skills (MAX 100 characters. e.g., "5+ years, Java").
 - "salary": The extracted salary or "Competitive".
+- "duration": The project/contract duration (e.g. "6 Months", "Long-term"). Extracted from text.
 - "apply_url": The primary URL or email address found in the text for applying. Look specifically for links following keywords like "Apply Here:", "Link:", "LinkedIn:", or "Application:". NEVER omit an application URL if one is present. If multiple are found, pick the most direct one. If none found, leave as empty string "".
 - "description": The rewritten, unique Career Guide in Markdown format.
 
