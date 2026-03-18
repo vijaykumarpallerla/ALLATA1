@@ -135,6 +135,11 @@ def admin_required(f):
 # Database configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+    "pool_size": 1,
+    "max_overflow": 0,
+    "pool_recycle": 280,
+}
 db = SQLAlchemy(app)
 
 class ContactMessage(db.Model):
