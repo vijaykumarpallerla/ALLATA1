@@ -157,6 +157,10 @@ a {
     color: var(--primary-color);
 }
 
+.nav-link-mobile {
+    display: none;
+}
+
 .nav-dropdown {
     position: relative;
     display: inline-block;
@@ -1023,6 +1027,12 @@ footer {
     .nav-menu .nav-link {
         padding: 0.8rem 1rem;
         width: 100%;
+    }
+
+    .nav-link-mobile {
+        display: block !important;
+        font-weight: 600;
+        color: var(--logo-color-3) !important; /* Make it stand out with the orange/red color */
     }
 
     .nav-actions {

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -47,7 +47,7 @@
     <nav class="navbar">
         <div class="nav-container">
             <a href="/" class="nav-logo">
-                <img src="/Logo.png" alt="Portal Logo" class="logo-img" onerror="this.style.display='none'">
+                <img src="{{ url_for('static', filename='Logo.png') }}" alt="Portal Logo" class="logo-img">
                 <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
                         class="color-3">A</span><span class="color-4">1</span></span>
             </a>
@@ -56,7 +56,15 @@
                 <a href="/" class="nav-link">Tech Insights</a>
                 <a href="students.html" class="nav-link" style="color: var(--logo-color-3); font-weight: 600;"><i class="fas fa-graduation-cap"></i> Students</a>
                 <a href="/browse_jobs" class="nav-link">Browse Jobs</a>
-                <a href="/contact.html" class="nav-link">Contact Us</a>
+                <div class="nav-dropdown">
+                    <a href="javascript:void(0)" class="nav-link">Legal Agreements <i class="fas fa-chevron-down dropdown-icon"></i></a>
+                    <div class="dropdown-content">
+                        <a href="terms.html">Terms and Conditions</a>
+                        <a href="privacy.html">Privacy Policy</a>
+                    </div>
+                </div>
+                <a href="contact.html" class="nav-link">Contact Us</a>
+                <a href="/job.html" class="nav-link nav-link-mobile">Post a Job</a>
             </div>
             <div class="nav-actions">
                 <button class="btn btn-primary" onclick="window.location.href='/job.html'">Post a Job</button>
@@ -156,7 +164,30 @@
 
     <!-- Footer -->
     <footer>
-                <div class="footer-bottom">
+        <div class="footer-content">
+            <div class="footer-col">
+                <a href="/" class="nav-logo">
+                    <img src="{{ url_for('static', filename='Logo.png') }}" alt="Portal Logo" class="logo-img-footer">
+                    <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
+                            class="color-3">A</span><span class="color-4">1</span></span>
+                </a>
+                <p>A premier, AI-moderated career hub dedicated to connecting top talent with high-quality, verified
+                    opportunities.</p>
+            </div>
+            <div class="footer-col">
+                <h4>For Employers</h4>
+                <a href="job.html">Post a Job</a>
+                <a href="/browse_jobs">Browse Jobs</a>
+            </div>
+            <div class="footer-col">
+                <h4>Support & Legal</h4>
+                <a href="aboutus.html">About Us</a>
+                <a href="contact.html">Contact Us</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Service</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
             <p>&copy; 2026 ALL AT A1. All rights reserved.</p>
             <div class="footer-social">
                 <a href="https://whatsapp.com/channel/0029Vb7sVZW9hXEz9CVcxz1k" class="wa" id="footer-whatsapp-link" aria-label="WhatsApp" title="WhatsApp" target="_blank" rel="noopener">
@@ -168,6 +199,7 @@
             </div>
         </div>
     </footer>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 
 </html>

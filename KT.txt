@@ -413,4 +413,103 @@ Date: March 18, 2026
    - DEV SETTINGS: Using single 'AI_Key' from .env for both Algorithm.py and adminpost.py.
    - NO LEAKS: Code is set up to never push these local keys to Git or Vercel.
 
---- END OF KT ---
+
+Project Knowledge Transfer (KT) - March 18, 2026 Standardization of Website Navigation and Footer
+
+1. OBJECTIVE: Ensuring a consistent and functional user experience across all website pages by standardizing the navigation bar (desktop and mobile) and the footer content.
+
+2. NAVIGATION UPDATES:
+
+Legal Agreements Dropdown: A new dropdown has been added to the navbar on all pages, containing links to "Terms and Conditions" and "Privacy Policy."
+"Post a Job" Button Visibility:
+Desktop: A prominent "Post a Job" button is now consistently placed in the desktop navigation section (.nav-actions).
+Mobile: A "Post a Job" link has been added to the hamburger menu specifically for mobile devices (using the .nav-link-mobile class).
+URL Branding: The logo is now consistently linked using {{ url_for('static', filename='Logo.png') }} to ensure reliability across all routes, including error pages.
+Consistency Fixes: Corrected navigation links in sub-pages (under the students/ directory) to ensure they point accurately to root and sibling pages.
+3. FOOTER UPDATES:
+
+Content Standardization: Standardized the footer across all modified pages to follow a consistent 3-column layout:
+Column 1: Website Logo and Company Description.
+Column 2: "For Employers" links (Post a Job, Browse Jobs).
+Column 3: "Support & Legal" links (About Us, Contact Us, Privacy Policy, Terms of Service).
+Bottom Section: Consistently includes copyright information and social media icons (WhatsApp, LinkedIn).
+4. HAMBURGER MENU FIX (404.html):
+
+Fixed an issue where the hamburger menu was non-functional on the 
+
+404.html
+ page by linking the required 
+
+script.js
+ file at the bottom of the template.
+5. FILES UPDATED: Root Templates:
+
+
+404.html
+, 
+
+USA_Browse_jobs.html
+, 
+
+aboutus.html
+, 
+
+blog_post.html
+, 
+
+contact.html
+, 
+
+index.html
+, 
+
+job.html
+, 
+
+job_detail.html
+, 
+
+privacy.html
+, 
+
+research.html
+, 
+
+terms.html
+.
+Student Section Templates:
+
+
+students/students.html
+, 
+
+students/DSAAI.html
+, 
+
+students/crack2026.html
+, 
+
+students/projects.html
+, 
+
+students/project1.html
+, 
+
+students/project2.html
+, 
+
+students/project3.html
+, 
+
+students/project4.html
+.
+6. NOTE:
+
+Administration and verification-related files (
+
+loginbyadmin.html
+, 
+
+admin.html
+, and Google verification files) were excluded from these UI/navigation updates as per instructions.
+
