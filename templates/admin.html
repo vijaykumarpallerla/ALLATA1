@@ -471,6 +471,16 @@
             70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
             100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
         }
+
+        /* Responsive Admin Global Navbar */
+        @media (max-width: 768px) {
+            .admin-nav-hide-mobile {
+                display: none !important;
+            }
+            .nav-actions {
+                gap: 5px !important;
+            }
+        }
     </style>
 </head>
 
@@ -484,10 +494,26 @@
                 <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
                         class="color-3">A</span><span class="color-4">1</span></span>
             </a>
-            <div class="nav-actions">
+            <div class="nav-actions" style="display: flex; align-items: center; gap: 15px;">
+                <div class="admin-user" style="display: flex; align-items: center; gap: 10px;">
+                    {% if admin_picture %}
+                    <img src="{{ admin_picture }}" alt="Profile"
+                        class="admin-nav-hide-mobile"
+                        style="width:36px; height:36px; border-radius:50%; object-fit:cover; border: 2px solid var(--border-color);">
+                    {% endif %}
+                    <span class="admin-nav-hide-mobile" style="font-weight: 600; color: var(--primary-dark); display: inline-block;">
+                        Hi, {{ admin_name.split(' ')[0] }}
+                    </span>
+                    <a href="/admin-logout"
+                        style="font-size:0.85rem; color:var(--text-muted); border:1px solid var(--border-color); padding:6px 12px; border-radius:20px; text-decoration:none; transition:all 0.2s; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; background: var(--bg-card); margin-right: 5px;"
+                        onmouseover="this.style.color='#c5512c'; this.style.borderColor='#c5512c';"
+                        onmouseout="this.style.color='var(--text-muted)'; this.style.borderColor='var(--border-color)';">
+                        <i class="fas fa-sign-out-alt"></i><span class="admin-nav-hide-mobile">Logout</span>
+                    </a>
+                </div>
                 <a href="/" class="btn btn-primary"
-                    style="display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
-                    <i class="fas fa-home"></i> Return to Main Site
+                    style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap;">
+                    <i class="fas fa-home"></i><span class="admin-nav-hide-mobile">Return to Site</span>
                 </a>
             </div>
         </div>
@@ -520,21 +546,6 @@
         <main class="admin-main">
             <div class="admin-header">
                 <h1 id="admin-page-title">User Messages</h1>
-                <div class="admin-user">
-                    {% if admin_picture %}
-                    <img src="{{ admin_picture }}" alt="Profile"
-                        style="width:36px; height:36px; border-radius:50%; object-fit:cover; border: 2px solid var(--border-color);">
-                    {% endif %}
-                    <span style="font-weight: 600; color: var(--primary-dark);">
-                        Hi, {{ admin_name.split(' ')[0] }} 👋
-                    </span>
-                    <a href="/admin-logout"
-                        style="font-size:0.8rem; color:var(--text-muted); border:1px solid var(--border-color); padding:4px 10px; border-radius:20px; text-decoration:none; transition:all 0.2s;"
-                        onmouseover="this.style.color='#c5512c'; this.style.borderColor='#c5512c';"
-                        onmouseout="this.style.color='var(--text-muted)'; this.style.borderColor='var(--border-color)';">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </a>
-                </div>
             </div>
 
             <!-- Content Area dynamically updated by JS -->
