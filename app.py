@@ -167,6 +167,7 @@ class Job(db.Model):
     admin_email = db.Column(db.String(120), nullable=True)
     admin_name = db.Column(db.String(100), nullable=True)
     admin_picture = db.Column(db.Text, nullable=True)
+    raw_jd_text = db.Column(db.Text, nullable=True)
 
 class ResearchRequest(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -189,7 +190,8 @@ with app.app_context():
                 "ADD COLUMN IF NOT EXISTS admin_email VARCHAR(120), "
                 "ADD COLUMN IF NOT EXISTS admin_name VARCHAR(100), "
                 "ADD COLUMN IF NOT EXISTS admin_picture TEXT, "
-                "ADD COLUMN IF NOT EXISTS duration VARCHAR(100) DEFAULT 'Not Specified'"
+                "ADD COLUMN IF NOT EXISTS duration VARCHAR(100) DEFAULT 'Not Specified', "
+                "ADD COLUMN IF NOT EXISTS raw_jd_text TEXT"
             ))
             conn.commit()
         print("[DB Migration] ai_approved and admin user columns ensured on job table.")
@@ -944,8 +946,9 @@ def get_admin_jobs():
             "ai_approved": j.ai_approved,
             "admin_email": j.admin_email,
             "admin_name": j.admin_name,
-            "admin_picture": j.admin_picture
-
+            "admin_picture": j.admin_picture,
+            "has_memory": bool(j.raw_jd_text),
+            "raw_jd_text": j.raw_jd_text
         } for j in jobs]
         return jsonify({"status": "success", "jobs": job_list})
     except Exception as e:
@@ -997,6 +1000,21 @@ def get_job_dates():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
+@app.route('/api/admin/memory-dates', methods=['GET'])
+@admin_required
+def get_memory_dates():
+    try:
+        from sqlalchemy import func
+        results = db.session.query(
+            Job.posted, 
+            func.count(Job.id)
+        ).filter(Job.raw_jd_text.isnot(None), Job.raw_jd_text != "").group_by(Job.posted).all()
+        
+        dates = [{"date": r[0], "count": r[1]} for r in results if r[0]]
+        return jsonify({"status": "success", "dates": dates})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
 @app.route('/api/admin/jobs/delete-by-date', methods=['DELETE'])
 @admin_required
 def delete_jobs_by_date():
@@ -1012,6 +1030,34 @@ def delete_jobs_by_date():
         db.session.rollback()
         return jsonify({"status": "error", "message": str(e)}), 500
 
+@app.route('/api/admin/jobs/<int:job_id>/clear-memory', methods=['PATCH'])
+@admin_required
+def clear_job_memory(job_id):
+    try:
+        job = db.session.get(Job, job_id)
+        if not job:
+            return jsonify({"status": "error", "message": "Job not found"}), 404
+        job.raw_jd_text = None
+        db.session.commit()
+        return jsonify({"status": "success", "message": "Memory cleared"})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route('/api/admin/jobs/clear-memory-by-date', methods=['PATCH'])
+@admin_required
+def clear_memory_by_date():
+    date_str = request.args.get('date')
+    if not date_str:
+        return jsonify({"status": "error", "message": "Date parameter is required"}), 400
+    try:
+        updated_count = db.session.query(Job).filter_by(posted=date_str).update({"raw_jd_text": None})
+        db.session.commit()
+        return jsonify({"status": "success", "updated_count": updated_count})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"status": "error", "message": str(e)}), 500
+
 @app.route('/api/admin/generate_guide', methods=['POST'])
 @admin_required
 def generate_career_guide():
@@ -1021,6 +1067,14 @@ def generate_career_guide():
         return jsonify({"status": "error", "message": "No Job Description provided."}), 400
     
     try:
+        # --- Pre-Flight Duplicate Check (Fuzzy Match 85%) ---
+        recent_jobs = db.session.query(Job).filter(Job.raw_jd_text.isnot(None), Job.is_algorithm==True).order_by(Job.id.desc()).limit(100).all()
+        for job in recent_jobs:
+            if job.raw_jd_text:
+                ratio = difflib.SequenceMatcher(None, jd_text.lower(), job.raw_jd_text.lower()).ratio()
+                if ratio >= 0.85:
+                    return jsonify({"status": "duplicate", "message": "Duplicate Prevented: This exact Job Description (85%+ identical) was recently posted by an admin. AI API call safely skipped!"}), 200
+
         result = call_with_rotation(jd_text)
         if result:
             parsed_result = json.loads(result)
@@ -1064,7 +1118,8 @@ def post_generated_job():
             ai_approved=True,   # Admin explicitly approved it
             admin_email=session.get('admin_email'),
             admin_name=session.get('admin_name'),
-            admin_picture=session.get('admin_picture')
+            admin_picture=session.get('admin_picture'),
+            raw_jd_text=data.get('raw_jd_text')
         )
         db.session.add(new_job)
         db.session.commit()

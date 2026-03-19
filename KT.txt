@@ -534,3 +534,35 @@ pool_recycle: 280: Automatically refreshes connections to prevent timeout issues
 
 app.py
 , multiple serverless instances will continue to compete for database connections, leading to potential stability issues under heavy traffic.
+
+
+
+# DATE: March 19, 2026
+# FEATURE: AI Job Duplicate Prevention & Memory Management
+# DEVELOPER: Assistant / Vijay
+
+## 1. Database Upgrade ([app.py](cci:7://file:///c:/Users/Palle/OneDrive/Desktop/ALLATA1/app.py:0:0-0:0))
+- **New Column:** Added `raw_jd_text` (Text) to the [Job](cci:2://file:///c:/Users/Palle/OneDrive/Desktop/ALLATA1/app.py:152:0-169:51) SQLAlchemy model.
+- **Purpose:** Secretly stores the exact, raw, unformatted Job Description block pasted by an Admin *before* it gets sent to the AI. This acts as the "Memory" for that job.
+
+## 2. The 85% Fuzzy Match Pre-Flight Check ([app.py](cci:7://file:///c:/Users/Palle/OneDrive/Desktop/ALLATA1/app.py:0:0-0:0))
+- **API File:** `/api/admin/generate_guide` 
+- **Logic:** Before firing off an expensive API call to Groq, the Python backend fetches the last 100 `is_algorithm=True` jobs. It uses `difflib.SequenceMatcher` to mathematically compare the new text against history.
+- **Threshold:** If it detects >= 85% similarity (which catches typos and extra hashtags while matching the core original text), it bypasses the AI completely and immediately returns `status: duplicate` to the frontend to save money and database clutter.
+
+## 3. Safe Frontend Handling ([admin.html](cci:7://file:///c:/Users/Palle/OneDrive/Desktop/ALLATA1/templates/admin.html:0:0-0:0))
+- **Intercepting the Signal:** Modified [submitPostJob](cci:1://file:///c:/Users/Palle/OneDrive/Desktop/ALLATA1/templates/admin.html:1561:8-1668:10) JS function to intercept the `data.status === 'duplicate'` flag. 
+- **Non-blocking UI:** It prints a native-looking orange warning bubble (`<i class="fas fa-ban"></i>`) into the Chat Window telling the Admin they hit the duplicate stopper. Mobile layout remains 100% intact.
+- **Passing the Raw Text:** When a fresh job *is* approved, [approveAndPostJob](cci:1://file:///c:/Users/Palle/OneDrive/Desktop/ALLATA1/templates/admin.html:1670:8-1714:10) correctly attaches `job.raw_jd_text` down to `/api/admin/post_generated_job` where it gets permanently committed to Postgres/Supabase.
+
+## 4. The "JOB MEMORY" Dashboard ([admin.html](cci:7://file:///c:/Users/Palle/OneDrive/Desktop/ALLATA1/templates/admin.html:0:0-0:0) & [app.py](cci:7://file:///c:/Users/Palle/OneDrive/Desktop/ALLATA1/app.py:0:0-0:0))
+- **New Tab UI:** Added `JOB MEMORY` (with `fa-brain` icon) to the horizontal Manage Jobs menu.
+- **New API:** Built `/api/admin/memory-dates` which groups and counts ONLY jobs where `raw_jd_text` IS NOT NULL (so the dates dropdown stays completely accurate for memory).
+- **Clear Memory By Date:** Added a dropdown identical to "All Jobs" but styled Orange. Fires a `PATCH` request to `/api/admin/jobs/clear-memory-by-date` which nullifies the `raw_jd_text`, effectively bypassing duplicate prevention if the admin wants to post it again tomorrow.
+- **Clear Single Memory:** Added a `<button>` replacing the garbage-can [Delete](cci:1://file:///c:/Users/Palle/OneDrive/Desktop/ALLATA1/templates/admin.html:702:8-709:9) button on each row in the Memory tab stringing to `window.clearSingleJobMemory(${jobId})` (`PATCH` to `/api/admin/jobs/<job_id>/clear-memory`).
+
+## 5. Dynamic Job Modal Context ([admin.html](cci:7://file:///c:/Users/Palle/OneDrive/Desktop/ALLATA1/templates/admin.html:0:0-0:0))
+- **Smart Reading:** Upgraded [openJobDetailModal()](cci:1://file:///c:/Users/Palle/OneDrive/Desktop/ALLATA1/templates/admin.html:1254:12-1302:14). If an admin opens a job while inside the Algorithm tab, it displays the beautiful AI Markdown. But if they open it while in the ` JOB MEMORY` tab, it switches context, changes the label to `Original Raw Text (Memory)`, and pulls in the raw unformatted string they originally pasted so they can inspect exactly what triggered a duplicate check!
+
+## 6. Dashboard Cleanup ([admin.html](cci:7://file:///c:/Users/Palle/OneDrive/Desktop/ALLATA1/templates/admin.html:0:0-0:0))
+- **Settings Page:** Removed old 'AI Management' tables, fetch logic, and accordion elements from the Settings tab to improve load speed. Replaced with a completely grid-safe UI placeholder that looks identical to empty dashboards on Mobile.

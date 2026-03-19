@@ -676,7 +676,7 @@
 
                 <!-- Description -->
                 <div class="modal-detail-group">
-                    <div class="modal-detail-label">Job Description</div>
+                    <div class="modal-detail-label" id="jd-description-label">Job Description</div>
                     <div class="modal-detail-value" id="jd-description"
                         style="min-height:120px; white-space:pre-wrap; line-height:1.6;"></div>
                 </div>
@@ -887,132 +887,13 @@
                 pageTitle.innerText = "Settings";
 
                 contentArea.innerHTML = `
-                    <div class="settings-container" style="animation: slideIn 0.3s ease-out; padding: 10px;">
-                        <div class="settings-accordion-item" style="background: white; border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden; margin-bottom: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
-                            <!-- Accordion Header -->
-                            <div class="accordion-header" style="padding: 1.5rem; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: background 0.2s;" onclick="toggleAccordion(this)">
-                                <div style="display: flex; align-items: center; gap: 15px; flex: 1;">
-                                    <h3 style="margin: 0; font-size: 1.1rem; color: var(--primary-dark); letter-spacing: 0.5px; text-transform: uppercase;">AI MANAGEMENT</h3>
-                                    <button onclick="event.stopPropagation(); checkAllAIKeys(this);" class="btn btn-primary" style="padding: 8px 16px; font-size: 0.85rem; border-radius: 6px; display: flex; align-items: center; gap: 8px;">
-                                        <i class="fas fa-sync-alt"></i> Check keys
-                                    </button>
-                                </div>
-                                <i class="fas fa-chevron-down accordion-arrow" style="transition: transform 0.3s; color: var(--text-muted);"></i>
-                            </div>
-
-                            <!-- Accordion Content -->
-                            <div class="accordion-content" style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out;">
-                                <div style="padding: 0 1.5rem 1.5rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
-                                    <div style="overflow-x: auto;">
-                                        <table style="width: 100%; border-collapse: collapse; min-width: 500px;">
-                                            <thead>
-                                                <tr style="text-align: left; border-bottom: 2px solid var(--bg-main);">
-                                                    <th style="padding: 12px; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;">Key Name</th>
-                                                    <th style="padding: 12px; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;">Use</th>
-                                                    <th style="padding: 12px; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;">Status</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="ai-keys-table-body">
-                                                <tr id="ai-keys-loading">
-                                                    <td colspan="3" style="padding: 2rem; text-align: center; color: var(--text-muted);">
-                                                        <i class="fas fa-spinner fa-spin"></i> Loading keys...
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="center-placeholder">
+                        <i class="fas fa-cog" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
+                        <h2>General Settings</h2>
+                        <p>Dashboard configurations will be available here soon.</p>
                     </div>
                 `;
-
-                fetchAIKeys();
             });
-
-            window.toggleAccordion = function (header) {
-                const content = header.nextElementSibling;
-                const arrow = header.querySelector('.accordion-arrow');
-                if (content.style.maxHeight === '0px' || !content.style.maxHeight) {
-                    content.style.maxHeight = '2000px'; // Allow expansion
-                    arrow.style.transform = 'rotate(180deg)';
-                    header.style.background = 'var(--bg-main)';
-                } else {
-                    content.style.maxHeight = '0';
-                    arrow.style.transform = 'rotate(0)';
-                    header.style.background = 'none';
-                }
-            };
-
-            async function fetchAIKeys() {
-                try {
-                    const res = await fetch('/api/admin/ai-keys');
-                    const data = await res.json();
-                    const tbody = document.getElementById('ai-keys-table-body');
-
-                    if (data.status === 'success') {
-                        tbody.innerHTML = '';
-                        data.keys.forEach(key => {
-                            const tr = document.createElement('tr');
-                            tr.style.borderBottom = '1px solid var(--bg-main)';
-                            tr.innerHTML = `
-                                <td style="padding: 12px; font-weight: 500; font-family: monospace;">${key.name}</td>
-                                <td style="padding: 12px;">
-                                    <span style="background: var(--bg-main); padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">${key.use}</span>
-                                </td>
-                                <td style="padding: 12px;" id="status-cell-${key.name}">
-                                    <span class="status-badge" style="background: #f1f5f9; color: #64748b; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">Pending</span>
-                                </td>
-                            `;
-                            tbody.appendChild(tr);
-                        });
-
-                        // Automatically expand if mobile isn't too small, or leave collapsed
-                        // For now let's leave it to user click or if we feel nice
-                    }
-                } catch (error) {
-                    console.error("Error fetching AI keys:", error);
-                }
-            }
-
-            window.checkAllAIKeys = async function (btn) {
-                const originalContent = btn.innerHTML;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
-                btn.disabled = true;
-
-                const tableBody = document.getElementById('ai-keys-table-body');
-                const rowNames = Array.from(tableBody.querySelectorAll('tr')).map(tr => {
-                    const nameCell = tr.querySelector('td');
-                    return nameCell ? nameCell.innerText.trim() : null;
-                }).filter(name => name);
-
-                for (const keyName of rowNames) {
-                    const statusCell = document.getElementById(`status-cell-${keyName}`);
-                    statusCell.innerHTML = '<i class="fas fa-circle-notch fa-spin" style="color: var(--primary-color);"></i>';
-
-                    try {
-                        const res = await fetch('/api/admin/check-ai-key', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ key_name: keyName })
-                        });
-                        const data = await res.json();
-
-                        if (data.key_status === 'Active') {
-                            statusCell.innerHTML = '<span style="background: #dcfce7; color: #166534; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 800;"><i class="fas fa-check-circle"></i> Active</span>';
-                        } else {
-                            statusCell.innerHTML = '<span style="background: #fee2e2; color: #991b1b; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 800;"><i class="fas fa-times-circle"></i> Invalid</span>';
-                        }
-                    } catch (e) {
-                        statusCell.innerHTML = '<span style="background: #fee2e2; color: #991b1b; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 800;">Error</span>';
-                    }
-                    // Small delay to make it look like it's actually checking one by one
-                    await new Promise(r => setTimeout(r, 300));
-                }
-
-                btn.innerHTML = originalContent;
-                btn.disabled = false;
-            };
 
             // Load Research Requests from DB
             navResearches.addEventListener('click', async (e) => {
@@ -1117,6 +998,7 @@
                 let activeTab = 'nav-jobs-all';
                 if (mode === 'algo') activeTab = 'nav-jobs-algo';
                 if (mode === 'post') activeTab = 'nav-jobs-post';
+                if (mode === 'duplicates') activeTab = 'nav-jobs-duplicates';
                 localStorage.setItem('activeAdminTab', activeTab);
 
                 const btnStyle = (isActive) => `font-size: 1.1rem; flex: 0 0 auto; white-space: nowrap; font-weight: 700; border-radius: 6px; padding: 10px 20px; cursor: pointer; border: ${isActive ? 'none' : '1px solid var(--border-color)'}; background: ${isActive ? 'var(--primary-color)' : 'transparent'}; color: ${isActive ? '#fff' : 'var(--text-main)'}; transition: all 0.2s;`;
@@ -1125,6 +1007,7 @@
                     <div class="admin-tab-header" style="display: flex; overflow-x: auto; gap: 10px; flex-wrap: nowrap; max-width: 100%; padding-bottom: 8px; -webkit-overflow-scrolling: touch; scrollbar-width: none;">
                         <button onclick="window.loadManageJobs('all')" style="${btnStyle(mode === 'all')}" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">ALL JOBS</button>
                         <button onclick="window.loadManageJobs('algo')" style="${btnStyle(mode === 'algo')}" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'"><i class="fas fa-robot"></i> ALGORITHM JOBS</button>
+                        <button onclick="window.loadManageJobs('duplicates')" style="${btnStyle(mode === 'duplicates')}" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'"><i class="fas fa-brain"></i> JOB MEMORY</button>
                         <button onclick="window.loadManageJobs('post')" style="${btnStyle(mode === 'post')}" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
                             <i class="fas fa-plus"></i> POST A JOB
                         </button>
@@ -1167,31 +1050,39 @@
                         let jobsToRender = data.jobs;
                         if (mode === 'algo') {
                             jobsToRender = jobsToRender.filter(j => j.is_algorithm === true);
+                        } else if (mode === 'duplicates') {
+                            jobsToRender = jobsToRender.filter(j => j.has_memory === true);
                         }
 
                         if (jobsToRender.length === 0) {
                             contentArea.innerHTML = `
                                 <div class="center-placeholder">
-                                    <i class="fas fa-${mode === 'algo' ? 'robot' : 'briefcase'}" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
+                                    <i class="fas fa-${mode === 'algo' ? 'robot' : (mode === 'duplicates' ? 'brain' : 'briefcase')}" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
                                     <h2>No Jobs Found</h2>
-                                    <p>${mode === 'algo' ? 'No jobs have been posted through the UI to trigger the AI yet.' : 'Your database currently has 0 job postings.'}</p>
+                                    <p>${mode === 'algo' ? 'No jobs have been posted through the UI to trigger the AI yet.' : (mode === 'duplicates' ? 'No jobs currently have duplicate-prevention memory saved.' : 'Your database currently has 0 job postings.')}</p>
                                 </div>
                             `;
                             return;
                         }
 
                         let dateCleanupHTML = '';
-                        if (mode === 'all') {
+                        if (mode === 'all' || mode === 'duplicates') {
                             try {
-                                const dateRes = await fetch('/api/admin/job-dates');
+                                const endpointUrl = mode === 'duplicates' ? '/api/admin/memory-dates' : '/api/admin/job-dates';
+                                const dateRes = await fetch(endpointUrl);
                                 const dateData = await dateRes.json();
                                 if (dateData.status === 'success' && dateData.dates.length > 0) {
+                                    const dropdownTitle = mode === 'duplicates' ? 'Clear Memory By Date' : 'Cleanup By Date';
+                                    const actionText = mode === 'duplicates' ? 'Clear Memory' : 'Delete All';
+                                    const iconList = mode === 'duplicates' ? 'fa-eraser' : 'fa-trash-alt';
+                                    const colorTheme = mode === 'duplicates' ? '#f59e0b' : '#ef4444';
+                                    
                                     dateCleanupHTML = `
                                         <div style="margin-bottom: 2rem; max-width: 400px;">
-                                            <label style="display: block; font-weight: 700; color: var(--ext-dark, #203a45); margin-bottom: 0.6rem; font-size: 1.1rem;">Cleanup By Date <span style="color: #ef4444;">*</span></label>
+                                            <label style="display: block; font-weight: 700; color: var(--ext-dark, #203a45); margin-bottom: 0.6rem; font-size: 1.1rem;">${dropdownTitle} <span style="color: ${colorTheme};">*</span></label>
                                             <div style="position: relative;">
                                                 <div id="date-cleanup-trigger" onclick="toggleDropdown(event, 'main-cleanup')" style="display: flex; align-items: center; justify-content: space-between; background: #fff; border: 1.5px solid #d1d5db; padding: 12px 18px; border-radius: 10px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: border-color 0.2s; user-select: none;" onmouseover="this.style.borderColor='#9ca3af'" onmouseout="this.style.borderColor='#d1d5db'">
-                                                    <span style="color: #4b5563; font-size: 1rem;">Select a date to delete</span>
+                                                    <span style="color: #4b5563; font-size: 1rem;">Select a date</span>
                                                     <i class="fas fa-chevron-down" style="font-size: 0.9rem; color: #1f2937;"></i>
                                                 </div>
 
@@ -1205,8 +1096,8 @@
                                                     <span style="font-size: 0.75rem; color: #6b7280;">${d.count} Jobs</span>
                                                 </div>
                                                 <div style="display: flex; align-items: center; gap: 8px;">
-                                                    <button onclick="event.stopPropagation(); window.confirmDeleteByDate('${d.date}', ${d.count})" style="background: transparent; color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); padding: 5px 10px; border-radius: 6px; font-weight: 600; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: all 0.2s;" onmouseover="this.style.background='#ef4444'; this.style.color='#fff';" onmouseout="this.style.background='transparent'; this.style.color='#ef4444';">
-                                                        <i class="fas fa-trash-alt"></i> Delete
+                                                    <button onclick="event.stopPropagation(); window.confirmGlobalAction('${d.date}', ${d.count}, '${mode}')" style="background: transparent; color: ${colorTheme}; border: 1px solid ${colorTheme}; opacity: 0.8; padding: 5px 10px; border-radius: 6px; font-weight: 600; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: all 0.2s;" onmouseover="this.style.background='${colorTheme}'; this.style.color='#fff';" onmouseout="this.style.background='transparent'; this.style.color='${colorTheme}';">
+                                                        <i class="fas ${iconList}"></i> ${actionText}
                                                     </button>
                                                 </div>
                                             </div>
@@ -1249,10 +1140,15 @@
                                     sourceBadge = `<td style="white-space:nowrap;"><span style="background: rgba(197, 81, 44, 0.1); color: #c5512c; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 600;"><i class="fas fa-ban"></i> Rejected</span></td>`;
                                 }
                             } else {
-                                // Algorithm Jobs tab
+                                // Algorithm Jobs / Duplicate Memory tab
                                 sourceBadge = job.ai_approved
                                     ? `<td style="white-space:nowrap;"><span style="background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 600;"><i class="fas fa-check-circle"></i> Approved</span></td>`
                                     : `<td style="white-space:nowrap;"><span style="background: rgba(197, 81, 44, 0.1); color: #c5512c; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 600;"><i class="fas fa-ban"></i> Rejected</span></td>`;
+                            }
+                            
+                            let rightActionBtn = `<button class="action-btn" style="color: #ef4444;" onclick="event.stopPropagation(); openJobDeleteModal(event, ${job.id})"><i class="fas fa-trash"></i></button>`;
+                            if (mode === 'duplicates') {
+                                rightActionBtn = `<button class="action-btn" style="color: #f59e0b; border: 1px solid #f59e0b; border-radius: 4px; font-size: 0.8rem; font-weight: 600; font-family: inherit; padding: 4px 10px;" onclick="event.stopPropagation(); window.clearSingleJobMemory(${job.id})"><i class="fas fa-eraser"></i> CLEAR MEMORY</button>`;
                             }
 
                             // Store job data on the row for click access
@@ -1268,7 +1164,7 @@
                                     <td class="action-cell">
                                         <div style="display:flex; align-items:center;">
                                             ${job.admin_email ? `<button class="action-btn" style="color: var(--primary-dark);" title="View Admin Details" onclick="event.stopPropagation(); window.showAdminInfo('${job.admin_name}', '${job.admin_email}', '${job.admin_picture}')"><i class="fas fa-user-lock"></i></button>` : ''}
-                                            <button class="action-btn" style="color: #ef4444;" onclick="event.stopPropagation(); openJobDeleteModal(event, ${job.id})"><i class="fas fa-trash"></i></button>
+                                            ${rightActionBtn}
                                         </div>
                                     </td>
                                 </tr>
@@ -1289,16 +1185,37 @@
                 }
             };
 
-            window.confirmDeleteByDate = (date, count) => {
+            window.confirmGlobalAction = (date, count, mode) => {
                 document.getElementById('deleteModal').classList.add('active');
-                document.querySelector('.delete-modal-text').innerHTML = `Are you sure you want to permanently delete <strong>all ${count} jobs</strong> posted on <strong>${date}</strong>? <br><br> (This will remove everything from this day in the "All Jobs" tab).`;
+                if (mode === 'duplicates') {
+                    document.querySelector('.delete-modal-text').innerHTML = `Are you sure you want to clear the Duplicate Memory for <strong>all jobs</strong> posted on <strong>${date}</strong>? <br><br> (This allows identical jobs from this day to be uploaded again. Original jobs will NOT be deleted).`;
+                    currentDeleteType = 'clear-memory-date';
+                } else {
+                    document.querySelector('.delete-modal-text').innerHTML = `Are you sure you want to permanently delete <strong>all ${count} jobs</strong> posted on <strong>${date}</strong>? <br><br> (This will remove everything from this day in the "All Jobs" tab).`;
+                    currentDeleteType = 'bulk-date';
+                }
 
                 // Track special delete type
                 window.bulkDeleteDate = date;
-                currentDeleteType = 'bulk-date';
 
                 // Close dropdown
                 document.querySelectorAll('.action-dropdown').forEach(d => d.classList.remove('active'));
+            };
+            
+            window.clearSingleJobMemory = async (jobId) => {
+                if(!confirm("Erase memory for this Job? This will allow someone to post the exact same job again without it being blocked as a duplicate!")) return;
+                
+                try {
+                    const res = await fetch(`/api/admin/jobs/${jobId}/clear-memory`, { method: 'PATCH' });
+                    const data = await res.json();
+                    if (data.status === 'success') {
+                        window.loadManageJobs('duplicates');
+                    } else {
+                        alert("Error: " + data.message);
+                    }
+                } catch (e) {
+                    alert("Network error clearing memory...");
+                }
             };
 
             // Sidebar Event Listener links directly to 'all' subtab
@@ -1369,8 +1286,18 @@
                     document.getElementById('jd-apply-group').style.display = 'none';
                 }
 
-                // Description
-                document.getElementById('jd-description').textContent = job.description || 'No description provided.';
+                // Description or Memory
+                const currentMode = localStorage.getItem('activeAdminTab');
+                const descLabel = document.getElementById('jd-description-label');
+                const descValue = document.getElementById('jd-description');
+                
+                if (currentMode === 'nav-jobs-duplicates' && job.has_memory) {
+                    descLabel.innerHTML = `<i class="fas fa-brain" style="color: #f59e0b;"></i> Original Raw Text (Memory)`;
+                    descValue.textContent = job.raw_jd_text || 'No memory attached to this job.';
+                } else {
+                    descLabel.innerHTML = `Generated Career Guide`;
+                    descValue.textContent = job.description || 'No description provided.';
+                }
 
                 jobDetailModal.classList.add('active');
             };
@@ -1554,6 +1481,23 @@
                     }
                     return;
                 }
+                
+                if (currentDeleteType === 'clear-memory-date') {
+                    const dateStr = window.bulkDeleteDate;
+                    try {
+                        const res = await fetch(`/api/admin/jobs/clear-memory-by-date?date=${encodeURIComponent(dateStr)}`, { method: 'PATCH' });
+                        const data = await res.json();
+                        if (data.status === 'success') {
+                            deleteModal.classList.remove('active');
+                            window.loadManageJobs('duplicates'); // Refresh the memory view
+                        } else {
+                            alert("Error: " + data.message);
+                        }
+                    } catch (e) {
+                        alert("Failed to communicate with server.");
+                    }
+                    return;
+                }
 
                 if (!messageToDeleteId) return;
 
@@ -1599,6 +1543,8 @@
                 window.loadManageJobs('all');
             } else if (savedTabId === 'nav-jobs-post') {
                 window.loadManageJobs('post');
+            } else if (savedTabId === 'nav-jobs-duplicates') {
+                window.loadManageJobs('duplicates');
             } else if (savedTabId === 'nav-settings') {
                 navSettings.click();
             } else if (savedTabId) {
@@ -1660,6 +1606,7 @@
 
                 if (data.status === 'success') {
                     const job = data.guide;
+                    job.raw_jd_text = jdText; // Inject raw text into the job object
                     const htmlResponse = marked.parse(job.description);
 
                     // Sanitize Company from AI immediately so preview is correct
@@ -1701,6 +1648,8 @@
                             <div class="markdown-body" style="line-height: 1.6; font-size: 1rem; overflow-x: auto; background: white; padding: 1.5rem; border: 1px solid var(--border-color); border-radius: 8px;">${htmlResponse}</div>
                         </div>
                     `;
+                } else if (data.status === 'duplicate') {
+                    aiMsg.innerHTML = `<span style="color: #c5512c; font-size: 1.1rem;"><i class="fas fa-ban"></i> <strong>${data.message}</strong></span>`;
                 } else {
                     aiMsg.innerHTML = `<span style="color: red;"><i class="fas fa-exclamation-triangle"></i> Error: ${data.message}</span>`;
                 }
