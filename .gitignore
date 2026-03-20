@@ -12,3 +12,9 @@ database.db
 # Ignore Google OAuth credentials
 allata1.json
 Documents
+
+# Environments
+all-at-a1/
+
+# VS Code
+.vscode/

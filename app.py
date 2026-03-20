@@ -250,15 +250,15 @@ def sitemap():
     # 1. Static Pages
     static_paths = [
         '/',
-        '/browse_jobs',
-        '/contact',
-        '/aboutus',
+        '/browse-jobs',
+        '/contact-us',
+        '/about-us',
         '/projects',
         '/DSAAI',
         '/crack2026',
         '/promptai',
-        '/terms',
-        '/privacy'
+        '/terms-and-conditions',
+        '/privacy-policy'
     ]
     for path in static_paths:
         pages.append({"loc": f"{base_url}{path}"})
@@ -299,7 +299,7 @@ def robots():
     content += f"Sitemap: https://all-at-a1.in/sitemap.xml\n"
     return content, 200, {'Content-Type': 'text/plain'}
 
-@app.route('/browse_jobs')
+@app.route('/browse-jobs')
 def usa_jobs_page():
     # Read the main job portal HTML
     try:
@@ -463,7 +463,7 @@ def usa_jobs_page():
             def build_page_url(p):
                 page_args = base_args.copy()
                 page_args['page'] = p
-                return f"/browse_jobs?{urlencode(page_args)}#jobs"
+                return f"/browse-jobs?{urlencode(page_args)}#jobs"
 
             # 1. Previous Button
             if current_page > 1:
@@ -1197,59 +1197,59 @@ def page_not_found(e):
     except Exception:
         return "404 - Page Not Found", 404
 
-@app.route('/job.html')
+@app.route('/jobs')
 def job_html_page():
     return render_template('job.html')
 
-@app.route('/aboutus.html')
+@app.route('/about-us')
 def aboutus_page():
     return render_template('aboutus.html')
 
-@app.route('/contact.html')
+@app.route('/contact-us')
 def contact_page():
     return render_template('contact.html')
 
-@app.route('/terms.html')
+@app.route('/terms-and-conditions')
 def terms_page():
     return render_template('terms.html')
 
-@app.route('/privacy.html')
+@app.route('/privacy-policy')
 def privacy_page():
     return render_template('privacy.html')
 
-@app.route('/students.html')
+@app.route('/student-library')
 def students_page():
     return render_template('students/students.html')
 
-@app.route('/projects.html')
+@app.route('/student-projects')
 def projects_page():
     return render_template('students/projects.html')
 
-@app.route('/project1.html')
+@app.route('/student-projects/project-1')
 def project1_page():
     return render_template('students/project1.html')
 
-@app.route('/project2.html')
+@app.route('/student-projects/project-2')
 def project2_page():
     return render_template('students/project2.html')
 
-@app.route('/project3.html')
+@app.route('/student-projects/project-3')
 def project3_page():
     return render_template('students/project3.html')
 
-@app.route('/project4.html')
+@app.route('/student-projects/project-4')
 def project4_page():
     return render_template('students/project4.html')
 
-@app.route('/DSAAI.html')
+@app.route('/dsa-and-ai')
 def dsaai_page():
     return render_template('students/DSAAI.html')
 
-@app.route('/crack2026.html')
+@app.route('/crack-2026')
 def crack2026_page():
     return render_template('students/crack2026.html')
 
-@app.route('/promptai.html')
+@app.route('/prompt-engineering')
 def promptai_page():
     return render_template('students/promptai.html')
 

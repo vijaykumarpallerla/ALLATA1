@@ -566,3 +566,64 @@ app.py
 
 ## 6. Dashboard Cleanup ([admin.html](cci:7://file:///c:/Users/Palle/OneDrive/Desktop/ALLATA1/templates/admin.html:0:0-0:0))
 - **Settings Page:** Removed old 'AI Management' tables, fetch logic, and accordion elements from the Settings tab to improve load speed. Replaced with a completely grid-safe UI placeholder that looks identical to empty dashboards on Mobile.
+<<<<<<< HEAD
+=======
+
+==========================================================================
+UPDATE: 20-03-2026
+==========================================================================
+
+- **URL Naming Convention Overhaul (Clean URL Migration):**
+  All site-wide URLs migrated from legacy .html file-based paths to clean,
+  hyphenated SEO-friendly slugs across app.py and every HTML template.
+
+  ROUTE MAPPING (app.py):
+  Old Route              → New Clean Route
+  /browse_jobs           → /browse-jobs
+  /terms.html            → /terms-and-conditions
+  /privacy.html          → /privacy-policy
+  /contact.html          → /contact-us
+  /aboutus.html          → /about-us
+  /students.html         → /student-library
+  /projects.html         → /student-projects
+  /project1.html         → /student-projects/project-1
+  /project2.html         → /student-projects/project-2
+  /project3.html         → /student-projects/project-3
+  /project4.html         → /student-projects/project-4
+  /DSAAI.html            → /dsa-and-ai
+  /crack2026.html        → /crack-2026
+  /promptai.html         → /prompt-engineering
+  /job.html              → /jobs
+
+  All legacy .html routes removed from app.py. Only clean routes are registered.
+
+- **Global Link Sanitization (All 20+ Templates):**
+  Every href across all navbars, dropdowns, footer columns, inline CTAs, and
+  JS window.location handlers was updated to use the absolute clean URLs above.
+  This covered relative .html paths (e.g. href="terms.html"), absolute html paths
+  (e.g. href="/job.html"), and Jinja url_for() calls (e.g. {{ url_for('terms_page') }})
+  which were all replaced with static absolute paths for consistency and reliability.
+
+- **Legal Agreements Dropdown — About Us Added:**
+  The "Legal Agreements" navbar dropdown now contains three links on all pages:
+  (1) Terms and Conditions, (2) Privacy Policy, (3) About Us.
+
+- **Post a Job — Global URL Fix:**
+  All remaining href="job.html", href="/job.html", onclick="...='job.html'" and
+  window.location.replace('/browse_jobs') references replaced with /jobs and
+  /browse-jobs respectively across every template.
+
+- **Sitemap Updated:**
+  Static paths in the dynamic sitemap.xml generator (app.py) updated to reflect
+  all new clean URL slugs (/contact-us, /about-us, /terms-and-conditions, etc.).
+
+- **Bug Fixes (index.html):**
+  - href="/about-us.html" in the Legal Agreements dropdown corrected to /about-us.
+  - href="/USA_Browse_jobs.html" in the navbar corrected to /browse-jobs.
+  - href="terms-and-conditions" (missing leading slash) corrected to /terms-and-conditions.
+
+- **Bug Fixes (blog_post.html):**
+  All remaining Jinja {{ url_for('...') }} calls in the navbar and footer replaced
+  with clean absolute URLs (/browse-jobs, /student-library, /terms-and-conditions,
+  /privacy-policy, /contact-us).
+>>>>>>> 02087dd (after changing url names for all pages)
