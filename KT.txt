@@ -570,7 +570,7 @@ app.py
 =======
 
 ==========================================================================
-UPDATE: 20-03-2026
+UPDATE: 20-03-2026 - Vivek 
 ==========================================================================
 
 - **URL Naming Convention Overhaul (Clean URL Migration):**
@@ -627,3 +627,25 @@ UPDATE: 20-03-2026
   with clean absolute URLs (/browse-jobs, /student-library, /terms-and-conditions,
   /privacy-policy, /contact-us).
 >>>>>>> 02087dd (after changing url names for all pages)
+
+
+
+
+# DATE: March 20, 2026
+# FEATURE UPDATES: Admin Dashboard UI Refinements & Bug Fixes
+# DEVELOPER: Assistant / Vijay
+
+## 1. Global Admin Profile Navbar ([admin.html](cci:7://file:///c:/Users/Palle/OneDrive/Desktop/ALLATA1/templates/admin.html:0:0-0:0))
+- **Move to Global Layout:** Plucked the Admin Profile block (Avatar, `<Hi Name>`, and `Logout` Button) out of the dynamic Workspace Header and permanently locked it into the topmost Global Navigation Bar (`.nav-actions`).
+- **Mobile Responsiveness Fix:** Created a custom `@media (max-width: 768px)` rule that mathematically hides the bulky profile picture and name on mobile screens while leaving the `Logout` and `Home` icons completely centered, ensuring the navbar never breaks or wraps on small phones.
+
+## 2. Chronological API Date Sorting ([app.py](cci:7://file:///c:/Users/Palle/OneDrive/Desktop/ALLATA1/app.py:0:0-0:0))
+- **The Issue:** The `/api/admin/job-dates` and `memory-dates` endpoints were sorting string dates alphabetically by day (e.g., 17, 18, 19) rather than by actual calendar chronology.
+- **The Fix:** Implemented a new, completely backend-driven [safe_sort](cci:1://file:///c:/Users/Palle/OneDrive/Desktop/ALLATA1/app.py:1023:8-1029:35) lambda loop. This loop runs `datetime.strptime()` against every single `DD/MM/YYYY` database chunk and forces the API to strictly return the lists backward from Newest (Top) -> Oldest (Bottom). 
+
+## 3. Date Cleanup UI Redesign ([admin.html](cci:7://file:///c:/Users/Palle/OneDrive/Desktop/ALLATA1/templates/admin.html:0:0-0:0))
+- **Single-Line Streamline:** Scrapped the old vertical stack (Date on top, Count underneath) which took up huge amounts of padding. Converted the Javascript DOM injection into a tight, professional, single-line horizontal layout.
+  - Added a subtle `<i class="far fa-calendar-alt">` icon.
+  - Converted the raw `XX Jobs` text into a sleek, highlighted badge `<span style="background: #f3f4f6;">`.
+  - Added clean `border-bottom` row dividers for a table-list feel.
+- **Micro-Scrolling (Max-Height):** Placed a hard `max-height: 175px` clamp on the `.action-dropdown` element. This restricts the element bounds perfectly so it ONLY displays the 3 most recent dates, aggressively shrinking vertical clutter and forcing the admin to scroll if they want older entries. Fits securely on both `ALL JOBS` and `JOB MEMORY` tabs natively.

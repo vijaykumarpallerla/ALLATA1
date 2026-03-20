@@ -988,14 +988,23 @@ def delete_admin_job(job_id):
 @admin_required
 def get_job_dates():
     try:
-        # Get unique dates and count of ALL jobs for each date (including AI ones)
         from sqlalchemy import func
         results = db.session.query(
             Job.posted, 
             func.count(Job.id)
         ).group_by(Job.posted).all()
         
-        dates = [{"date": r[0], "count": r[1]} for r in results]
+        dates = [{"date": r[0], "count": r[1]} for r in results if r[0]]
+        
+        def safe_sort(d):
+            try:
+                from datetime import datetime
+                return datetime.strptime(d['date'].split(' ')[0], "%d/%m/%Y")
+            except:
+                from datetime import datetime
+                return datetime.min
+
+        dates.sort(key=safe_sort, reverse=True)
         return jsonify({"status": "success", "dates": dates})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
@@ -1011,6 +1020,16 @@ def get_memory_dates():
         ).filter(Job.raw_jd_text.isnot(None), Job.raw_jd_text != "").group_by(Job.posted).all()
         
         dates = [{"date": r[0], "count": r[1]} for r in results if r[0]]
+        
+        def safe_sort(d):
+            try:
+                from datetime import datetime
+                return datetime.strptime(d['date'].split(' ')[0], "%d/%m/%Y")
+            except:
+                from datetime import datetime
+                return datetime.min
+
+        dates.sort(key=safe_sort, reverse=True)
         return jsonify({"status": "success", "dates": dates})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500

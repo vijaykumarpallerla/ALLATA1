@@ -1097,17 +1097,24 @@
                                                     <i class="fas fa-chevron-down" style="font-size: 0.9rem; color: #1f2937;"></i>
                                                 </div>
 
-                                                <div class="action-dropdown" id="dropdown-main-cleanup" style="top: calc(100% + 5px); left: 0; right: 0; min-width: 100%; padding: 0.4rem; max-height: 350px; overflow-y: auto; border: 1.5px solid #d1d5db; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); background: #fff; z-index: 1000;">
+                                                <div class="action-dropdown" id="dropdown-main-cleanup" style="top: calc(100% + 5px); left: 0; right: 0; width: 100%; box-sizing: border-box; padding: 0.5rem; max-height: 175px; overflow-y: auto; overflow-x: hidden; border: 1.5px solid #e5e7eb; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); background: #fff; z-index: 1000;">
                                     `;
                                     dateData.dates.forEach((d, idx) => {
+                                        const isLast = idx === dateData.dates.length - 1;
+                                        const borderBottom = isLast ? 'none' : '1px solid #f3f4f6';
                                         dateCleanupHTML += `
-                                            <div class="action-dropdown-item" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; border-radius: 8px; margin-bottom: 2px; border: none; transition: background 0.2s;" onmouseover="this.style.background='#f3f4f6';" onmouseout="this.style.background='transparent';">
-                                                <div style="display: flex; flex-direction: column;">
-                                                    <span style="font-weight: 600; color: #111827; font-size: 0.95rem;">${d.date}</span>
-                                                    <span style="font-size: 0.75rem; color: #6b7280;">${d.count} Jobs</span>
+                                            <div class="action-dropdown-item" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; margin-bottom: 2px; border-bottom: ${borderBottom}; transition: background 0.2s; border-radius: 6px;" onmouseover="this.style.background='#f9fafb';" onmouseout="this.style.background='transparent';">
+                                                <div style="display: flex; align-items: center; gap: 10px;">
+                                                    <div style="display: flex; align-items: center; gap: 6px;">
+                                                        <i class="far fa-calendar-alt" style="color: #9ca3af; font-size: 0.9rem;"></i>
+                                                        <span style="font-weight: 600; color: #1f2937; font-size: 0.95rem;">${d.date}</span>
+                                                    </div>
+                                                    <span style="font-size: 0.75rem; color: #6b7280; font-weight: 600; background: #f3f4f6; padding: 3px 8px; border-radius: 12px; border: 1px solid #e5e7eb;">
+                                                        ${d.count} Jobs
+                                                    </span>
                                                 </div>
-                                                <div style="display: flex; align-items: center; gap: 8px;">
-                                                    <button onclick="event.stopPropagation(); window.confirmGlobalAction('${d.date}', ${d.count}, '${mode}')" style="background: transparent; color: ${colorTheme}; border: 1px solid ${colorTheme}; opacity: 0.8; padding: 5px 10px; border-radius: 6px; font-weight: 600; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: all 0.2s;" onmouseover="this.style.background='${colorTheme}'; this.style.color='#fff';" onmouseout="this.style.background='transparent'; this.style.color='${colorTheme}';">
+                                                <div style="display: flex; align-items: center;">
+                                                    <button onclick="event.stopPropagation(); window.confirmGlobalAction('${d.date}', ${d.count}, '${mode}')" style="background: transparent; color: ${colorTheme}; border: 1px solid ${colorTheme}; opacity: 0.9; padding: 5px 12px; border-radius: 20px; font-weight: 600; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s; white-space: nowrap;" onmouseover="this.style.background='${colorTheme}'; this.style.color='#fff';" onmouseout="this.style.background='transparent'; this.style.color='${colorTheme}';">
                                                         <i class="fas ${iconList}"></i> ${actionText}
                                                     </button>
                                                 </div>

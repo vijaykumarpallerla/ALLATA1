@@ -2,7 +2,7 @@
 __pycache__/
 Content 
 Content.txt
-upload_2_jobs.py
+upload_2_jobs.py 
 database.db
 
 # Exclude AI-generated Word Documents (Keep text notes safe for reference)
@@ -18,3 +18,6 @@ all-at-a1/
 
 # VS Code
 .vscode/
+
+# Local Info
+commit_id.txt
