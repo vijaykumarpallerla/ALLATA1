@@ -251,12 +251,15 @@ def sitemap():
     static_paths = [
         '/',
         '/browse-jobs',
+        '/jobs',
         '/contact-us',
         '/about-us',
-        '/projects',
-        '/DSAAI',
-        '/crack2026',
-        '/promptai',
+        '/student-library',
+        '/student-projects',
+        '/dsa-and-ai',
+        '/crack-2026',
+        '/prompt-engineering',
+        '/research',
         '/terms-and-conditions',
         '/privacy-policy'
     ]
