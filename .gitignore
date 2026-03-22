@@ -7,6 +7,7 @@ database.db
 
 # Exclude AI-generated Word Documents (Keep text notes safe for reference)
 *.docx
+!static/resumes/*.docx
 *.txt
 
 # Ignore Google OAuth credentials
