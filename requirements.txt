@@ -6,3 +6,4 @@ python-dotenv
 requests
 Authlib
 groq
+python-docx

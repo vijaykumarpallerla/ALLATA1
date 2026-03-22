@@ -176,6 +176,7 @@ class ResearchRequest(db.Model):
     topic = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
 
+    
 
 with app.app_context():
     db.create_all()
@@ -228,6 +229,10 @@ def home():
 def google_verification():
     return render_template('google57b6f02c4dd10a3a.html')
 
+@app.route('/resume-kits')
+def resume_kits():
+    return render_template('resume_kits.html')
+
 @app.route('/blog/<blog_id>')
 def read_blog(blog_id):
     try:
@@ -261,7 +266,8 @@ def sitemap():
         '/prompt-engineering',
         '/research',
         '/terms-and-conditions',
-        '/privacy-policy'
+        '/privacy-policy',
+        '/resume-kits'
     ]
     for path in static_paths:
         pages.append({"loc": f"{base_url}{path}"})
@@ -731,6 +737,8 @@ def api_research():
     except Exception as e:
         db.session.rollback()
         return jsonify({"status": "error", "message": str(e)}), 500
+
+
 
 @app.route('/job')
 def job_detail():

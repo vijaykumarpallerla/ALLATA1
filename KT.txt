@@ -566,8 +566,6 @@ app.py
 
 ## 6. Dashboard Cleanup ([admin.html](cci:7://file:///c:/Users/Palle/OneDrive/Desktop/ALLATA1/templates/admin.html:0:0-0:0))
 - **Settings Page:** Removed old 'AI Management' tables, fetch logic, and accordion elements from the Settings tab to improve load speed. Replaced with a completely grid-safe UI placeholder that looks identical to empty dashboards on Mobile.
-<<<<<<< HEAD
-=======
 
 ==========================================================================
 UPDATE: 20-03-2026 - Vivek 
@@ -626,7 +624,6 @@ UPDATE: 20-03-2026 - Vivek
   All remaining Jinja {{ url_for('...') }} calls in the navbar and footer replaced
   with clean absolute URLs (/browse-jobs, /student-library, /terms-and-conditions,
   /privacy-policy, /contact-us).
->>>>>>> 02087dd (after changing url names for all pages)
 
 
 
@@ -649,3 +646,18 @@ UPDATE: 20-03-2026 - Vivek
   - Converted the raw `XX Jobs` text into a sleek, highlighted badge `<span style="background: #f3f4f6;">`.
   - Added clean `border-bottom` row dividers for a table-list feel.
 - **Micro-Scrolling (Max-Height):** Placed a hard `max-height: 175px` clamp on the `.action-dropdown` element. This restricts the element bounds perfectly so it ONLY displays the 3 most recent dates, aggressively shrinking vertical clutter and forcing the admin to scroll if they want older entries. Fits securely on both `ALL JOBS` and `JOB MEMORY` tabs natively.
+
+# DATE: March 22, 2026
+# FEATURE UPDATES: Role-Specific Resume Kits & Fresher Templates
+# DEVELOPER: Assistant / Vijay
+
+## 1. Resume Kits Page Creation
+- **New UI (`resume_kits.html`):** Built a dedicated "Resume Kits" page showcasing 9 tech roles (Full Stack, Data Scientist, Data Analyst, Machine Learning, Data Engineer, Software Engineer, Business Analyst, AI Engineer, Cloud Engineer) with matching 4-color branding and FontAwesome icons.
+- **Direct Downloads:** Configured direct `<a download>` links for users to easily grab `.docx` files without any database tracking or email collection, maximizing user ease.
+- **Sitemap Integration:** Added `/resume-kits` to the dynamic `sitemap.xml` generator within `app.py` to ensure immediate Google indexing for SEO.
+
+## 2. Automated Resume Generation Pipeline 
+- **Script (`generate_resumes.py`):** Created a standalone Python script utilizing the `python-docx` library to auto-generate beautifully formatted Microsoft Word documents for all 9 roles.
+- **Fresher & Student Focus:** Tailored the ATS-friendly layout specifically for entry-level candidates. The structural hierarchy prioritizes Education (with GPAs and Coursework) and Academic Projects heavily over standard professional experience gaps.
+- **ATS Power Words:** Engineered role-specific "Power Word" banks for each resume template. The generation script programmatically weaves these critical algorithm-beating keywords directly into the summary, bullet points, and project descriptions.
+- **Fill-in-the-Blank Templates:** Designed the `.docx` outputs as ready-to-use templates featuring bracketed generic placeholders (e.g., `[FULL NAME]`, `[University Name]`, `[Project Name]`), allowing students to instantly populate their personal details without disturbing the ATS-optimized phrasing.
