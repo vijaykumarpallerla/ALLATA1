@@ -147,7 +147,7 @@
                 <div class="kit-icon"><i class="fas fa-laptop-code"></i></div>
                 <h3>Full Stack Developer</h3>
                 <p>Pre-filled with optimized power words for both frontend and backend engineering, matching top ATS requirements.</p>
-                <a href="{{ url_for('static', filename='resumes/full_stack_developer.docx') }}" class="btn btn-primary" download><i class="fas fa-download"></i> Download Kit</a>
+                <button onclick="openResumeModal('full-stack')" class="btn btn-primary"><i class="fas fa-eye"></i> View Strategy & Download</button>
             </article>
 
             <!-- Data Scientist -->
@@ -155,7 +155,7 @@
                 <div class="kit-icon"><i class="fas fa-chart-pie"></i></div>
                 <h3>Data Scientist</h3>
                 <p>Highlight your statistical modeling, machine learning, and data visualization expertise using verified industry phrasing.</p>
-                <a href="{{ url_for('static', filename='resumes/data_scientist.docx') }}" class="btn btn-primary" download><i class="fas fa-download"></i> Download Kit</a>
+                <button onclick="openResumeModal('data-scientist')" class="btn btn-primary"><i class="fas fa-eye"></i> View Strategy & Download</button>
             </article>
 
             <!-- Data Analyst -->
@@ -163,7 +163,7 @@
                 <div class="kit-icon"><i class="fas fa-chart-line"></i></div>
                 <h3>Data Analyst</h3>
                 <p>Packed with actionable verbs and data translation keywords designed strictly to bypass initial automated screenings.</p>
-                <a href="{{ url_for('static', filename='resumes/data_analyst.docx') }}" class="btn btn-primary" download><i class="fas fa-download"></i> Download Kit</a>
+                <button onclick="openResumeModal('data-analyst')" class="btn btn-primary"><i class="fas fa-eye"></i> View Strategy & Download</button>
             </article>
 
             <!-- Machine Learning Engineer -->
@@ -171,7 +171,7 @@
                 <div class="kit-icon"><i class="fas fa-brain"></i></div>
                 <h3>Machine Learning Engineer</h3>
                 <p>Targeted ATS templates packed with power words for model deployment, NLP, deep learning, and MLOps.</p>
-                <a href="{{ url_for('static', filename='resumes/machine_learning_engineer.docx') }}" class="btn btn-primary" download><i class="fas fa-download"></i> Download Kit</a>
+                <button onclick="openResumeModal('machine-learning')" class="btn btn-primary"><i class="fas fa-eye"></i> View Strategy & Download</button>
             </article>
 
             <!-- Data Engineer -->
@@ -179,7 +179,7 @@
                 <div class="kit-icon"><i class="fas fa-database"></i></div>
                 <h3>Data Engineer</h3>
                 <p>Features optimal vocabulary for ETL pipelines, big data integration, and data warehousing to stand out to recruiter AIs.</p>
-                <a href="{{ url_for('static', filename='resumes/data_engineer.docx') }}" class="btn btn-primary" download><i class="fas fa-download"></i> Download Kit</a>
+                <button onclick="openResumeModal('data-engineer')" class="btn btn-primary"><i class="fas fa-eye"></i> View Strategy & Download</button>
             </article>
 
             <!-- Software Engineer -->
@@ -187,7 +187,7 @@
                 <div class="kit-icon"><i class="fas fa-code"></i></div>
                 <h3>Software Engineer</h3>
                 <p>Standardized, cleanly formatted generic engineering templates filled with algorithmic problem-solving and SDLC buzzwords.</p>
-                <a href="{{ url_for('static', filename='resumes/software_engineer.docx') }}" class="btn btn-primary" download><i class="fas fa-download"></i> Download Kit</a>
+                <button onclick="openResumeModal('software-engineer')" class="btn btn-primary"><i class="fas fa-eye"></i> View Strategy & Download</button>
             </article>
 
             <!-- Business Analyst -->
@@ -195,7 +195,7 @@
                 <div class="kit-icon"><i class="fas fa-briefcase"></i></div>
                 <h3>Business Analyst</h3>
                 <p>Communicate stakeholder engagement, requirement gathering, and process optimization strictly in ATS-friendly language.</p>
-                <a href="{{ url_for('static', filename='resumes/business_analyst.docx') }}" class="btn btn-primary" download><i class="fas fa-download"></i> Download Kit</a>
+                <button onclick="openResumeModal('business-analyst')" class="btn btn-primary"><i class="fas fa-eye"></i> View Strategy & Download</button>
             </article>
 
             <!-- AI Engineer -->
@@ -203,7 +203,7 @@
                 <div class="kit-icon"><i class="fas fa-robot"></i></div>
                 <h3>AI Engineer</h3>
                 <p>Modernized templates with prompt engineering, LLM integration, and generative AI keywords formatted for robots.</p>
-                <a href="{{ url_for('static', filename='resumes/ai_engineer.docx') }}" class="btn btn-primary" download><i class="fas fa-download"></i> Download Kit</a>
+                <button onclick="openResumeModal('ai-engineer')" class="btn btn-primary"><i class="fas fa-eye"></i> View Strategy & Download</button>
             </article>
 
             <!-- Cloud Engineer -->
@@ -211,7 +211,7 @@
                 <div class="kit-icon"><i class="fas fa-cloud"></i></div>
                 <h3>Cloud Engineer</h3>
                 <p>Pre-populated with essential power phrases for AWS/Azure/GCP architecture, CI/CD pipelines, and infrastructure as code.</p>
-                <a href="{{ url_for('static', filename='resumes/cloud_engineer.docx') }}" class="btn btn-primary" download><i class="fas fa-download"></i> Download Kit</a>
+                <button onclick="openResumeModal('cloud-engineer')" class="btn btn-primary"><i class="fas fa-eye"></i> View Strategy & Download</button>
             </article>
         </div>
     </main>
@@ -227,6 +227,11 @@
                 </a>
                 <p>A premier, AI-moderated career hub dedicated to connecting top talent with high-quality, verified
                     opportunities.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Our Products</h4>
+                <a href="/research">Research Desk</a>
+                <a href="/resume-kits">Resume Kits</a>
             </div>
             <div class="footer-col">
                 <h4>For Employers</h4>
@@ -255,6 +260,125 @@
     </footer>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+    <!-- SEO Highly-Visible Modals for Resume Strategies -->
+    <div id="resume-modal" style="display: none; align-items: center; justify-content: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); z-index: 9999; backdrop-filter: blur(4px);">
+        <div id="resume-modal-content" style="background: white; width: 90%; max-width: 650px; border-radius: 12px; padding: 2.2rem; box-shadow: 0 20px 40px rgba(0,0,0,0.15); position: relative; max-height: 90vh; overflow-y: auto;">
+            <button onclick="closeResumeModal()" style="position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 1.5rem; color: #6b7280; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='#6b7280'"><i class="fas fa-times"></i></button>
+            
+            <div style="text-align: center; margin-bottom: 1.8rem;">
+                <h2 id="modal-r-title" style="color: var(--primary-dark); font-size: 1.8rem; margin-bottom: 0.6rem; font-weight: 700;">Loading Strategy...</h2>
+                <span style="display: inline-block; background: #e0f2fe; color: #0284c7; padding: 5px 14px; border-radius: 20px; font-weight: 600; font-size: 0.85rem;"><i class="fas fa-robot"></i> ATS Optimized Format</span>
+            </div>
+
+            <div style="margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e7eb;">
+                <h4 style="color: #374151; font-weight: 700; font-size: 1.1rem; margin-bottom: 0.6rem;"><i class="fas fa-info-circle" style="color: var(--logo-color-1); margin-right: 6px;"></i> Strategic Overview</h4>
+                <p id="modal-r-desc" style="color: #4b5563; font-size: 0.95rem; line-height: 1.7;"></p>
+            </div>
+
+            <div style="margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e7eb;">
+                <h4 style="color: #374151; font-weight: 700; font-size: 1.1rem; margin-bottom: 0.6rem;"><i class="fas fa-lightbulb" style="color: var(--logo-color-4); margin-right: 6px;"></i> Core Philosophy</h4>
+                <p id="modal-r-phil" style="color: #4b5563; font-size: 0.95rem; line-height: 1.7;"></p>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <h4 style="color: #374151; font-weight: 700; font-size: 1.1rem; margin-bottom: 0.8rem;"><i class="fas fa-check-circle" style="color: var(--logo-color-2); margin-right: 6px;"></i> ATS Optimizations Included</h4>
+                <ul id="modal-r-ats" style="color: #4b5563; font-size: 0.95rem; line-height: 1.7; padding-left: 1.2rem; margin: 0;"></ul>
+            </div>
+
+            <div style="margin-bottom: 2rem; background: #f9fafb; padding: 1.2rem; border-radius: 8px; border: 1px dashed #d1d5db;">
+                <h4 style="color: #374151; font-weight: 700; font-size: 1rem; margin-bottom: 0.8rem;"><i class="fas fa-key" style="color: #f59e0b; margin-right: 6px;"></i> Embedded Power Keywords</h4>
+                <div id="modal-r-keys" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
+            </div>
+
+            <div style="text-align: center; margin-top: 1rem;">
+                <a id="modal-r-download" href="#" class="btn btn-primary" style="width: 100%; font-size: 1.15rem; padding: 14px; font-weight: 600;" download><i class="fas fa-file-word"></i> Download .docx Template</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Injection Engine -->
+    <script>
+        let resumeData = {};
+
+        // Fetch JSON on load so Googlebots can pre-read the network traffic
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const res = await fetch('/static/data/resumes.json');
+                resumeData = await res.json();
+            } catch (e) {
+                console.error("Failed to fetch AdSense resume SEO data:", e);
+            }
+        });
+
+        function openResumeModal(roleKey) {
+            const data = resumeData[roleKey];
+            if (!data) return;
+
+            // Inject SEO-rich text into DOM
+            document.getElementById('modal-r-title').textContent = data.title;
+            document.getElementById('modal-r-desc').textContent = data.description;
+            document.getElementById('modal-r-phil').textContent = data.core_philosophy;
+            
+            // Build ATS Bullet Points
+            const atsList = document.getElementById('modal-r-ats');
+            atsList.innerHTML = '';
+            data.ats_optimizations.forEach(opt => {
+                const li = document.createElement('li');
+                li.style.marginBottom = '6px';
+                li.textContent = opt;
+                atsList.appendChild(li);
+            });
+
+            // Build Keyword Pills
+            const keyBox = document.getElementById('modal-r-keys');
+            keyBox.innerHTML = '';
+            data.power_keywords.forEach(kw => {
+                const span = document.createElement('span');
+                span.style.background = 'white';
+                span.style.border = '1px solid #d1d5db';
+                span.style.color = '#374151';
+                span.style.padding = '4px 10px';
+                span.style.borderRadius = '20px';
+                span.style.fontSize = '0.8rem';
+                span.style.fontWeight = '600';
+                span.textContent = kw;
+                keyBox.appendChild(span);
+            });
+
+            // Set Download Link
+            document.getElementById('modal-r-download').href = '/static/resumes/' + data.download_file;
+
+            // Display Modal FIRST so geometry exists
+            const modal = document.getElementById('resume-modal');
+            const modalContent = document.getElementById('resume-modal-content');
+            
+            modal.style.display = 'flex';
+            
+            // NOW Reset scroll position to top (Browsers ignore scrollTop on display:none)
+            if (modalContent) modalContent.scrollTop = 0;
+
+            modal.style.opacity = '0';
+            setTimeout(() => modal.style.opacity = '1', 10);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeResumeModal() {
+            const modal = document.getElementById('resume-modal');
+            modal.style.opacity = '0';
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }, 200);
+        }
+
+        // Close when clicking outside the box
+        document.getElementById('resume-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeResumeModal();
+            }
+        });
+    </script>
 </body>
 
 </html>

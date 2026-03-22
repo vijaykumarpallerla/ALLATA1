@@ -442,6 +442,42 @@
                     protocols without crashing the client's machine.</li>
             </ul>
 
+            <h2 class="section-title"><i class="fas fa-comments"></i> The Exact Script to Say in an Interview</h2>
+            <p class="article-text">When you finally get an interview at a major tech company, they are going to ask you to "Walk me through a project." Do not just read the bullet points on your resume. Use this exact psychological framework to sound like a Senior Engineer solving a massive business problem:</p>
+            
+            <div style="background: var(--bg-main); padding: 2rem; border-radius: var(--radius-md); border-left: 4px solid var(--logo-color-4); margin-bottom: 3rem;">
+                <p class="article-text" style="font-style: italic; color: var(--text-main); margin-bottom: 1rem;">
+                    "Most of my classmates built simple To-Do list websites, but I wanted to build something that solves an actual multi-million dollar problem in the Corporate HR world right now: <strong>Proxy Interviewing Fraud.</strong>"
+                </p>
+                <p class="article-text" style="font-style: italic; color: var(--text-main); margin-bottom: 1rem;">
+                    "I built a native Electron desktop application that acts as a secure lock-down browser for technical interviews. The moment a candidate joins the video call, my software utilizes native OS command line executions—like 'taskkill' on Windows—to aggressively scan the system RAM and force-close known cheating vectors like Discord, AnyDesk, or hidden Chrome windows."
+                </p>
+                <p class="article-text" style="font-style: italic; color: var(--text-main); margin-bottom: 0;">
+                    "By taking the video stream directly out of the easily-manipulated web browser and forcing the candidate into a native desktop application, I was able to mathematically guarantee that the person talking on the screen is the only person in the room answering the technical questions."
+                </p>
+            </div>
+
+            <h2 class="section-title"><i class="fas fa-question-circle"></i> Frequently Asked Technical Questions (FAQ)</h2>
+            <div style="margin-bottom: 2rem;">
+                <h3 style="color: var(--text-main); font-size: 1.25rem; margin-bottom: 0.5rem;">Q: Why did you choose Electron instead of a standard React Website?</h3>
+                <p class="article-text">Because standard websites do not have deep-level access to the computer's Operating System. A browser tab cannot see if you have an invisible screen-sharing app running in the background. By building a native desktop app using Electron, the software gains direct access to the computer's active processes, allowing us to build a true 'Zero Trust' environment that completely stops fraudulent behavior.</p>
+            </div>
+            
+            <div style="margin-bottom: 2rem;">
+                <h3 style="color: var(--text-main); font-size: 1.25rem; margin-bottom: 0.5rem;">Q: How does the software handle false positives? What if it accidentally closes a harmless app?</h3>
+                <p class="article-text">This is a massive issue in enterprise security architecture. To prevent the software from destroying a user's computer, we hardcoded an explicit 'Blacklist Array' containing only the executable process names of known cheating software (like 'anydesk.exe' and 'discord.exe'). It does not touch essential background services, meaning the OS remains 100% stable while running the interview.</p>
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+                <h3 style="color: var(--text-main); font-size: 1.25rem; margin-bottom: 0.5rem;">Q: Is it legal to forcefully close applications on someone else's computer?</h3>
+                <p class="article-text">Yes, provided the candidate signs a digital User Agreement (EULA) before launching the software. This is the exact identical legal framework utilized by anti-cheat software inside major video games like Valorant or League of Legends. You explicitly grant the app permission to verify your local system integrity before you are permitted to join the secure server.</p>
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+                <h3 style="color: var(--text-main); font-size: 1.25rem; margin-bottom: 0.5rem;">Q: How does the video feed remain stable without severe lag?</h3>
+                <p class="article-text">Instead of trying to route heavy 1080p video packets through a centralized bottleneck server, the app is engineered to utilize a WebRTC Peer-to-Peer pipeline. This allows the recruiter and the candidate to stream video data directly to each other locally, stripping out intermediate server costs and radically dropping latency to nearly zero milliseconds.</p>
+            </div>
+
             <div
                 style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border-color); text-align: center; color: var(--text-muted); font-size: 0.95rem; font-style: italic;">
                 This architectural blueprint is provided for educational engineering purposes.
@@ -459,6 +495,11 @@
                 </a>
                 <p>A premier, AI-moderated career hub dedicated to connecting top talent with high-quality, verified
                     opportunities.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Our Products</h4>
+                <a href="/research">Research Desk</a>
+                <a href="/resume-kits">Resume Kits</a>
             </div>
             <div class="footer-col">
                 <h4>For Employers</h4>

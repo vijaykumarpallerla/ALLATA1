@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <style>
         .research-hero {
-            padding: 5rem 1rem 2rem;
+            padding: 2rem 1rem 2rem;
             text-align: center;
             background: linear-gradient(135deg, rgba(79, 70, 229, 0.05), rgba(49, 46, 129, 0.05));
         }
@@ -181,7 +181,7 @@
 
         @media (max-width: 768px) {
             .research-hero {
-                padding: 4rem 1rem 2rem;
+                padding: 1.5rem 1rem 2rem;
             }
             .research-hero h1 {
                 font-size: 2.2rem;
@@ -192,6 +192,60 @@
             .research-card {
                 padding: 1.5rem;
             }
+        }
+
+        /* How It Works Section */
+        .how-section {
+            background: var(--bg-main);
+            padding: 4rem 1rem;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .how-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+            text-align: center;
+        }
+
+        .how-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 3rem 2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .how-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .how-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(49, 46, 129, 0.1));
+            color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.5rem;
+            margin: 0 auto 1.5rem;
+        }
+
+        .how-card h3 {
+            font-size: 1.4rem;
+            color: var(--text-main);
+            margin-bottom: 1rem;
+        }
+
+        .how-card p {
+            color: var(--text-muted);
+            line-height: 1.6;
+            font-size: 1.05rem;
         }
     </style>
 </head>
@@ -229,7 +283,7 @@
 
     <!-- Hero & Form -->
     <section class="research-hero">
-        <div class="container">
+        <div style="max-width: 1200px; margin: 0 auto;">
             <h1>The Deep-Dive Research Desk</h1>
             <p>Confused by AI hallucinations? Official documentation too hard to read? Submit your topic and our human team will verify and research it for you, directly to your inbox.</p>
             
@@ -331,6 +385,31 @@
         </div>
     </section>
 
+    <!-- How It Works Section -->
+    <section class="how-section">
+        <div style="text-align: center; margin-bottom: 3rem;">
+            <h2 style="font-size: 2.2rem; color: var(--text-main); margin-bottom: 1rem;">How Our Desk Works</h2>
+            <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto;">Stop relying on AI hallucination loops. Our human-first approach verifies actual code.</p>
+        </div>
+        <div class="how-grid">
+            <div class="how-card">
+                <div class="how-icon"><i class="fas fa-bullseye"></i></div>
+                <h3>1. You Ask the Hard Questions</h3>
+                <p>Submit a highly complex, confusing, or niche technical prompt. The kind of question standard ChatGPT continually gets completely wrong.</p>
+            </div>
+            <div class="how-card">
+                <div class="how-icon"><i class="fas fa-search-dollar"></i></div>
+                <h3>2. We Deep-Dive the Truth</h3>
+                <p>Our senior engineering team actively reads the official developer documentation, builds local environments, and tests the actual architecture.</p>
+            </div>
+            <div class="how-card">
+                <div class="how-icon"><i class="fas fa-envelope-open-text"></i></div>
+                <h3>3. You Get the Blueprint</h3>
+                <p>We generate and email you a verified, 100% accurate proof-of-concept research report. No AI filler text, just the absolute truth, completely free.</p>
+            </div>
+        </div>
+    </section>
+
     <!-- Public Research Gallery -->
     <section class="gallery-section">
         <div class="gallery-header">
@@ -355,6 +434,11 @@
                 </a>
                 <p>A premier, AI-moderated career hub dedicated to connecting top talent with high-quality, verified
                     opportunities.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Our Products</h4>
+                <a href="/research">Research Desk</a>
+                <a href="/resume-kits">Resume Kits</a>
             </div>
             <div class="footer-col">
                 <h4>For Employers</h4>
@@ -402,7 +486,7 @@
                     if (!document.getElementById('researchModal')) {
                         const modalHTML = `
                         <div id="researchModal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; padding: 1rem;">
-                            <div class="modal-content" style="background: var(--bg-card); border-radius: var(--radius-lg); padding: 2.5rem; max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; border: 1px solid var(--border-color); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
+                            <div id="research-scrollable-content" class="modal-content" style="background: var(--bg-card); border-radius: var(--radius-lg); padding: 2.5rem; max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; border: 1px solid var(--border-color); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
                                 <button onclick="document.getElementById('researchModal').style.display='none'" style="position: absolute; top: 1.5rem; right: 1.5rem; background: transparent; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer;"><i class="fas fa-times"></i></button>
                                 <span id="modalDate" class="research-card-date" style="margin-bottom: 1rem; display: inline-block;"></span>
                                 <h2 id="modalTitle" style="font-size: 2rem; color: var(--text-main); margin-bottom: 1rem;"></h2>
@@ -443,7 +527,12 @@
                             document.getElementById('modalQuery').innerHTML = `<strong><i class="fas fa-quote-left"></i> User Query:</strong> ${item.query}`;
                             document.getElementById('modalBody').innerHTML = item.content;
                             
+                            // Display the modal FIRST so geometry exists
                             document.getElementById('researchModal').style.display = 'flex';
+                            
+                            // Prevent scroll retention bug
+                            const scrollBox = document.getElementById('research-scrollable-content');
+                            if (scrollBox) scrollBox.scrollTop = 0;
                         });
 
                         grid.appendChild(card);
