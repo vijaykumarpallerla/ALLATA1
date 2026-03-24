@@ -944,7 +944,27 @@ def delete_admin_research(req_id):
 @admin_required
 def get_admin_jobs():
     try:
-        jobs = db.session.query(Job).order_by(Job.id.desc()).all()
+        offset = request.args.get('offset', 0, type=int)
+        limit = request.args.get('limit', 15, type=int)
+        mode = request.args.get('mode', 'all')
+        dates_str = request.args.get('dates', '')
+
+        query = db.session.query(Job)
+        if mode == 'algo':
+            query = query.filter(Job.is_algorithm == True)
+        elif mode == 'duplicates':
+            query = query.filter(Job.raw_jd_text.isnot(None), Job.raw_jd_text != "")
+
+        if dates_str:
+            dates_list = [d.strip() for d in dates_str.split(',') if d.strip()]
+            if dates_list:
+                query = query.filter(Job.posted.in_(dates_list))
+
+        total_count = query.count()
+        jobs = query.order_by(Job.id.desc()).offset(offset).limit(limit).all()
+
+        has_more = (offset + limit) < total_count
+
         job_list = [{
             "id": j.id,
             "title": j.title,
@@ -965,7 +985,7 @@ def get_admin_jobs():
             "has_memory": bool(j.raw_jd_text),
             "raw_jd_text": j.raw_jd_text
         } for j in jobs]
-        return jsonify({"status": "success", "jobs": job_list})
+        return jsonify({"status": "success", "jobs": job_list, "has_more": has_more})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 

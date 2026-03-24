@@ -1053,154 +1053,249 @@
                     </div>
                 `;
 
+                // Reset Infinite Scroll State
+                window.isFetchingJobs = false;
+                window.jobsOffset = 0;
+                window.jobsLimit = 15;
+                window.jobsHasMore = true;
+                window.jobsMode = mode;
+                window.jobsSelectedDates = [];
+                window.fetchedAdminJobs = [];
+
+                // Fire initial fetch
+                window.fetchAdminJobsPage();
+            };
+
+            // Infinite Scroll Engine
+            window.fetchAdminJobsPage = async () => {
+                if (window.isFetchingJobs || !window.jobsHasMore) return;
+                window.isFetchingJobs = true;
+
+                const loaderId = 'infinite-scroll-loader';
+                const tbody = document.getElementById('admin-jobs-tbody');
+                
+                if (tbody && !document.getElementById(loaderId)) {
+                    const tr = document.createElement('tr');
+                    tr.id = loaderId;
+                    tr.innerHTML = `<td colspan="7" style="text-align: center; padding: 1.5rem;"><i class="fas fa-spinner fa-spin" style="color: var(--primary-color);"></i> Loading more jobs...</td>`;
+                    tbody.appendChild(tr);
+                }
+
                 try {
-                    const response = await fetch('/api/admin/jobs');
+                    const datesQuery = window.jobsSelectedDates && window.jobsSelectedDates.length > 0 ? `&dates=${encodeURIComponent(window.jobsSelectedDates.join(','))}` : '';
+                    const response = await fetch(`/api/admin/jobs?mode=${window.jobsMode}&offset=${window.jobsOffset}&limit=${window.jobsLimit}${datesQuery}`);
                     const data = await response.json();
 
                     if (data.status === 'success') {
-                        let jobsToRender = data.jobs;
-                        if (mode === 'algo') {
-                            jobsToRender = jobsToRender.filter(j => j.is_algorithm === true);
-                        } else if (mode === 'duplicates') {
-                            jobsToRender = jobsToRender.filter(j => j.has_memory === true);
-                        }
+                        const loader = document.getElementById(loaderId);
+                        if (loader) loader.remove();
 
-                        if (jobsToRender.length === 0) {
+                        const jobsToRender = data.jobs;
+                        window.jobsHasMore = data.has_more;
+                        window.jobsOffset += window.jobsLimit;
+
+                        const startIndex = window.fetchedAdminJobs.length;
+                        window.fetchedAdminJobs.push(...jobsToRender);
+
+                        if (jobsToRender.length === 0 && startIndex === 0) {
                             contentArea.innerHTML = `
                                 <div class="center-placeholder">
-                                    <i class="fas fa-${mode === 'algo' ? 'robot' : (mode === 'duplicates' ? 'brain' : 'briefcase')}" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
+                                    <i class="fas fa-${window.jobsMode === 'algo' ? 'robot' : (window.jobsMode === 'duplicates' ? 'brain' : 'briefcase')}" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
                                     <h2>No Jobs Found</h2>
-                                    <p>${mode === 'algo' ? 'No jobs have been posted through the UI to trigger the AI yet.' : (mode === 'duplicates' ? 'No jobs currently have duplicate-prevention memory saved.' : 'Your database currently has 0 job postings.')}</p>
+                                    <p>${window.jobsMode === 'algo' ? 'No jobs have been posted through the UI to trigger the AI yet.' : (window.jobsMode === 'duplicates' ? 'No jobs currently have duplicate-prevention memory saved.' : 'Your database currently has 0 job postings.')}</p>
                                 </div>
                             `;
+                            window.isFetchingJobs = false;
                             return;
                         }
 
+                        let isFirstLoad = !tbody;
                         let dateCleanupHTML = '';
-                        if (mode === 'all' || mode === 'duplicates') {
-                            try {
-                                const endpointUrl = mode === 'duplicates' ? '/api/admin/memory-dates' : '/api/admin/job-dates';
-                                const dateRes = await fetch(endpointUrl);
-                                const dateData = await dateRes.json();
-                                if (dateData.status === 'success' && dateData.dates.length > 0) {
-                                    const dropdownTitle = mode === 'duplicates' ? 'Clear Memory By Date' : 'Cleanup By Date';
-                                    const actionText = mode === 'duplicates' ? 'Clear Memory' : 'Delete All';
-                                    const iconList = mode === 'duplicates' ? 'fa-eraser' : 'fa-trash-alt';
-                                    const colorTheme = mode === 'duplicates' ? '#f59e0b' : '#ef4444';
-                                    
-                                    dateCleanupHTML = `
-                                        <div style="margin-bottom: 2rem; max-width: 400px;">
-                                            <label style="display: block; font-weight: 700; color: var(--ext-dark, #203a45); margin-bottom: 0.6rem; font-size: 1.1rem;">${dropdownTitle} <span style="color: ${colorTheme};">*</span></label>
-                                            <div style="position: relative;">
-                                                <div id="date-cleanup-trigger" onclick="toggleDropdown(event, 'main-cleanup')" style="display: flex; align-items: center; justify-content: space-between; background: #fff; border: 1.5px solid #d1d5db; padding: 12px 18px; border-radius: 10px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: border-color 0.2s; user-select: none;" onmouseover="this.style.borderColor='#9ca3af'" onmouseout="this.style.borderColor='#d1d5db'">
-                                                    <span style="color: #4b5563; font-size: 1rem;">Select a date</span>
-                                                    <i class="fas fa-chevron-down" style="font-size: 0.9rem; color: #1f2937;"></i>
-                                                </div>
 
-                                                <div class="action-dropdown" id="dropdown-main-cleanup" style="top: calc(100% + 5px); left: 0; right: 0; width: 100%; box-sizing: border-box; padding: 0.5rem; max-height: 175px; overflow-y: auto; overflow-x: hidden; border: 1.5px solid #e5e7eb; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); background: #fff; z-index: 1000;">
-                                    `;
-                                    dateData.dates.forEach((d, idx) => {
-                                        const isLast = idx === dateData.dates.length - 1;
-                                        const borderBottom = isLast ? 'none' : '1px solid #f3f4f6';
-                                        dateCleanupHTML += `
-                                            <div class="action-dropdown-item" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; margin-bottom: 2px; border-bottom: ${borderBottom}; transition: background 0.2s; border-radius: 6px;" onmouseover="this.style.background='#f9fafb';" onmouseout="this.style.background='transparent';">
-                                                <div style="display: flex; align-items: center; gap: 10px;">
-                                                    <div style="display: flex; align-items: center; gap: 6px;">
-                                                        <i class="far fa-calendar-alt" style="color: #9ca3af; font-size: 0.9rem;"></i>
-                                                        <span style="font-weight: 600; color: #1f2937; font-size: 0.95rem;">${d.date}</span>
-                                                    </div>
-                                                    <span style="font-size: 0.75rem; color: #6b7280; font-weight: 600; background: #f3f4f6; padding: 3px 8px; border-radius: 12px; border: 1px solid #e5e7eb;">
-                                                        ${d.count} Jobs
-                                                    </span>
-                                                </div>
-                                                <div style="display: flex; align-items: center;">
-                                                    <button onclick="event.stopPropagation(); window.confirmGlobalAction('${d.date}', ${d.count}, '${mode}')" style="background: transparent; color: ${colorTheme}; border: 1px solid ${colorTheme}; opacity: 0.9; padding: 5px 12px; border-radius: 20px; font-weight: 600; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s; white-space: nowrap;" onmouseover="this.style.background='${colorTheme}'; this.style.color='#fff';" onmouseout="this.style.background='transparent'; this.style.color='${colorTheme}';">
-                                                        <i class="fas ${iconList}"></i> ${actionText}
-                                                    </button>
-                                                </div>
-                                            </div>
+                        if (isFirstLoad && startIndex === 0) {
+                            if (window.jobsMode === 'all' || window.jobsMode === 'duplicates') {
+                                try {
+                                    const endpointUrl = window.jobsMode === 'duplicates' ? '/api/admin/memory-dates' : '/api/admin/job-dates';
+                                    const dateRes = await fetch(endpointUrl);
+                                    const dateData = await dateRes.json();
+                                    if (dateData.status === 'success' && dateData.dates.length > 0) {
+                                        const dropdownTitle = window.jobsMode === 'duplicates' ? 'Clear Memory By Date' : 'Cleanup By Date';
+                                        const actionText = window.jobsMode === 'duplicates' ? 'Clear Memory' : 'Delete All';
+                                        const iconList = window.jobsMode === 'duplicates' ? 'fa-eraser' : 'fa-trash-alt';
+                                        const colorTheme = window.jobsMode === 'duplicates' ? '#f59e0b' : '#ef4444';
+                                        
+                                        dateCleanupHTML = `
+                                            <div style="margin-bottom: 2rem; width: 100%;">
+                                                <label style="display: block; font-weight: 700; color: var(--ext-dark, #203a45); margin-bottom: 0.8rem; font-size: 1.1rem;">${dropdownTitle} <span style="color: ${colorTheme};">*</span></label>
+                                                
+                                                <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 15px; width: 100%; box-sizing: border-box;">
+                                                    <div style="position: relative; flex: 0 0 auto; min-width: 170px; max-width: 100%;">
+                                                        <div id="date-cleanup-trigger" onclick="toggleDropdown(event, 'main-cleanup')" style="height: 100%; display: flex; align-items: center; justify-content: space-between; background: #fff; border: 1.5px solid #d1d5db; padding: 10px 18px; border-radius: 10px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: border-color 0.2s; user-select: none; box-sizing: border-box;" onmouseover="this.style.borderColor='#9ca3af'" onmouseout="this.style.borderColor='#d1d5db'">
+                                                            <span style="color: #4b5563; font-size: 0.95rem; font-weight: 500;">Select Date</span>
+                                                            <i class="fas fa-chevron-down" style="font-size: 0.9rem; color: #1f2937; margin-left: 10px;"></i>
+                                                        </div>
+                                                        <div class="action-dropdown" id="dropdown-main-cleanup" style="top: calc(100% + 5px); left: 0; width: 350px; max-width: 100vw; box-sizing: border-box; padding: 0.5rem; max-height: 250px; overflow-y: auto; overflow-x: hidden; border: 1.5px solid #e5e7eb; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); background: #fff; z-index: 1000;">
                                         `;
-                                    });
-                                    dateCleanupHTML += `</div></div></div>`;
+                                        dateData.dates.forEach((d, idx) => {
+                                            const isLast = idx === dateData.dates.length - 1;
+                                            const borderBottom = isLast ? 'none' : '1px solid #f3f4f6';
+                                            dateCleanupHTML += `
+                                                <div class="action-dropdown-item" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; margin-bottom: 2px; border-bottom: ${borderBottom}; transition: background 0.2s; border-radius: 6px;" onmouseover="this.style.background='#f9fafb';" onmouseout="this.style.background='transparent';" onclick="window.addDateFilter('${d.date}')">
+                                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                                        <div style="display: flex; align-items: center; gap: 6px;">
+                                                            <i class="far fa-calendar-alt" style="color: #9ca3af; font-size: 0.9rem;"></i>
+                                                            <span style="font-weight: 600; color: #1f2937; font-size: 0.95rem;">${d.date}</span>
+                                                        </div>
+                                                        <span style="font-size: 0.75rem; color: #6b7280; font-weight: 600; background: #f3f4f6; padding: 3px 8px; border-radius: 12px; border: 1px solid #e5e7eb;">
+                                                            ${d.count} Jobs
+                                                        </span>
+                                                    </div>
+                                                    <div style="display: flex; align-items: center;">
+                                                        <button onclick="event.stopPropagation(); window.confirmGlobalAction('${d.date}', ${d.count}, '${window.jobsMode}')" style="background: transparent; color: ${colorTheme}; border: 1px solid ${colorTheme}; opacity: 0.9; padding: 5px 12px; border-radius: 20px; font-weight: 600; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s; white-space: nowrap;" onmouseover="this.style.background='${colorTheme}'; this.style.color='#fff';" onmouseout="this.style.background='transparent'; this.style.color='${colorTheme}';">
+                                                            <i class="fas ${iconList}"></i> ${actionText}
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            `;
+                                        });
+                                        dateCleanupHTML += `</div></div> <div id="admin-date-pills-container" style="flex: 1 1 0; min-width: 0; display: flex; align-items: center; gap: 10px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; -webkit-overflow-scrolling: touch;"></div> </div></div>`;
+                                    }
+                                } catch (e) {
+                                    console.error("Error loading cleanup dates", e);
                                 }
-                            } catch (e) {
-                                console.error("Error loading cleanup dates", e);
+                            }
+
+                            contentArea.innerHTML = dateCleanupHTML + `
+                                <table class="message-table" style="width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>Date Posted</th>
+                                            <th>Title</th>
+                                            <th>Company</th>
+                                            <th>Location</th>
+                                            <th>Type</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="admin-jobs-tbody"></tbody>
+                                </table>
+                            `;
+                            
+                            if (window.renderDatePills) {
+                                window.renderDatePills();
                             }
                         }
 
-                        let tableHTML = dateCleanupHTML + `
-                            <table class="message-table" style="width: 100%;">
-                                <thead>
-                                    <tr>
-                                        <th>Date Posted</th>
-                                        <th>Title</th>
-                                        <th>Company</th>
-                                        <th>Location</th>
-                                        <th>Type</th>
-                                        <th>Status</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                        `;
+                        const currentTbody = document.getElementById('admin-jobs-tbody');
 
-                        jobsToRender.forEach((job) => {
+                        jobsToRender.forEach((job, idx) => {
+                            const absoluteIndex = startIndex + idx;
                             let sourceBadge = '';
-                            if (mode === 'all') {
+                            if (window.jobsMode === 'all') {
                                 if (!job.is_algorithm) {
-                                    // Bulk uploaded / scraped
                                     sourceBadge = `<td style="white-space:nowrap;"><span style="background: rgba(100, 116, 139, 0.1); color: var(--text-muted); padding: 4px 8px; border-radius: 4px; font-size: 0.85rem;"><i class="fas fa-upload"></i> Scraped</span></td>`;
                                 } else if (job.ai_approved) {
-                                    // AI checked & approved
                                     sourceBadge = `<td style="white-space:nowrap;"><span style="background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 600;"><i class="fas fa-robot"></i> Approved</span></td>`;
                                 } else {
-                                    // AI checked & rejected
                                     sourceBadge = `<td style="white-space:nowrap;"><span style="background: rgba(197, 81, 44, 0.1); color: #c5512c; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 600;"><i class="fas fa-ban"></i> Rejected</span></td>`;
                                 }
                             } else {
-                                // Algorithm Jobs / Duplicate Memory tab
                                 sourceBadge = job.ai_approved
                                     ? `<td style="white-space:nowrap;"><span style="background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 600;"><i class="fas fa-check-circle"></i> Approved</span></td>`
                                     : `<td style="white-space:nowrap;"><span style="background: rgba(197, 81, 44, 0.1); color: #c5512c; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 600;"><i class="fas fa-ban"></i> Rejected</span></td>`;
                             }
                             
                             let rightActionBtn = `<button class="action-btn" style="color: #ef4444;" onclick="event.stopPropagation(); openJobDeleteModal(event, ${job.id})"><i class="fas fa-trash"></i></button>`;
-                            if (mode === 'duplicates') {
+                            if (window.jobsMode === 'duplicates') {
                                 rightActionBtn = `<button class="action-btn" style="color: #f59e0b; border: 1px solid #f59e0b; border-radius: 4px; font-size: 0.8rem; font-weight: 600; font-family: inherit; padding: 4px 10px;" onclick="event.stopPropagation(); window.clearSingleJobMemory(${job.id})"><i class="fas fa-eraser"></i> CLEAR MEMORY</button>`;
                             }
 
-                            // Store job data on the row for click access
-                            const jobIndex = jobsToRender.indexOf(job);
-                            tableHTML += `
-                                <tr data-jobindex="${jobIndex}" style="cursor:pointer;" onclick="openJobDetailModal(${jobIndex})">
-                                    <td style="color: var(--text-muted); font-size: 0.9rem; white-space:nowrap;">${job.posted}</td>
-                                    <td style="font-weight: 600; color: var(--primary-dark);">${job.title}</td>
-                                    <td>${job.company}</td>
-                                    <td>${job.location}</td>
-                                    <td style="white-space:nowrap;"><span style="background: var(--bg-body); padding: 4px 8px; border-radius: 4px; font-size: 0.85rem;">${job.type}</span></td>
-                                    ${sourceBadge}
-                                    <td class="action-cell">
-                                        <div style="display:flex; align-items:center;">
-                                            ${job.admin_email ? `<button class="action-btn" style="color: var(--primary-dark);" title="View Admin Details" onclick="event.stopPropagation(); window.showAdminInfo('${job.admin_name}', '${job.admin_email}', '${job.admin_picture}')"><i class="fas fa-user-lock"></i></button>` : ''}
-                                            ${rightActionBtn}
-                                        </div>
-                                    </td>
-                                </tr>
+                            const tr = document.createElement('tr');
+                            tr.setAttribute('data-jobindex', absoluteIndex);
+                            tr.style.cursor = 'pointer';
+                            tr.onclick = () => openJobDetailModal(absoluteIndex);
+                            tr.innerHTML = `
+                                <td style="color: var(--text-muted); font-size: 0.9rem; white-space:nowrap;">${job.posted}</td>
+                                <td style="font-weight: 600; color: var(--primary-dark);">${job.title}</td>
+                                <td>${job.company}</td>
+                                <td>${job.location}</td>
+                                <td style="white-space:nowrap;"><span style="background: var(--bg-body); padding: 4px 8px; border-radius: 4px; font-size: 0.85rem;">${job.type}</span></td>
+                                ${sourceBadge}
+                                <td class="action-cell">
+                                    <div style="display:flex; align-items:center;">
+                                        ${job.admin_email ? `<button class="action-btn" style="color: var(--primary-dark);" title="View Admin Details" onclick="event.stopPropagation(); window.showAdminInfo('${job.admin_name}', '${job.admin_email}', '${job.admin_picture}')"><i class="fas fa-user-lock"></i></button>` : ''}
+                                        ${rightActionBtn}
+                                    </div>
+                                </td>
                             `;
+                            currentTbody.appendChild(tr);
                         });
 
-                        // Store jobs globally for modal access
-                        window.fetchedAdminJobs = jobsToRender;
-
-                        tableHTML += `</tbody></table>`;
-                        contentArea.innerHTML = tableHTML;
                     } else {
-                        contentArea.innerHTML = `<p style="color: red;">Error loading jobs: ${data.message}</p>`;
+                        if (startIndex === 0) contentArea.innerHTML = `<p style="color: red;">Error loading jobs: ${data.message}</p>`;
                     }
                 } catch (error) {
-                    contentArea.innerHTML = `<p style="color: red;">Failed to connect to the server.</p>`;
+                    if (window.jobsOffset === 0) contentArea.innerHTML = `<p style="color: red;">Failed to connect to the server.</p>`;
                     console.error("Error fetching jobs:", error);
+                } finally {
+                    window.isFetchingJobs = false;
                 }
+            };
+            
+            // Link the physical scroll interaction to the fetching engine
+            contentArea.addEventListener('scroll', () => {
+                const isJobsTabActive = document.getElementById('nav-jobs').classList.contains('active');
+                if (!isJobsTabActive || localStorage.getItem('activeAdminTab') === 'nav-jobs-post') return;
+
+                // When user scrolls within 150px of the bottom, trigger next 15 jobs
+                if (contentArea.scrollTop + contentArea.clientHeight >= contentArea.scrollHeight - 150) {
+                    window.fetchAdminJobsPage();
+                }
+            });
+
+            window.addDateFilter = (dateStr) => {
+                if (!window.jobsSelectedDates) window.jobsSelectedDates = [];
+                if (!window.jobsSelectedDates.includes(dateStr)) {
+                    window.jobsSelectedDates.push(dateStr);
+                    window.refreshAdminJobsTable();
+                }
+            };
+
+            window.removeDateFilter = (dateStr) => {
+                window.jobsSelectedDates = window.jobsSelectedDates.filter(d => d !== dateStr);
+                window.refreshAdminJobsTable();
+            };
+
+            window.renderDatePills = () => {
+                const container = document.getElementById('admin-date-pills-container');
+                if (!container) return;
+                
+                let html = '';
+                if (window.jobsSelectedDates && window.jobsSelectedDates.length > 0) {
+                    window.jobsSelectedDates.forEach(date => {
+                        html += `<div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(33, 150, 243, 0.1); border: 1px solid rgba(33, 150, 243, 0.2); color: var(--primary-dark); padding: 8px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; white-space: nowrap;">
+                            <i class="far fa-calendar-alt"></i> ${date}
+                            <button onclick="window.removeDateFilter('${date}')" style="background: transparent; border: none; color: var(--primary-color); cursor: pointer; font-size: 1rem; margin-left: 4px; border-radius: 50%; width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; transition: background 0.2s;" onmouseover="this.style.background='rgba(33, 150, 243, 0.2)';" onmouseout="this.style.background='transparent';">&times;</button>
+                        </div>`;
+                    });
+                }
+                container.innerHTML = html;
+            };
+
+            window.refreshAdminJobsTable = () => {
+                const tbody = document.getElementById('admin-jobs-tbody');
+                if (tbody) tbody.innerHTML = '';
+                
+                window.isFetchingJobs = false;
+                window.jobsOffset = 0;
+                window.jobsHasMore = true;
+                window.fetchedAdminJobs = [];
+                
+                document.querySelectorAll('.action-dropdown').forEach(d => d.classList.remove('active'));
+                
+                window.renderDatePills();
+                window.fetchAdminJobsPage();
             };
 
             window.confirmGlobalAction = (date, count, mode) => {
@@ -1672,7 +1767,9 @@
                     aiMsg.innerHTML = `<span style="color: red;"><i class="fas fa-exclamation-triangle"></i> Error: ${data.message}</span>`;
                 }
                 chatWindow.appendChild(aiMsg);
-                chatWindow.scrollTop = chatWindow.scrollHeight;
+                
+                // Scroll specifically to the TOP of the newly generated response so the "Approve & Post" button is instantly visible.
+                aiMsg.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
             } catch (error) {
                 const indicator = document.getElementById('chat-loading-indicator');
