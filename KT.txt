@@ -728,3 +728,11 @@ UPDATE: 20-03-2026 - Vivek
 - **Javascript Intersection Observer (`admin.html`):** Erased the single `try/catch` fetch function inside `loadManageJobsModes`. Replaced it with a brand new `fetchAdminJobsPage()` asynchronous UI engine. Mapped an `Event Listener` statically to the `contentArea` scroll bounding-box. Now, exactly when the user's scroll reaches 150 pixels from the absolute bottom of the container, an invisible `fetch()` retrieves the next chunk of 15 database rows and flawlessly injects them into the `<tbody id="admin-jobs-tbody">` as `<tr>` strings without triggering a page reload.
 - **Mobile-Responsive Deep Date Filtering (`admin.html`):** Transformed the static "Cleanup By Date" Dropdown menu into an interactive Date Filter payload. Selecting a date dynamically loops through `window.jobsSelectedDates` and pushes a visually distinct `<div class="date-pill">` next to the dropdown.
 - **Responsive Flex Constraint (`admin.html`):** To aggressively prevent the new Date Pills from bleeding off the screen horizontally and corrupting the Mobile web app viewport (320px width limitation), `flex-wrap: wrap` and strict bounding limits (`max-width: 100vw; min-width: 0;`) were directly chained onto the parent `div`. Small mobile devices now automatically drop the Dates menu to an isolated second horizontal scroll axis perfectly stacked underneath the dropdown.
+
+
+# DATE: March 25, 2026
+# FEATURE UPDATES:Blog Post.html and App.py
+# DEVELOPER: VIJAY / Assistant
+
+- changed the Port number from 5000 to 4000 
+- add the about us Link in the Blog Post.html page 

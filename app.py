@@ -1315,7 +1315,7 @@ if __name__ == '__main__':
     # Function to automatically open the browser
     def open_browser():
         # Make sure it opens the correct local address
-        webbrowser.open('http://127.0.0.1:5000/')
+        webbrowser.open('http://127.0.0.1:4000/')
         
     # Prevent the browser from opening twice when the development server reloads
     if os.environ.get('WERKZEUG_RUN_MAIN') != 'true':
@@ -1324,4 +1324,4 @@ if __name__ == '__main__':
         
     print("Starting Allata Job Portal app...")
     # Run the Flask server
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=4000)
