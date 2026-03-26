@@ -90,6 +90,17 @@
             padding: 1.5rem;
             margin: 2rem 0;
             border-radius: 0 var(--radius-md) var(--radius-md) 0;
+            overflow: hidden;
+        }
+
+        .highlight-box code {
+            display: inline-block;
+            max-width: 100%;
+            overflow-x: auto;
+            word-break: break-all;
+            overflow-wrap: break-word;
+            white-space: pre-wrap;
+            font-size: 0.85rem;
         }
 
         .highlight-box h4 {
@@ -97,6 +108,7 @@
             margin-bottom: 0.5rem;
             font-size: 1.2rem;
         }
+
 
         .code-box {
             background-color: #1e1e2d;
@@ -421,7 +433,7 @@
                 recruiter's integrity.</p>
 
             <div class="code-box">
-                <span style="color:#f87171;">const</span> { exec } = <span style="color:#60a5fa;">require</span>(<span
+                <span style="color:#f87171;">const</span> <span style="color:#e2e8f0;">{ exec }</span> = <span style="color:#60a5fa;">require</span>(<span
                     style="color:#a7f3d0;">'child_process'</span>);<br><br>
                 <span style="color:#9ca3af;">// Force close highly utilized cheating vectors on Windows OS via the
                     command line layer</span><br>

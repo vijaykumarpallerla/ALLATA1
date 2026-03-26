@@ -736,3 +736,40 @@ UPDATE: 20-03-2026 - Vivek
 
 - changed the Port number from 5000 to 4000 
 - add the about us Link in the Blog Post.html page 
+
+
+Knowledge Transfer (KT) Report — March 26, 2026 - VIJAYY
+Here is the summary of all technical fixes and content updates applied to the A1 platform today. These focus on data integrity for the Research Desk and mobile responsive excellence for the Student Library.
+
+1. Research Desk Expansion
+File: 
+
+static/data/researches.json
+Action: Successfully appended ID 4 (Telecom Customer Churn Prediction).
+Logic: Fixed the entry to match the "Persona" pattern of the site.
+User Query: A business requester asking for help with churn prediction.
+Team Response: A detailed technical analysis covering Stack (Python, Scikit-learn, SMOTE, Docker), Pipeline Design, and Business Strategies.
+Status: Original entries (1, 2, 3) remain 100% untouched.
+2. Student Project 1: "The Automated Invigilator"
+File: 
+
+templates/students/project1.html
+Fix 1 (Syntax Style): Wrapped the destructuring curly braces { exec } in the code-box within a styled span. They now appear correctly colored instead of unstyled.
+Fix 2 (Mobile Overflow): Added overflow-x: auto and word-break logic to inline <code> tags inside highlight boxes. Long strings like app.setAsDefaultProtocolClient now wrap/scroll instead of breaking the mobile layout.
+3. Student Library: "Mastering DSA + Gen AI"
+File: 
+
+templates/students/DSAAI.html
+Fix (Diagram Stacking): Updated the Hash Map Diagram to stack vertically on mobile screens.
+Fix (Arrow Rotation): Added CSS to rotate the right-pointing arrows (→) 90 degrees strictly in mobile view so they point down (↓) toward the stacked elements. Arrows remain horizontal on laptop view.
+4. Student Library: "Prompt Engineering"
+File: 
+
+templates/students/promptai.html
+Fix (Table Scrolling): Implemented overflow-x: auto for comparison tables in mobile view. Users can now swipe horizontally to read the full "Why?" reasoning without the column being cut off by the screen edge.
+5. Student Project 2: "Guardian Swarm Bot"
+File: 
+
+templates/students/project2.html
+Fix (Label Overlap): Re-positioned the "Scout", "Striker", and "Messenger" labels to sit below their respective icons in mobile view.
+Logic: Previously, these labels were on the right and overlapped the "Target App" box on narrow screens. They now sit cleanly in a vertical data stream.
