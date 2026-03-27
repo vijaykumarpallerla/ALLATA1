@@ -773,3 +773,48 @@ File:
 templates/students/project2.html
 Fix (Label Overlap): Re-positioned the "Scout", "Striker", and "Messenger" labels to sit below their respective icons in mobile view.
 Logic: Previously, these labels were on the right and overlapped the "Target App" box on narrow screens. They now sit cleanly in a vertical data stream.
+
+==============================================================================
+UPDATE: 27-03-2026 - PageSpeed Insights & SEO Optimization
+==============================================================================
+
+Source: Google Search Console (GSC) PageSpeed Insights audit.
+Laptop Scores Pre-Fix: Performance 99 | Accessibility 95 | Best Practices 100 | SEO 83
+Mobile Scores Pre-Fix: Performance 70 | Accessibility 94 | Best Practices 100 | SEO 83
+
+--- FIX 1: Logo Image Optimization (Mobile Performance: 70 → ~90+) ---
+- PROBLEM: Logo.png was 1024x1024px and 383KB but displayed at only 84x84px. This was the 
+  primary cause of slow LCP (Largest Contentful Paint) on mobile.
+- ACTION: Converted Logo.png to Logo.webp using Pillow (PIL), resizing to 200x200px.
+- RESULT: Logo.webp is now 4KB — a 99% file size reduction.
+- FILES: static/Logo.webp (NEW FILE created)
+- ALL 23 HTML templates updated: filename='Logo.png' → filename='Logo.webp'
+
+--- FIX 2: Missing width/height on <img> Tags (CLS Prevention) ---
+- PROBLEM: <img> tags for the logo had no width or height attributes, causing 
+  Cumulative Layout Shift (CLS) while the browser calculated image dimensions.
+- ACTION: Added width="84" height="84" to all navbar logo images and width="56" 
+  height="56" to all footer logo images across all 23 templates.
+- FILES: All 23 HTML templates updated via automated Python script.
+
+--- FIX 3: Missing Meta Descriptions (SEO: 83 → ~100) ---
+- PROBLEM: No <meta name="description"> tags existed on any page. Google was showing 
+  random text in search results instead of a controlled summary.
+- ACTION: Added unique, keyword-rich meta descriptions to all 23 pages.
+- METHOD: Python script (fix_seo.py) injected each description after the <meta charset> tag.
+- SAMPLE (index.html): "ALL AT A1 — India's premier AI-moderated career hub. Discover 
+  tech insights on GenAI, RAG, and AI Architecture. Browse verified job listings and 
+  student resources."
+- FILES: All 23 HTML templates updated.
+
+--- FIX 4: javascript:void(0) Uncrawlable Link (SEO: 83 → ~100) ---
+- PROBLEM: The "Legal Agreements" navbar dropdown used href="javascript:void(0)". 
+  Google's crawlers cannot follow this, causing an SEO penalty.
+- ACTION: Replaced with href="/privacy-policy" (a real, crawlable URL) across all pages.
+- RESULT: 21 HTML files updated (2 admin pages excluded as they are private).
+- FILES: All front-facing HTML templates updated via fix_seo.py.
+
+--- PENDING FIXES (NOT YET IMPLEMENTED) ---
+- FIX 5: Badge color contrast (Accessibility: 94 → 100)
+- FIX 6: aria-label on nav logo (Accessibility polish)
+- FIX 7: Font render-blocking (Minor Performance gain)
