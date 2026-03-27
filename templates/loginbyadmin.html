@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 
@@ -151,7 +151,7 @@
             align-items: center;
             justify-content: center;
             margin: 0 auto 1.5rem;
-            box-shadow: 0 4px 14px rgba(56, 90, 100, 0.35);
+            box-shadow: 0 4px 14px rgba(56, 90, 100, 0.25);
         }
 
         .login-icon-wrap i {
@@ -205,7 +205,7 @@
             width: 100%;
             padding: 0.85rem 1.5rem;
             font-size: 1rem;
-            font-weight: 600;
+            font-weight: 700;
             font-family: 'Outfit', sans-serif;
             color: var(--text-main);
             background-color: #ffffff;
@@ -275,7 +275,7 @@
             align-items: center;
             gap: 0.6rem;
             background: rgba(197, 81, 44, 0.08);
-            border: 1px solid rgba(197, 81, 44, 0.45);
+            border: 1px solid rgba(197, 81, 44, 0.25);
             color: #b94020;
             border-radius: var(--radius-md);
             padding: 0.75rem 1rem;
@@ -313,7 +313,7 @@
         <div class="nav-container">
             <a href="/" class="nav-logo" aria-label="All At A1">
                 <img src="{{ url_for('static', filename='Logo.webp') }}" width="84" height="84" class="logo-img"
-                    onerror="this.style.display='none'">
+                    onerror="this.style.display='none'" alt="All At A1 Logo">
                 <span class="logo-text">
                     <span class="color-1">ALL</span>
                     <span class="color-2"> AT</span>

@@ -9,7 +9,7 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <style>
@@ -52,9 +52,9 @@
             padding: 6px 16px;
             border-radius: 20px;
             font-size: 0.9rem;
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 1.5rem;
-            border: 1px solid rgba(245, 158, 11, 0.45);
+            border: 1px solid rgba(245, 158, 11, 0.25);
         }
 
         .article-header h1 {
@@ -126,7 +126,7 @@
             border-radius: 4px;
             font-size: 0.8rem;
             font-family: 'Outfit', sans-serif;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         /* CSS Circuit Simulator Animation */
@@ -350,14 +350,14 @@
     <nav class="navbar">
         <div class="nav-container">
             <a href="/" class="nav-logo" aria-label="All At A1">
-                <img src="{{ url_for('static', filename='Logo.webp') }}" width="84" height="84" class="logo-img">
+                <img src="{{ url_for('static', filename='Logo.webp') }}" width="84" height="84" class="logo-img" alt="All At A1 Logo">
                 <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
                         class="color-3">A</span><span class="color-4">1</span></span>
             </a>
             <div class="menu-toggle" id="mobile-menu"><i class="fas fa-bars"></i></div>
             <div class="nav-menu" id="nav-menu">
                 <a href="/" class="nav-link">Tech Insights</a>
-                <a href="/student-library" class="nav-link" style="color: var(--logo-color-3); font-weight: 600;"><i class="fas fa-graduation-cap"></i> Students</a>
+                <a href="/student-library" class="nav-link" style="color: var(--logo-color-3); font-weight: 700;"><i class="fas fa-graduation-cap"></i> Students</a>
                 <a href="/browse-jobs" class="nav-link">Browse Jobs</a>
                 <div class="nav-dropdown">
                     <a href="/privacy-policy" class="nav-link">Legal Agreements <i class="fas fa-chevron-down dropdown-icon"></i></a>
@@ -549,7 +549,7 @@
         <div class="footer-content">
             <div class="footer-col">
                 <a href="/" class="nav-logo" aria-label="All At A1">
-                    <img src="{{ url_for('static', filename='Logo.webp') }}" width="56" height="56" class="logo-img-footer">
+                    <img src="{{ url_for('static', filename='Logo.webp') }}" width="56" height="56" class="logo-img-footer" alt="All At A1 Logo">
                     <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
                             class="color-3">A</span><span class="color-4">1</span></span>
                 </a>

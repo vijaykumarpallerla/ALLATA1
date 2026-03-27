@@ -9,7 +9,7 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <style>
@@ -38,7 +38,7 @@
 
         .kits-description strong {
             color: var(--primary-dark);
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .kits-grid {
@@ -78,7 +78,7 @@
             font-size: 1.4rem;
             color: var(--text-main);
             margin-bottom: 1rem;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .kit-card p {
@@ -113,14 +113,14 @@
     <nav class="navbar">
         <div class="nav-container">
             <a href="/" class="nav-logo" aria-label="All At A1">
-                <img src="{{ url_for('static', filename='Logo.webp') }}" width="84" height="84" class="logo-img">
+                <img src="{{ url_for('static', filename='Logo.webp') }}" width="84" height="84" class="logo-img" alt="All At A1 Logo">
                 <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
                         class="color-3">A</span><span class="color-4">1</span></span>
             </a>
             <div class="menu-toggle" id="mobile-menu"><i class="fas fa-bars"></i></div>
             <div class="nav-menu" id="nav-menu">
                 <a href="/" class="nav-link">Tech Insights</a>
-                <a href="/student-library" class="nav-link" style="color: var(--logo-color-3); font-weight: 600;"><i class="fas fa-graduation-cap"></i> Students</a>
+                <a href="/student-library" class="nav-link" style="color: var(--logo-color-3); font-weight: 700;"><i class="fas fa-graduation-cap"></i> Students</a>
                 <a href="/browse-jobs" class="nav-link">Browse Jobs</a>
                 <div class="nav-dropdown">
                     <a href="/privacy-policy" class="nav-link">Legal Agreements <i class="fas fa-chevron-down dropdown-icon"></i></a>
@@ -225,7 +225,7 @@
         <div class="footer-content">
             <div class="footer-col">
                 <a href="/" class="nav-logo" aria-label="All At A1">
-                    <img src="{{ url_for('static', filename='Logo.webp') }}" width="56" height="56" class="logo-img-footer">
+                    <img src="{{ url_for('static', filename='Logo.webp') }}" width="56" height="56" class="logo-img-footer" alt="All At A1 Logo">
                     <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
                             class="color-3">A</span><span class="color-4">1</span></span>
                 </a>
@@ -272,7 +272,7 @@
             
             <div style="text-align: center; margin-bottom: 1.8rem;">
                 <h2 id="modal-r-title" style="color: var(--primary-dark); font-size: 1.8rem; margin-bottom: 0.6rem; font-weight: 700;">Loading Strategy...</h2>
-                <span style="display: inline-block; background: #e0f2fe; color: #0284c7; padding: 5px 14px; border-radius: 20px; font-weight: 600; font-size: 0.85rem;"><i class="fas fa-robot"></i> ATS Optimized Format</span>
+                <span style="display: inline-block; background: #e0f2fe; color: #0284c7; padding: 5px 14px; border-radius: 20px; font-weight: 700; font-size: 0.85rem;"><i class="fas fa-robot"></i> ATS Optimized Format</span>
             </div>
 
             <div style="margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e7eb;">
@@ -296,7 +296,7 @@
             </div>
 
             <div style="text-align: center; margin-top: 1rem;">
-                <a id="modal-r-download" href="#" class="btn btn-primary" style="width: 100%; font-size: 1.15rem; padding: 14px; font-weight: 600;" download><i class="fas fa-file-word"></i> Download .docx Template</a>
+                <a id="modal-r-download" href="#" class="btn btn-primary" style="width: 100%; font-size: 1.15rem; padding: 14px; font-weight: 700;" download><i class="fas fa-file-word"></i> Download .docx Template</a>
             </div>
         </div>
     </div>

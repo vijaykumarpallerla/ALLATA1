@@ -9,7 +9,7 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -158,7 +158,7 @@
         .message-table th {
             background-color: rgba(33, 150, 243, 0.2);
             color: var(--primary-dark);
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .message-table tr:hover {
@@ -166,7 +166,7 @@
         }
 
         .msg-subject {
-            font-weight: 600;
+            font-weight: 700;
             color: var(--primary-color);
         }
 
@@ -258,7 +258,7 @@
         }
 
         .modal-detail-label {
-            font-weight: 600;
+            font-weight: 700;
             font-size: 0.9rem;
             color: var(--text-muted);
             text-transform: uppercase;
@@ -494,7 +494,7 @@
         <div class="nav-container">
             <a href="/" class="nav-logo" aria-label="All At A1">
                 <img src="{{ url_for('static', filename='Logo.webp') }}" width="84" height="84" class="logo-img"
-                    onerror="this.style.display='none'">
+                    onerror="this.style.display='none'" alt="All At A1 Logo">
                 <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
                         class="color-3">A</span><span class="color-4">1</span></span>
             </a>
@@ -505,7 +505,7 @@
                         class="admin-nav-hide-mobile"
                         style="width:36px; height:36px; border-radius:50%; object-fit:cover; border: 2px solid var(--border-color);">
                     {% endif %}
-                    <span class="admin-nav-hide-mobile" style="font-weight: 600; color: var(--primary-dark); display: inline-block;">
+                    <span class="admin-nav-hide-mobile" style="font-weight: 700; color: var(--primary-dark); display: inline-block;">
                         Hi, {{ admin_name.split(' ')[0] }}
                     </span>
                     <a href="/admin-logout"
@@ -573,7 +573,7 @@
                 <div class="modal-detail-group">
                     <div class="modal-detail-label">From</div>
                     <div class="modal-detail-value">
-                        <span id="modal-name" style="font-weight: 600;"></span>
+                        <span id="modal-name" style="font-weight: 700;"></span>
                         (<a id="modal-email" style="color: var(--primary-color); text-decoration: none;"></a>)
                     </div>
                 </div>
@@ -583,7 +583,7 @@
                 </div>
                 <div class="modal-detail-group">
                     <div class="modal-detail-label" id="modal-subject-label">Subject</div>
-                    <div class="modal-detail-value" id="modal-subject" style="font-weight: 600;"></div>
+                    <div class="modal-detail-value" id="modal-subject" style="font-weight: 700;"></div>
                 </div>
                 <div class="modal-detail-group">
                     <div class="modal-detail-label" id="modal-body-label">Message Body</div>
@@ -765,12 +765,12 @@
                             </div>
                             <div style="flex: 1;">
                                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
-                                    <h3 style="margin: 0; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Active Users (Real-time)</h3>
+                                    <h3 style="margin: 0; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700;">Active Users (Real-time)</h3>
                                     <span class="pulse-dot" style="width: 8px; height: 8px; background: #10b981; border-radius: 50%; display: inline-block; animation: pulse 2s infinite;"></span>
                                 </div>
                                 <div style="display: flex; align-items: baseline; gap: 8px;">
                                     <span id="active-users-count" style="font-size: 2.2rem; font-weight: 800; color: var(--primary-dark);">0</span>
-                                    <span style="font-size: 0.9rem; color: #10b981; font-weight: 600;">online</span>
+                                    <span style="font-size: 0.9rem; color: #10b981; font-weight: 700;">online</span>
                                 </div>
                                 <p style="margin: 0; font-size: 0.75rem; color: var(--text-muted);">Updated every 30 seconds</p>
                             </div>
@@ -1148,14 +1148,14 @@
                                                     <div style="display: flex; align-items: center; gap: 10px;">
                                                         <div style="display: flex; align-items: center; gap: 6px;">
                                                             <i class="far fa-calendar-alt" style="color: #9ca3af; font-size: 0.9rem;"></i>
-                                                            <span style="font-weight: 600; color: #1f2937; font-size: 0.95rem;">${d.date}</span>
+                                                            <span style="font-weight: 700; color: #1f2937; font-size: 0.95rem;">${d.date}</span>
                                                         </div>
-                                                        <span style="font-size: 0.75rem; color: #6b7280; font-weight: 600; background: #f3f4f6; padding: 3px 8px; border-radius: 12px; border: 1px solid #e5e7eb;">
+                                                        <span style="font-size: 0.75rem; color: #6b7280; font-weight: 700; background: #f3f4f6; padding: 3px 8px; border-radius: 12px; border: 1px solid #e5e7eb;">
                                                             ${d.count} Jobs
                                                         </span>
                                                     </div>
                                                     <div style="display: flex; align-items: center;">
-                                                        <button onclick="event.stopPropagation(); window.confirmGlobalAction('${d.date}', ${d.count}, '${window.jobsMode}')" style="background: transparent; color: ${colorTheme}; border: 1px solid ${colorTheme}; opacity: 0.9; padding: 5px 12px; border-radius: 20px; font-weight: 600; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s; white-space: nowrap;" onmouseover="this.style.background='${colorTheme}'; this.style.color='#fff';" onmouseout="this.style.background='transparent'; this.style.color='${colorTheme}';">
+                                                        <button onclick="event.stopPropagation(); window.confirmGlobalAction('${d.date}', ${d.count}, '${window.jobsMode}')" style="background: transparent; color: ${colorTheme}; border: 1px solid ${colorTheme}; opacity: 0.9; padding: 5px 12px; border-radius: 20px; font-weight: 700; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s; white-space: nowrap;" onmouseover="this.style.background='${colorTheme}'; this.style.color='#fff';" onmouseout="this.style.background='transparent'; this.style.color='${colorTheme}';">
                                                             <i class="fas ${iconList}"></i> ${actionText}
                                                         </button>
                                                     </div>
@@ -1200,19 +1200,19 @@
                                 if (!job.is_algorithm) {
                                     sourceBadge = `<td style="white-space:nowrap;"><span style="background: rgba(100, 116, 139, 0.25); color: var(--text-muted); padding: 4px 8px; border-radius: 4px; font-size: 0.85rem;"><i class="fas fa-upload"></i> Scraped</span></td>`;
                                 } else if (job.ai_approved) {
-                                    sourceBadge = `<td style="white-space:nowrap;"><span style="background: rgba(16, 185, 129, 0.25); color: #10b981; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 600;"><i class="fas fa-robot"></i> Approved</span></td>`;
+                                    sourceBadge = `<td style="white-space:nowrap;"><span style="background: rgba(16, 185, 129, 0.25); color: #10b981; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 700;"><i class="fas fa-robot"></i> Approved</span></td>`;
                                 } else {
-                                    sourceBadge = `<td style="white-space:nowrap;"><span style="background: rgba(197, 81, 44, 0.25); color: #c5512c; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 600;"><i class="fas fa-ban"></i> Rejected</span></td>`;
+                                    sourceBadge = `<td style="white-space:nowrap;"><span style="background: rgba(197, 81, 44, 0.25); color: #c5512c; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 700;"><i class="fas fa-ban"></i> Rejected</span></td>`;
                                 }
                             } else {
                                 sourceBadge = job.ai_approved
-                                    ? `<td style="white-space:nowrap;"><span style="background: rgba(16, 185, 129, 0.25); color: #10b981; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 600;"><i class="fas fa-check-circle"></i> Approved</span></td>`
-                                    : `<td style="white-space:nowrap;"><span style="background: rgba(197, 81, 44, 0.25); color: #c5512c; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 600;"><i class="fas fa-ban"></i> Rejected</span></td>`;
+                                    ? `<td style="white-space:nowrap;"><span style="background: rgba(16, 185, 129, 0.25); color: #10b981; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 700;"><i class="fas fa-check-circle"></i> Approved</span></td>`
+                                    : `<td style="white-space:nowrap;"><span style="background: rgba(197, 81, 44, 0.25); color: #c5512c; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 700;"><i class="fas fa-ban"></i> Rejected</span></td>`;
                             }
                             
                             let rightActionBtn = `<button class="action-btn" style="color: #ef4444;" onclick="event.stopPropagation(); openJobDeleteModal(event, ${job.id})"><i class="fas fa-trash"></i></button>`;
                             if (window.jobsMode === 'duplicates') {
-                                rightActionBtn = `<button class="action-btn" style="color: #f59e0b; border: 1px solid #f59e0b; border-radius: 4px; font-size: 0.8rem; font-weight: 600; font-family: inherit; padding: 4px 10px;" onclick="event.stopPropagation(); window.clearSingleJobMemory(${job.id})"><i class="fas fa-eraser"></i> CLEAR MEMORY</button>`;
+                                rightActionBtn = `<button class="action-btn" style="color: #f59e0b; border: 1px solid #f59e0b; border-radius: 4px; font-size: 0.8rem; font-weight: 700; font-family: inherit; padding: 4px 10px;" onclick="event.stopPropagation(); window.clearSingleJobMemory(${job.id})"><i class="fas fa-eraser"></i> CLEAR MEMORY</button>`;
                             }
 
                             const tr = document.createElement('tr');
@@ -1221,7 +1221,7 @@
                             tr.onclick = () => openJobDetailModal(absoluteIndex);
                             tr.innerHTML = `
                                 <td style="color: var(--text-muted); font-size: 0.9rem; white-space:nowrap;">${job.posted}</td>
-                                <td style="font-weight: 600; color: var(--primary-dark);">${job.title}</td>
+                                <td style="font-weight: 700; color: var(--primary-dark);">${job.title}</td>
                                 <td>${job.company}</td>
                                 <td>${job.location}</td>
                                 <td style="white-space:nowrap;"><span style="background: var(--bg-body); padding: 4px 8px; border-radius: 4px; font-size: 0.85rem;">${job.type}</span></td>
@@ -1278,7 +1278,7 @@
                 let html = '';
                 if (window.jobsSelectedDates && window.jobsSelectedDates.length > 0) {
                     window.jobsSelectedDates.forEach(date => {
-                        html += `<div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(33, 150, 243, 0.25); border: 1px solid rgba(33, 150, 243, 0.2); color: var(--primary-dark); padding: 8px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; white-space: nowrap;">
+                        html += `<div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(33, 150, 243, 0.25); border: 1px solid rgba(33, 150, 243, 0.2); color: var(--primary-dark); padding: 8px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; white-space: nowrap;">
                             <i class="far fa-calendar-alt"></i> ${date}
                             <button onclick="window.removeDateFilter('${date}')" style="background: transparent; border: none; color: var(--primary-color); cursor: pointer; font-size: 1rem; margin-left: 4px; border-radius: 50%; width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; transition: background 0.2s;" onmouseover="this.style.background='rgba(33, 150, 243, 0.2)';" onmouseout="this.style.background='transparent';">&times;</button>
                         </div>`;
@@ -1427,12 +1427,12 @@
 
                 if (job.is_algorithm) {
                     if (job.ai_approved) {
-                        banner.style.cssText = 'display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1rem;border-radius:8px;font-weight:600;font-size:0.9rem;background:rgba(16,185,129, 0.25);color:#10b981;border:1px solid rgba(16,185,129, 0.45);';
+                        banner.style.cssText = 'display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1rem;border-radius:8px;font-weight:600;font-size:0.9rem;background:rgba(16,185,129, 0.25);color:#10b981;border:1px solid rgba(16,185,129, 0.25);';
                         banner.innerHTML = '<i class="fas fa-check-circle"></i> AI Moderation: APPROVED — This job passed the Algorithm check.';
                         toggleBtn.style.cssText = 'display:inline-flex;align-items:center;gap:0.4rem;padding:6px 16px;border-radius:20px;font-size:0.88rem;font-weight:600;font-family:inherit;cursor:pointer;border:none;background:rgba(197,81,44, 0.25);color:#c5512c;';
                         toggleBtn.innerHTML = '<i class="fas fa-ban"></i> Reject';
                     } else {
-                        banner.style.cssText = 'display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1rem;border-radius:8px;font-weight:600;font-size:0.9rem;background:rgba(197,81,44,0.08);color:#c5512c;border:1px solid rgba(197,81,44, 0.45);';
+                        banner.style.cssText = 'display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1rem;border-radius:8px;font-weight:600;font-size:0.9rem;background:rgba(197,81,44,0.08);color:#c5512c;border:1px solid rgba(197,81,44, 0.25);';
                         banner.innerHTML = '<i class="fas fa-ban"></i> AI Moderation: REJECTED — This job was flagged as spam or unprofessional.';
                         toggleBtn.style.cssText = 'display:inline-flex;align-items:center;gap:0.4rem;padding:6px 16px;border-radius:20px;font-size:0.88rem;font-weight:600;font-family:inherit;cursor:pointer;border:none;background:rgba(16,185,129, 0.25);color:#10b981;';
                         toggleBtn.innerHTML = '<i class="fas fa-check-circle"></i> Approve';
@@ -1692,7 +1692,7 @@
             // Append User Message
             const userMsg = document.createElement('div');
             userMsg.style.cssText = "background: rgba(33, 150, 243, 0.25); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; align-self: flex-end; max-width: 90%; margin-left: auto; border: 1px solid rgba(33, 150, 243, 0.2); font-size: 0.95rem;";
-            userMsg.innerHTML = `<span style="font-weight: 600; display: block; margin-bottom: 0.5rem; color: var(--primary-color);"><i class="fas fa-user-circle"></i> You:</span><div style="white-space: pre-wrap;">${jdText}</div>`;
+            userMsg.innerHTML = `<span style="font-weight: 700; display: block; margin-bottom: 0.5rem; color: var(--primary-color);"><i class="fas fa-user-circle"></i> You:</span><div style="white-space: pre-wrap;">${jdText}</div>`;
             chatWindow.appendChild(userMsg);
 
             // Clear input
@@ -1751,7 +1751,7 @@
                         </div>
                         
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; background: var(--bg-body); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
-                            <div><strong style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Job Title</strong><div id="edit-title-${uniqueJobId}" contenteditable="true" style="font-weight: 600; font-size: 1.1rem; border: 1px solid transparent; padding: 2px; border-radius: 4px;" onfocus="this.style.background='#fff'; this.style.borderColor='var(--primary-color)'" onblur="this.style.background='transparent'; this.style.borderColor='transparent'">${job.title}</div></div>
+                            <div><strong style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Job Title</strong><div id="edit-title-${uniqueJobId}" contenteditable="true" style="font-weight: 700; font-size: 1.1rem; border: 1px solid transparent; padding: 2px; border-radius: 4px;" onfocus="this.style.background='#fff'; this.style.borderColor='var(--primary-color)'" onblur="this.style.background='transparent'; this.style.borderColor='transparent'">${job.title}</div></div>
                             <div><strong style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Company</strong><div id="edit-company-${uniqueJobId}" contenteditable="true" style="border: 1px solid transparent; padding: 2px; border-radius: 4px;" onfocus="this.style.background='#fff'; this.style.borderColor='var(--primary-color)'" onblur="this.style.background='transparent'; this.style.borderColor='transparent'">${job.company}</div></div>
                             <div><strong style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Location</strong><div id="edit-location-${uniqueJobId}" contenteditable="true" style="border: 1px solid transparent; padding: 2px; border-radius: 4px;" onfocus="this.style.background='#fff'; this.style.borderColor='var(--primary-color)'" onblur="this.style.background='transparent'; this.style.borderColor='transparent'">${job.location}</div></div>
                             <div><strong style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Type</strong><div id="edit-type-${uniqueJobId}" contenteditable="true" style="border: 1px solid transparent; padding: 2px; border-radius: 4px;" onfocus="this.style.background='#fff'; this.style.borderColor='var(--primary-color)'" onblur="this.style.background='transparent'; this.style.borderColor='transparent'">${job.job_type}</div></div>

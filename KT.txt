@@ -839,3 +839,13 @@ UPDATE: 27-03-2026 - FINAL POLLISH (CLINCHING 100/100)
 - RESULT: The browser no longer pauses to load fonts/icons; LCP and Speed Index improved.
 
 STATUS: ALL 7 AUDIT ITEMS RESOLVED.
+
+4. Global UI Consistency ("The Elite Polish"):
+- Standardized ALL badge styling across the entire site to match the premium aesthetic of the "Project Ideas" template.
+- Alpha Transparency Locked: Both `background` and `border-color` parameters are now strictly set to `0.25` alpha globally (e.g., `rgba(x, y, z, 0.25)`). This guarantees a clean, subtle pastel box standard.
+- High-Contrast Typography Fix: The previous pastel text colors were blending into the `0.25` white card backgrounds, causing a "ghostly" effect. "Tailwind 400" hexes were manually upgraded to solid "Tailwind 600" level hues:
+     * Purple: `#c084fc` -> `#9333ea`
+     * Green: `#34d399` -> `#059669`
+     * Violet: `#a78bfa` -> `#7c3aed`
+     * Blue: `#60a5fa` -> `#2563eb`
+- Font-Weight Boost: Globally increased the `.badge` font-weight from `600` to `700` to maximize text legibility and "pop" without compromising the soft background designs.
