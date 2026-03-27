@@ -6,14 +6,17 @@
     <meta name="description" content="Explore student project showcases on ALL AT A1. Learn how to build real-world AI, automation, and security projects.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Elite Project Ideas for 2026 | ALL AT A1</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <style>
         .projects-header {
             text-align: center;
             padding: 4rem 1rem;
-            background: linear-gradient(135deg, var(--bg-main) 0%, rgba(99, 102, 241, 0.05) 100%);
+            background: linear-gradient(135deg, var(--bg-main) 0%, rgba(99, 102, 241, 0.2) 100%);
             border-bottom: 1px solid var(--border-color);
         }
 
@@ -89,7 +92,7 @@
             right: 0;
             bottom: 0;
             background-size: 20px 20px;
-            background-image: radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-image: radial-gradient(circle, rgba(255, 255, 255, 0.2) 1px, transparent 1px);
             opacity: 0.5;
             z-index: 1;
         }
@@ -115,14 +118,14 @@
 
         .card-badge {
             align-self: flex-start;
-            background: rgba(16, 185, 129, 0.1);
+            background: rgba(16, 185, 129, 0.25);
             color: #10b981;
             padding: 4px 12px;
             border-radius: 20px;
             font-size: 0.8rem;
             font-weight: 600;
             margin-bottom: 1rem;
-            border: 1px solid rgba(16, 185, 129, 0.3);
+            border: 1px solid rgba(16, 185, 129, 0.45);
         }
 
         .card-title {
@@ -155,7 +158,7 @@
         }
 
         .tech-pill {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.2);
             color: var(--text-muted);
             font-size: 0.75rem;
             padding: 3px 8px;
@@ -188,7 +191,7 @@
 <body>
     <nav class="navbar">
         <div class="nav-container">
-            <a href="/" class="nav-logo">
+            <a href="/" class="nav-logo" aria-label="All At A1">
                 <img src="{{ url_for('static', filename='Logo.webp') }}" width="84" height="84" class="logo-img">
                 <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
                         class="color-3">A</span><span class="color-4">1</span></span>
@@ -230,7 +233,7 @@
             </div>
             <div class="card-content">
                 <span class="card-badge"
-                    style="color: #ef4444; background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3);">Cybersecurity</span>
+                    style="color: #ef4444; background: rgba(239, 68, 68, 0.25); border-color: rgba(239, 68, 68, 0.45);">Cybersecurity</span>
                 <h2 class="card-title">The "Interview Shield" App 🛡️</h2>
                 <p class="card-desc">An anti-cheat Electron desktop lockdown client designed to prevent "Proxy
                     Interviewing" and AI hallucination scripts during live tech assessments.</p>
@@ -275,7 +278,7 @@
             </div>
             <div class="card-content">
                 <span class="card-badge"
-                    style="color: #f59e0b; background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.3);">Hardware
+                    style="color: #f59e0b; background: rgba(245, 158, 11, 0.25); border-color: rgba(245, 158, 11, 0.45);">Hardware
                     Physics</span>
                 <h2 class="card-title">The "Deep-Sync" Virtual Lab ⚡🧪</h2>
                 <p class="card-desc">A drag-and-drop hardware engineering simulator running real-time Ohm's Law
@@ -300,7 +303,7 @@
             </div>
             <div class="card-content">
                 <span class="card-badge"
-                    style="color: #3b82f6; background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.3);">Computer
+                    style="color: #3b82f6; background: rgba(59, 130, 246, 0.25); border-color: rgba(59, 130, 246, 0.45);">Computer
                     Vision</span>
                 <h2 class="card-title">The "Scrap-to-System" Architect 🛠️♻️</h2>
                 <p class="card-desc">A Generative DIY engine utilizing strict LLM constraints to convert household
@@ -321,7 +324,7 @@
     <footer>
         <div class="footer-content">
             <div class="footer-col">
-                <a href="/" class="nav-logo">
+                <a href="/" class="nav-logo" aria-label="All At A1">
                     <img src="{{ url_for('static', filename='Logo.webp') }}" width="56" height="56" class="logo-img-footer">
                     <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
                             class="color-3">A</span><span class="color-4">1</span></span>

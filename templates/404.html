@@ -6,8 +6,11 @@
     <meta name="description" content="Page not found — but ALL AT A1 is still here. Return to our homepage for tech insights, job listings, and student resources.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page Not Found | ALL AT A1</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <style>
         .error-container {
@@ -47,7 +50,7 @@
     <!-- Navbar -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="/" class="nav-logo">
+            <a href="/" class="nav-logo" aria-label="All At A1">
                 <img src="{{ url_for('static', filename='Logo.webp') }}" width="84" height="84" class="logo-img">
                 <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
                         class="color-3">A</span><span class="color-4">1</span></span>
@@ -108,7 +111,7 @@
                     stroke-linecap="round" />
 
                 <!-- Floating Hologram Screen -->
-                <rect x="300" y="30" width="220" height="140" rx="8" fill="rgba(14, 165, 233, 0.15)" stroke="#0ea5e9"
+                <rect x="300" y="30" width="220" height="140" rx="8" fill="rgba(14, 165, 233, 0.25)" stroke="#0ea5e9"
                     stroke-width="2" />
                 <rect x="320" y="50" width="120" height="8" rx="4" fill="#0ea5e9" />
                 <rect x="320" y="70" width="160" height="8" rx="4" fill="#bae6fd" />
@@ -168,7 +171,7 @@
     <footer>
         <div class="footer-content">
             <div class="footer-col">
-                <a href="/" class="nav-logo">
+                <a href="/" class="nav-logo" aria-label="All At A1">
                     <img src="{{ url_for('static', filename='Logo.webp') }}" width="56" height="56" class="logo-img-footer">
                     <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
                             class="color-3">A</span><span class="color-4">1</span></span>

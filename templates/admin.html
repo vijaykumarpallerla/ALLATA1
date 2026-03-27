@@ -6,8 +6,11 @@
     <meta name="description" content="ALL AT A1 Admin Dashboard — internal job and content management panel.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard | ALL AT A1</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
@@ -47,7 +50,7 @@
 
         .admin-nav-item:hover,
         .admin-nav-item.active {
-            background-color: rgba(33, 150, 243, 0.1);
+            background-color: rgba(33, 150, 243, 0.25);
             color: var(--primary-color);
         }
 
@@ -153,7 +156,7 @@
         }
 
         .message-table th {
-            background-color: rgba(33, 150, 243, 0.05);
+            background-color: rgba(33, 150, 243, 0.2);
             color: var(--primary-dark);
             font-weight: 600;
         }
@@ -222,7 +225,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: rgba(33, 150, 243, 0.05);
+            background-color: rgba(33, 150, 243, 0.2);
             border-top-left-radius: var(--radius-lg);
             border-top-right-radius: var(--radius-lg);
         }
@@ -296,7 +299,7 @@
         }
 
         .action-btn:hover {
-            background-color: rgba(0, 0, 0, 0.05);
+            background-color: rgba(0, 0, 0, 0.2);
             color: var(--text-main);
         }
 
@@ -307,7 +310,7 @@
             top: 50%;
             transform: translateY(-50%);
             background-color: var(--bg-card);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
             border-radius: var(--radius-sm);
             border: 1px solid var(--border-color);
             z-index: 100;
@@ -328,7 +331,7 @@
         }
 
         .action-dropdown-item:hover {
-            background-color: rgba(244, 67, 54, 0.1);
+            background-color: rgba(244, 67, 54, 0.25);
         }
 
         /* Delete Confirmation Modal Styles */
@@ -366,7 +369,7 @@
         }
 
         .btn-cancel:hover {
-            background-color: rgba(0, 0, 0, 0.05);
+            background-color: rgba(0, 0, 0, 0.2);
         }
 
         .btn-danger {
@@ -489,7 +492,7 @@
     <!-- Navbar (Simplified for Admin) -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="/" class="nav-logo">
+            <a href="/" class="nav-logo" aria-label="All At A1">
                 <img src="{{ url_for('static', filename='Logo.webp') }}" width="84" height="84" class="logo-img"
                     onerror="this.style.display='none'">
                 <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
@@ -757,7 +760,7 @@
                     <div class="dashboard-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; padding: 5px;">
                         <!-- Active Users Card -->
                         <div class="stat-card" style="background: white; padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 1.5rem; transition: transform 0.2s;">
-                            <div style="width: 56px; height: 56px; background: rgba(16, 185, 129, 0.1); color: #10b981; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem;">
+                            <div style="width: 56px; height: 56px; background: rgba(16, 185, 129, 0.25); color: #10b981; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem;">
                                 <i class="fas fa-users"></i>
                             </div>
                             <div style="flex: 1;">
@@ -1131,7 +1134,7 @@
                                                 
                                                 <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 15px; width: 100%; box-sizing: border-box;">
                                                     <div style="position: relative; flex: 0 0 auto; min-width: 170px; max-width: 100%;">
-                                                        <div id="date-cleanup-trigger" onclick="toggleDropdown(event, 'main-cleanup')" style="height: 100%; display: flex; align-items: center; justify-content: space-between; background: #fff; border: 1.5px solid #d1d5db; padding: 10px 18px; border-radius: 10px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: border-color 0.2s; user-select: none; box-sizing: border-box;" onmouseover="this.style.borderColor='#9ca3af'" onmouseout="this.style.borderColor='#d1d5db'">
+                                                        <div id="date-cleanup-trigger" onclick="toggleDropdown(event, 'main-cleanup')" style="height: 100%; display: flex; align-items: center; justify-content: space-between; background: #fff; border: 1.5px solid #d1d5db; padding: 10px 18px; border-radius: 10px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0, 0.2); transition: border-color 0.2s; user-select: none; box-sizing: border-box;" onmouseover="this.style.borderColor='#9ca3af'" onmouseout="this.style.borderColor='#d1d5db'">
                                                             <span style="color: #4b5563; font-size: 0.95rem; font-weight: 500;">Select Date</span>
                                                             <i class="fas fa-chevron-down" style="font-size: 0.9rem; color: #1f2937; margin-left: 10px;"></i>
                                                         </div>
@@ -1195,16 +1198,16 @@
                             let sourceBadge = '';
                             if (window.jobsMode === 'all') {
                                 if (!job.is_algorithm) {
-                                    sourceBadge = `<td style="white-space:nowrap;"><span style="background: rgba(100, 116, 139, 0.1); color: var(--text-muted); padding: 4px 8px; border-radius: 4px; font-size: 0.85rem;"><i class="fas fa-upload"></i> Scraped</span></td>`;
+                                    sourceBadge = `<td style="white-space:nowrap;"><span style="background: rgba(100, 116, 139, 0.25); color: var(--text-muted); padding: 4px 8px; border-radius: 4px; font-size: 0.85rem;"><i class="fas fa-upload"></i> Scraped</span></td>`;
                                 } else if (job.ai_approved) {
-                                    sourceBadge = `<td style="white-space:nowrap;"><span style="background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 600;"><i class="fas fa-robot"></i> Approved</span></td>`;
+                                    sourceBadge = `<td style="white-space:nowrap;"><span style="background: rgba(16, 185, 129, 0.25); color: #10b981; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 600;"><i class="fas fa-robot"></i> Approved</span></td>`;
                                 } else {
-                                    sourceBadge = `<td style="white-space:nowrap;"><span style="background: rgba(197, 81, 44, 0.1); color: #c5512c; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 600;"><i class="fas fa-ban"></i> Rejected</span></td>`;
+                                    sourceBadge = `<td style="white-space:nowrap;"><span style="background: rgba(197, 81, 44, 0.25); color: #c5512c; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 600;"><i class="fas fa-ban"></i> Rejected</span></td>`;
                                 }
                             } else {
                                 sourceBadge = job.ai_approved
-                                    ? `<td style="white-space:nowrap;"><span style="background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 600;"><i class="fas fa-check-circle"></i> Approved</span></td>`
-                                    : `<td style="white-space:nowrap;"><span style="background: rgba(197, 81, 44, 0.1); color: #c5512c; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 600;"><i class="fas fa-ban"></i> Rejected</span></td>`;
+                                    ? `<td style="white-space:nowrap;"><span style="background: rgba(16, 185, 129, 0.25); color: #10b981; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 600;"><i class="fas fa-check-circle"></i> Approved</span></td>`
+                                    : `<td style="white-space:nowrap;"><span style="background: rgba(197, 81, 44, 0.25); color: #c5512c; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 600;"><i class="fas fa-ban"></i> Rejected</span></td>`;
                             }
                             
                             let rightActionBtn = `<button class="action-btn" style="color: #ef4444;" onclick="event.stopPropagation(); openJobDeleteModal(event, ${job.id})"><i class="fas fa-trash"></i></button>`;
@@ -1275,7 +1278,7 @@
                 let html = '';
                 if (window.jobsSelectedDates && window.jobsSelectedDates.length > 0) {
                     window.jobsSelectedDates.forEach(date => {
-                        html += `<div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(33, 150, 243, 0.1); border: 1px solid rgba(33, 150, 243, 0.2); color: var(--primary-dark); padding: 8px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; white-space: nowrap;">
+                        html += `<div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(33, 150, 243, 0.25); border: 1px solid rgba(33, 150, 243, 0.2); color: var(--primary-dark); padding: 8px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; white-space: nowrap;">
                             <i class="far fa-calendar-alt"></i> ${date}
                             <button onclick="window.removeDateFilter('${date}')" style="background: transparent; border: none; color: var(--primary-color); cursor: pointer; font-size: 1rem; margin-left: 4px; border-radius: 50%; width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; transition: background 0.2s;" onmouseover="this.style.background='rgba(33, 150, 243, 0.2)';" onmouseout="this.style.background='transparent';">&times;</button>
                         </div>`;
@@ -1424,14 +1427,14 @@
 
                 if (job.is_algorithm) {
                     if (job.ai_approved) {
-                        banner.style.cssText = 'display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1rem;border-radius:8px;font-weight:600;font-size:0.9rem;background:rgba(16,185,129,0.1);color:#10b981;border:1px solid rgba(16,185,129,0.3);';
+                        banner.style.cssText = 'display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1rem;border-radius:8px;font-weight:600;font-size:0.9rem;background:rgba(16,185,129, 0.25);color:#10b981;border:1px solid rgba(16,185,129, 0.45);';
                         banner.innerHTML = '<i class="fas fa-check-circle"></i> AI Moderation: APPROVED — This job passed the Algorithm check.';
-                        toggleBtn.style.cssText = 'display:inline-flex;align-items:center;gap:0.4rem;padding:6px 16px;border-radius:20px;font-size:0.88rem;font-weight:600;font-family:inherit;cursor:pointer;border:none;background:rgba(197,81,44,0.12);color:#c5512c;';
+                        toggleBtn.style.cssText = 'display:inline-flex;align-items:center;gap:0.4rem;padding:6px 16px;border-radius:20px;font-size:0.88rem;font-weight:600;font-family:inherit;cursor:pointer;border:none;background:rgba(197,81,44, 0.25);color:#c5512c;';
                         toggleBtn.innerHTML = '<i class="fas fa-ban"></i> Reject';
                     } else {
-                        banner.style.cssText = 'display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1rem;border-radius:8px;font-weight:600;font-size:0.9rem;background:rgba(197,81,44,0.08);color:#c5512c;border:1px solid rgba(197,81,44,0.3);';
+                        banner.style.cssText = 'display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1rem;border-radius:8px;font-weight:600;font-size:0.9rem;background:rgba(197,81,44,0.08);color:#c5512c;border:1px solid rgba(197,81,44, 0.45);';
                         banner.innerHTML = '<i class="fas fa-ban"></i> AI Moderation: REJECTED — This job was flagged as spam or unprofessional.';
-                        toggleBtn.style.cssText = 'display:inline-flex;align-items:center;gap:0.4rem;padding:6px 16px;border-radius:20px;font-size:0.88rem;font-weight:600;font-family:inherit;cursor:pointer;border:none;background:rgba(16,185,129,0.12);color:#10b981;';
+                        toggleBtn.style.cssText = 'display:inline-flex;align-items:center;gap:0.4rem;padding:6px 16px;border-radius:20px;font-size:0.88rem;font-weight:600;font-family:inherit;cursor:pointer;border:none;background:rgba(16,185,129, 0.25);color:#10b981;';
                         toggleBtn.innerHTML = '<i class="fas fa-check-circle"></i> Approve';
                     }
                 } else {
@@ -1467,8 +1470,8 @@
                             const sourceTd = row.querySelectorAll('td')[5];
                             if (sourceTd) {
                                 sourceTd.innerHTML = data.ai_approved
-                                    ? `<span style="background:rgba(16,185,129,0.1);color:#10b981;padding:4px 8px;border-radius:4px;font-size:0.85rem;font-weight:600;"><i class="fas fa-check-circle"></i> Approved</span>`
-                                    : `<span style="background:rgba(197,81,44,0.1);color:#c5512c;padding:4px 8px;border-radius:4px;font-size:0.85rem;font-weight:600;"><i class="fas fa-ban"></i> Rejected</span>`;
+                                    ? `<span style="background:rgba(16,185,129, 0.25);color:#10b981;padding:4px 8px;border-radius:4px;font-size:0.85rem;font-weight:600;"><i class="fas fa-check-circle"></i> Approved</span>`
+                                    : `<span style="background:rgba(197,81,44, 0.25);color:#c5512c;padding:4px 8px;border-radius:4px;font-size:0.85rem;font-weight:600;"><i class="fas fa-ban"></i> Rejected</span>`;
                             }
                         }
                     } else {
@@ -1688,7 +1691,7 @@
 
             // Append User Message
             const userMsg = document.createElement('div');
-            userMsg.style.cssText = "background: rgba(33, 150, 243, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; align-self: flex-end; max-width: 90%; margin-left: auto; border: 1px solid rgba(33, 150, 243, 0.2); font-size: 0.95rem;";
+            userMsg.style.cssText = "background: rgba(33, 150, 243, 0.25); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; align-self: flex-end; max-width: 90%; margin-left: auto; border: 1px solid rgba(33, 150, 243, 0.2); font-size: 0.95rem;";
             userMsg.innerHTML = `<span style="font-weight: 600; display: block; margin-bottom: 0.5rem; color: var(--primary-color);"><i class="fas fa-user-circle"></i> You:</span><div style="white-space: pre-wrap;">${jdText}</div>`;
             chatWindow.appendChild(userMsg);
 
@@ -1716,7 +1719,7 @@
                 if (indicator) indicator.remove();
 
                 const aiMsg = document.createElement('div');
-                aiMsg.style.cssText = "background: #fff; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; align-self: flex-start; max-width: 95%; width: 100%; border: 1px solid var(--primary-color); box-shadow: 0 4px 15px rgba(33, 150, 243, 0.15);";
+                aiMsg.style.cssText = "background: #fff; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; align-self: flex-start; max-width: 95%; width: 100%; border: 1px solid var(--primary-color); box-shadow: 0 4px 15px rgba(33, 150, 243, 0.25);";
 
                 if (data.status === 'success') {
                     const job = data.guide;
@@ -1743,7 +1746,7 @@
                             </button>
                         </div>
                         
-                        <div style="background: rgba(33, 150, 243, 0.05); padding: 0.8rem; border-radius: 6px; margin-bottom: 1.5rem; font-size: 0.85rem; border: 1px solid rgba(33, 150, 243, 0.2); color: var(--primary-dark);">
+                        <div style="background: rgba(33, 150, 243, 0.2); padding: 0.8rem; border-radius: 6px; margin-bottom: 1.5rem; font-size: 0.85rem; border: 1px solid rgba(33, 150, 243, 0.2); color: var(--primary-dark);">
                             <strong>Tip:</strong> You can click on any field below (Title, Company, URL, etc.) to <strong>edit it manually</strong> before posting if AI missed anything!
                         </div>
                         

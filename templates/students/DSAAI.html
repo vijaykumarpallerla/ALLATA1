@@ -6,8 +6,11 @@
     <meta name="description" content="Don't Be a Coder, Be an Architect — master Data Structures, Algorithms, and Gen AI to land high-paying developer roles in 2026.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mastering DSA + Gen AI | ALL AT A1</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <style>
         .article-container {
@@ -61,7 +64,7 @@
         }
 
         .highlight-box {
-            background-color: rgba(99, 102, 241, 0.1);
+            background-color: rgba(99, 102, 241, 0.25);
             border-left: 4px solid var(--primary-color);
             padding: 1.5rem;
             margin: 2rem 0;
@@ -234,7 +237,7 @@
             background: rgba(16, 185, 129, 0.2);
             border: 2px solid #10b981;
             border-radius: 4px;
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.45);
             animation: pulse-glow 2s infinite alternate;
         }
 
@@ -656,7 +659,7 @@
     <!-- Navbar -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="/" class="nav-logo">
+            <a href="/" class="nav-logo" aria-label="All At A1">
                 <img src="{{ url_for('static', filename='Logo.webp') }}" width="84" height="84" class="logo-img">
                 <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
                         class="color-3">A</span><span class="color-4">1</span></span>
@@ -870,7 +873,7 @@
                 <div style="display: flex; gap: 15px;">
                     <div class="hash-bucket" style="opacity: 0.3;">...</div>
                     <div class="hash-bucket"
-                        style="border-color: #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);">
+                        style="border-color: #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.45);">
                         <span style="font-size: 1.2rem; font-weight: bold;">Room 402</span>
                     </div>
                     <div class="hash-bucket" style="opacity: 0.3;">...</div>
@@ -959,7 +962,7 @@
     <footer>
         <div class="footer-content">
             <div class="footer-col">
-                <a href="/" class="nav-logo">
+                <a href="/" class="nav-logo" aria-label="All At A1">
                     <img src="{{ url_for('static', filename='Logo.webp') }}" width="56" height="56" class="logo-img-footer">
                     <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
                             class="color-3">A</span><span class="color-4">1</span></span>

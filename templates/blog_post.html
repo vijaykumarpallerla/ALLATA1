@@ -6,8 +6,11 @@
     <meta name="description" content="ALL AT A1 Tech Insights — deep-dive articles on AI, machine learning, and software engineering best practices for developers in 2026.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ blog.title }} | ALL AT A1 Tech Insights</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <style>
         .bg-gradient-1 {
@@ -45,7 +48,7 @@
             font-size: 3.5rem;
             color: white;
             margin-bottom: 1rem;
-            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.45);
         }
 
         .blog-container {
@@ -85,26 +88,26 @@
 
         .badge-dsa {
             color: #c084fc;
-            background: rgba(192, 132, 252, 0.1);
-            border-color: rgba(192, 132, 252, 0.3);
+            background: rgba(192, 132, 252, 0.25);
+            border-color: rgba(192, 132, 252, 0.45);
         }
 
         .badge-jobs {
             color: #34d399;
-            background: rgba(52, 211, 153, 0.1);
-            border-color: rgba(52, 211, 153, 0.3);
+            background: rgba(52, 211, 153, 0.25);
+            border-color: rgba(52, 211, 153, 0.45);
         }
 
         .badge-prompt {
             color: #a78bfa;
-            background: rgba(167, 139, 250, 0.1);
-            border-color: rgba(167, 139, 250, 0.3);
+            background: rgba(167, 139, 250, 0.25);
+            border-color: rgba(167, 139, 250, 0.45);
         }
 
         .badge-projects {
             color: #60a5fa;
-            background: rgba(96, 165, 250, 0.1);
-            border-color: rgba(96, 165, 250, 0.3);
+            background: rgba(96, 165, 250, 0.25);
+            border-color: rgba(96, 165, 250, 0.45);
         }
 
         .back-btn {
@@ -124,7 +127,7 @@
 <body>
     <nav class="navbar">
         <div class="nav-container">
-            <a href="/" class="nav-logo">
+            <a href="/" class="nav-logo" aria-label="All At A1">
                 <img src="{{ url_for('static', filename='Logo.webp') }}" width="84" height="84" class="logo-img">
                 <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
                         class="color-3">A</span><span class="color-4">1</span></span>
@@ -156,11 +159,11 @@
 
     <header class="blog-header {{ blog.bg_class }}" style="position: relative; overflow: hidden;">
         <div
-            style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-size: 20px 20px; background-image: radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px); z-index: 1;">
+            style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-size: 20px 20px; background-image: radial-gradient(circle, rgba(255,255,255, 0.25) 1px, transparent 1px); z-index: 1;">
         </div>
         <div style="position: relative; z-index: 2;">
             <span class="badge {{ blog.badge_class }}"
-                style="background: rgba(0,0,0,0.3); border-color: rgba(255,255,255,0.2); color: white;">{{ blog.badge
+                style="background: rgba(0,0,0, 0.45); border-color: rgba(255,255,255,0.2); color: white;">{{ blog.badge
                 }}</span>
             <h1><i class="{{ blog.icon }}" style="margin-right: 15px; opacity: 0.9;"></i>{{ blog.title }}</h1>
             <p style="color: rgba(255,255,255,0.9); font-size: 1.2rem; max-width: 600px; margin: 0 auto;">{{
@@ -172,7 +175,7 @@
         {{ blog.content | safe }}
 
         <div
-            style="margin-top: 3rem; padding: 2rem; background: rgba(167, 139, 250, 0.1); border-left: 4px solid var(--logo-color-3); border-radius: 8px;">
+            style="margin-top: 3rem; padding: 2rem; background: rgba(167, 139, 250, 0.25); border-left: 4px solid var(--logo-color-3); border-radius: 8px;">
             <h3 style="color: var(--text-main); margin-bottom: 0.5rem;"><i class="fas fa-briefcase"></i> Why Employers
                 Pay For This</h3>
             <p style="color: var(--text-muted); font-size: 0.95rem;">
@@ -188,7 +191,7 @@
     <footer>
         <div class="footer-content">
             <div class="footer-col">
-                <a href="/" class="nav-logo">
+                <a href="/" class="nav-logo" aria-label="All At A1">
                     <img src="{{ url_for('static', filename='Logo.webp') }}" width="56" height="56" class="logo-img-footer">
                     <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
                             class="color-3">A</span><span class="color-4">1</span></span>

@@ -6,8 +6,11 @@
     <meta name="description" content="The Automated Online Invigilator — a student project using Electron and Node.js to build a secure, cross-platform exam environment.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The "Interview Shield" App | ALL AT A1 Projects</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <style>
         .article-container {
@@ -44,14 +47,14 @@
 
         .project-badge {
             display: inline-block;
-            background: rgba(239, 68, 68, 0.1);
+            background: rgba(239, 68, 68, 0.25);
             color: #ef4444;
             padding: 6px 16px;
             border-radius: 20px;
             font-size: 0.9rem;
             font-weight: 600;
             margin-bottom: 1.5rem;
-            border: 1px solid rgba(239, 68, 68, 0.3);
+            border: 1px solid rgba(239, 68, 68, 0.45);
         }
 
         .article-header h1 {
@@ -86,7 +89,7 @@
         }
 
         .highlight-box {
-            background-color: rgba(99, 102, 241, 0.1);
+            background-color: rgba(99, 102, 241, 0.25);
             border-left: 4px solid var(--primary-color);
             padding: 1.5rem;
             margin: 2rem 0;
@@ -307,7 +310,7 @@
 <body>
     <nav class="navbar">
         <div class="nav-container">
-            <a href="/" class="nav-logo">
+            <a href="/" class="nav-logo" aria-label="All At A1">
                 <img src="{{ url_for('static', filename='Logo.webp') }}" width="84" height="84" class="logo-img">
                 <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
                         class="color-3">A</span><span class="color-4">1</span></span>
@@ -501,7 +504,7 @@
     <footer>
         <div class="footer-content">
             <div class="footer-col">
-                <a href="/" class="nav-logo">
+                <a href="/" class="nav-logo" aria-label="All At A1">
                     <img src="{{ url_for('static', filename='Logo.webp') }}" width="56" height="56" class="logo-img-footer">
                     <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
                             class="color-3">A</span><span class="color-4">1</span></span>
