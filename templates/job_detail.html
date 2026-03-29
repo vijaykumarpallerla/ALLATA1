@@ -11,6 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+    <link rel="preload" href="{{ url_for('static', filename='Logo.webp') }}" as="image" type="image/webp">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <style>
         .job-detail-container {
@@ -211,7 +212,7 @@
         <div class="footer-content">
             <div class="footer-col">
                 <a href="/" class="nav-logo" aria-label="All At A1">
-                    <img src="{{ url_for('static', filename='Logo.webp') }}" width="56" height="56" class="logo-img-footer" alt="All At A1 Logo">
+                    <img src="{{ url_for('static', filename='Logo.webp') }}" width="56" height="56" class="logo-img-footer" alt="All At A1 Logo" loading="lazy">
                     <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
                             class="color-3">A</span><span class="color-4">1</span></span>
                 </a>
@@ -312,7 +313,7 @@
             margin-bottom: 0.5rem;
         }
     </style>
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
 </body>
 
 </html>
