@@ -849,3 +849,60 @@ STATUS: ALL 7 AUDIT ITEMS RESOLVED.
      * Violet: `#a78bfa` -> `#7c3aed`
      * Blue: `#60a5fa` -> `#2563eb`
 - Font-Weight Boost: Globally increased the `.badge` font-weight from `600` to `700` to maximize text legibility and "pop" without compromising the soft background designs.
+
+=========================================
+Update: March 29, 2026 (Author: Vijay)
+=========================================
+
+1. Research Desk Data Expansion & Humanization:
+   - Handled the migration of 4 new deep-dive technical topics from `research.html.txt` into the production `researches.json` database.
+   - Performed an "AI to Human" translation pass on the new JSON objects. Swapped robotic, listicle-style AI jargon with conversational, highly engaging human English tailored for developers.
+   - Embedded full HTML markup (<h3>, <p>, <b>, <code>, <i>) directly inside the JSON strings to ensure the content renders seamlessly with the A1 layout theme.
+
+2. Mobile UI Overlay Scroll-Chaining Fix:
+   - Identified a critical mobile UI bug where scrolling inside the `research.html` and `resume_kits.html` modal popups would drag the background page along with it (Scroll Chaining).
+   - Injected robust CSS (`overscroll-behavior: contain;` and `-webkit-overflow-scrolling: touch;`) into the scrollable modal container elements.
+   - Refactored JS triggers to force `document.body.style.overflow = 'hidden';` the precise moment the overlay opens to fully lock the background, and reset it to `'auto'` when the user exits the popup.
+=========================================
+
+
+********************************************************************************************************************************************************************************************
+========================================================================
+[AI INSTRUCTION ALGORITHM] SOP: ADDING NEW RESEARCH POSTS TO JSON
+========================================================================
+ATTENTION FUTURE AI ASSISTANTS: If the user (Vijay or his colleague) asks 
+you to add a new research post to `static/data/researches.json`, you MUST 
+strictly adhere to the following "A1 Research Theme" formatting and tone  
+guidelines. Do not inject raw markdown; it must be raw HTML strings.
+
+1. TONE & HUMANIZATION (Crucial Step):
+- DO NOT just copy/paste raw AI text. Translate robotic, listicle-style 
+  jargon (e.g., "Our research indicates", "Firstly", "In conclusion") into 
+  highly engaging, conversational human English tailored for developers. 
+- Use a "builder-to-builder" tone. Speak directly to the user (e.g., "You 
+  don't need to pay for Zapier if you just use this script...").
+- Keep paragraphs punchy, authentic, and straightforward.
+
+2. HTML FORMATTING REQUIREMENTS (The A1 Theme):
+The `content` string inside the JSON must be perfectly formatted HTML:
+- Main Section Headers: Wrap in `<h3>` tags (e.g., `<h3>1. The Core Strategy</h3>`).
+- Standard Text: Wrap all text blocks in `<p>` tags.
+- Bolding / Highlights: Use `<b>` tags for emphasis or sub-headers within a paragraph (e.g., `<p><b>The Fix:</b> Use a high-speed API...</p>`).
+- Code Snippets: Wrap inline code/terminal commands in `<code>` tags.
+- Lists: Use `<ul>` and `<li>` for any bullet points. 
+
+3. THE MANDATORY A1 DISCLAIMER:
+Every single research post MUST end with this exact HTML block appended to the very bottom of the `content` string:
+`<br><p><i>A1 NOTE: This is our research-backed strategy. We aren't affiliated with any third-party tools mentioned—use whatever stack works best for your needs.</i></p>`
+
+4. STRICT JSON SCHEMA:
+Ensure your final appended object matches this exact dictionary format:
+{
+  "id": <Next Available Integer in Array>,
+  "title": "A1 Team Research Report: <Topic>",
+  "query": "\"Hi A1 Team! <User Question>\"",
+  "date": "<Current Month Year, e.g., March 2026>",
+  "content": "<h3>1. Header</h3><p>Text...</p><br><p><i>A1 NOTE:...</i></p>"
+}
+========================================================================
+************************************************************************************************************************************************************

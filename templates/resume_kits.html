@@ -3,14 +3,18 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="description" content="Download professional resume kits crafted by the A1 team. Tailored templates for software engineers, data scientists, and AI developers.">
+    <meta name="description"
+        content="Download professional resume kits crafted by the A1 team. Tailored templates for software engineers, data scientists, and AI developers.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resume Kits | ALL AT A1</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style"
+        onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    </noscript>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <style>
         .kits-header {
@@ -113,17 +117,20 @@
     <nav class="navbar">
         <div class="nav-container">
             <a href="/" class="nav-logo" aria-label="All At A1">
-                <img src="{{ url_for('static', filename='Logo.webp') }}" width="84" height="84" class="logo-img" alt="All At A1 Logo">
+                <img src="{{ url_for('static', filename='Logo.webp') }}" width="84" height="84" class="logo-img"
+                    alt="All At A1 Logo">
                 <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
                         class="color-3">A</span><span class="color-4">1</span></span>
             </a>
             <div class="menu-toggle" id="mobile-menu"><i class="fas fa-bars"></i></div>
             <div class="nav-menu" id="nav-menu">
                 <a href="/" class="nav-link">Tech Insights</a>
-                <a href="/student-library" class="nav-link" style="color: var(--logo-color-3); font-weight: 700;"><i class="fas fa-graduation-cap"></i> Students</a>
+                <a href="/student-library" class="nav-link" style="color: var(--logo-color-3); font-weight: 700;"><i
+                        class="fas fa-graduation-cap"></i> Students</a>
                 <a href="/browse-jobs" class="nav-link">Browse Jobs</a>
                 <div class="nav-dropdown">
-                    <a href="/privacy-policy" class="nav-link">Legal Agreements <i class="fas fa-chevron-down dropdown-icon"></i></a>
+                    <a href="/privacy-policy" class="nav-link">Legal Agreements <i
+                            class="fas fa-chevron-down dropdown-icon"></i></a>
                     <div class="dropdown-content">
                         <a href="/terms-and-conditions">Terms and Conditions</a>
                         <a href="/privacy-policy">Privacy Policy</a>
@@ -150,72 +157,90 @@
             <article class="kit-card">
                 <div class="kit-icon"><i class="fas fa-laptop-code"></i></div>
                 <h3>Full Stack Developer</h3>
-                <p>Pre-filled with optimized power words for both frontend and backend engineering, matching top ATS requirements.</p>
-                <button onclick="openResumeModal('full-stack')" class="btn btn-primary"><i class="fas fa-eye"></i> View Strategy & Download</button>
+                <p>Pre-filled with optimized power words for both frontend and backend engineering, matching top ATS
+                    requirements.</p>
+                <button onclick="openResumeModal('full-stack')" class="btn btn-primary"><i class="fas fa-eye"></i> View
+                    Strategy & Download</button>
             </article>
 
             <!-- Data Scientist -->
             <article class="kit-card">
                 <div class="kit-icon"><i class="fas fa-chart-pie"></i></div>
                 <h3>Data Scientist</h3>
-                <p>Highlight your statistical modeling, machine learning, and data visualization expertise using verified industry phrasing.</p>
-                <button onclick="openResumeModal('data-scientist')" class="btn btn-primary"><i class="fas fa-eye"></i> View Strategy & Download</button>
+                <p>Highlight your statistical modeling, machine learning, and data visualization expertise using
+                    verified industry phrasing.</p>
+                <button onclick="openResumeModal('data-scientist')" class="btn btn-primary"><i class="fas fa-eye"></i>
+                    View Strategy & Download</button>
             </article>
 
             <!-- Data Analyst -->
             <article class="kit-card">
                 <div class="kit-icon"><i class="fas fa-chart-line"></i></div>
                 <h3>Data Analyst</h3>
-                <p>Packed with actionable verbs and data translation keywords designed strictly to bypass initial automated screenings.</p>
-                <button onclick="openResumeModal('data-analyst')" class="btn btn-primary"><i class="fas fa-eye"></i> View Strategy & Download</button>
+                <p>Packed with actionable verbs and data translation keywords designed strictly to bypass initial
+                    automated screenings.</p>
+                <button onclick="openResumeModal('data-analyst')" class="btn btn-primary"><i class="fas fa-eye"></i>
+                    View Strategy & Download</button>
             </article>
 
             <!-- Machine Learning Engineer -->
             <article class="kit-card">
                 <div class="kit-icon"><i class="fas fa-brain"></i></div>
                 <h3>Machine Learning Engineer</h3>
-                <p>Targeted ATS templates packed with power words for model deployment, NLP, deep learning, and MLOps.</p>
-                <button onclick="openResumeModal('machine-learning')" class="btn btn-primary"><i class="fas fa-eye"></i> View Strategy & Download</button>
+                <p>Targeted ATS templates packed with power words for model deployment, NLP, deep learning, and MLOps.
+                </p>
+                <button onclick="openResumeModal('machine-learning')" class="btn btn-primary"><i class="fas fa-eye"></i>
+                    View Strategy & Download</button>
             </article>
 
             <!-- Data Engineer -->
             <article class="kit-card">
                 <div class="kit-icon"><i class="fas fa-database"></i></div>
                 <h3>Data Engineer</h3>
-                <p>Features optimal vocabulary for ETL pipelines, big data integration, and data warehousing to stand out to recruiter AIs.</p>
-                <button onclick="openResumeModal('data-engineer')" class="btn btn-primary"><i class="fas fa-eye"></i> View Strategy & Download</button>
+                <p>Features optimal vocabulary for ETL pipelines, big data integration, and data warehousing to stand
+                    out to recruiter AIs.</p>
+                <button onclick="openResumeModal('data-engineer')" class="btn btn-primary"><i class="fas fa-eye"></i>
+                    View Strategy & Download</button>
             </article>
 
             <!-- Software Engineer -->
             <article class="kit-card">
                 <div class="kit-icon"><i class="fas fa-code"></i></div>
                 <h3>Software Engineer</h3>
-                <p>Standardized, cleanly formatted generic engineering templates filled with algorithmic problem-solving and SDLC buzzwords.</p>
-                <button onclick="openResumeModal('software-engineer')" class="btn btn-primary"><i class="fas fa-eye"></i> View Strategy & Download</button>
+                <p>Standardized, cleanly formatted generic engineering templates filled with algorithmic problem-solving
+                    and SDLC buzzwords.</p>
+                <button onclick="openResumeModal('software-engineer')" class="btn btn-primary"><i
+                        class="fas fa-eye"></i> View Strategy & Download</button>
             </article>
 
             <!-- Business Analyst -->
             <article class="kit-card">
                 <div class="kit-icon"><i class="fas fa-briefcase"></i></div>
                 <h3>Business Analyst</h3>
-                <p>Communicate stakeholder engagement, requirement gathering, and process optimization strictly in ATS-friendly language.</p>
-                <button onclick="openResumeModal('business-analyst')" class="btn btn-primary"><i class="fas fa-eye"></i> View Strategy & Download</button>
+                <p>Communicate stakeholder engagement, requirement gathering, and process optimization strictly in
+                    ATS-friendly language.</p>
+                <button onclick="openResumeModal('business-analyst')" class="btn btn-primary"><i class="fas fa-eye"></i>
+                    View Strategy & Download</button>
             </article>
 
             <!-- AI Engineer -->
             <article class="kit-card">
                 <div class="kit-icon"><i class="fas fa-robot"></i></div>
                 <h3>AI Engineer</h3>
-                <p>Modernized templates with prompt engineering, LLM integration, and generative AI keywords formatted for robots.</p>
-                <button onclick="openResumeModal('ai-engineer')" class="btn btn-primary"><i class="fas fa-eye"></i> View Strategy & Download</button>
+                <p>Modernized templates with prompt engineering, LLM integration, and generative AI keywords formatted
+                    for robots.</p>
+                <button onclick="openResumeModal('ai-engineer')" class="btn btn-primary"><i class="fas fa-eye"></i> View
+                    Strategy & Download</button>
             </article>
 
             <!-- Cloud Engineer -->
             <article class="kit-card">
                 <div class="kit-icon"><i class="fas fa-cloud"></i></div>
                 <h3>Cloud Engineer</h3>
-                <p>Pre-populated with essential power phrases for AWS/Azure/GCP architecture, CI/CD pipelines, and infrastructure as code.</p>
-                <button onclick="openResumeModal('cloud-engineer')" class="btn btn-primary"><i class="fas fa-eye"></i> View Strategy & Download</button>
+                <p>Pre-populated with essential power phrases for AWS/Azure/GCP architecture, CI/CD pipelines, and
+                    infrastructure as code.</p>
+                <button onclick="openResumeModal('cloud-engineer')" class="btn btn-primary"><i class="fas fa-eye"></i>
+                    View Strategy & Download</button>
             </article>
         </div>
     </main>
@@ -225,7 +250,8 @@
         <div class="footer-content">
             <div class="footer-col">
                 <a href="/" class="nav-logo" aria-label="All At A1">
-                    <img src="{{ url_for('static', filename='Logo.webp') }}" width="56" height="56" class="logo-img-footer" alt="All At A1 Logo">
+                    <img src="{{ url_for('static', filename='Logo.webp') }}" width="56" height="56"
+                        class="logo-img-footer" alt="All At A1 Logo">
                     <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
                             class="color-3">A</span><span class="color-4">1</span></span>
                 </a>
@@ -253,10 +279,12 @@
         <div class="footer-bottom">
             <p>&copy; 2026 ALL AT A1. All rights reserved.</p>
             <div class="footer-social">
-                <a href="https://whatsapp.com/channel/0029Vb7sVZW9hXEz9CVcxz1k" class="wa" id="footer-whatsapp-link" aria-label="WhatsApp" title="WhatsApp" target="_blank" rel="noopener">
+                <a href="https://whatsapp.com/channel/0029Vb7sVZW9hXEz9CVcxz1k" class="wa" id="footer-whatsapp-link"
+                    aria-label="WhatsApp" title="WhatsApp" target="_blank" rel="noopener">
                     <i class="fab fa-whatsapp"></i>
                 </a>
-                <a href="https://www.linkedin.com/company/all-at-a1/" class="li" id="footer-linkedin-link" aria-label="LinkedIn" title="LinkedIn" target="_blank" rel="noopener">
+                <a href="https://www.linkedin.com/company/all-at-a1/" class="li" id="footer-linkedin-link"
+                    aria-label="LinkedIn" title="LinkedIn" target="_blank" rel="noopener">
                     <i class="fab fa-linkedin-in"></i>
                 </a>
             </div>
@@ -266,37 +294,57 @@
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 
     <!-- SEO Highly-Visible Modals for Resume Strategies -->
-    <div id="resume-modal" style="display: none; align-items: center; justify-content: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); z-index: 9999; backdrop-filter: blur(4px);">
-        <div id="resume-modal-content" style="background: white; width: 90%; max-width: 650px; border-radius: 12px; padding: 2.2rem; box-shadow: 0 20px 40px rgba(0,0,0, 0.25); position: relative; max-height: 90vh; overflow-y: auto;">
-            <button onclick="closeResumeModal()" style="position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 1.5rem; color: #6b7280; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='#6b7280'"><i class="fas fa-times"></i></button>
-            
+    <div id="resume-modal"
+        style="display: none; align-items: center; justify-content: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); z-index: 9999; backdrop-filter: blur(4px);">
+        <div id="resume-modal-content"
+            style="background: white; width: 90%; max-width: 650px; border-radius: 12px; padding: 2.2rem; box-shadow: 0 20px 40px rgba(0,0,0, 0.25); position: relative; max-height: 90vh; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch;">
+            <button onclick="closeResumeModal()"
+                style="position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 1.5rem; color: #6b7280; cursor: pointer; transition: color 0.2s;"
+                onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='#6b7280'"><i
+                    class="fas fa-times"></i></button>
+
             <div style="text-align: center; margin-bottom: 1.8rem;">
-                <h2 id="modal-r-title" style="color: var(--primary-dark); font-size: 1.8rem; margin-bottom: 0.6rem; font-weight: 700;">Loading Strategy...</h2>
-                <span style="display: inline-block; background: #e0f2fe; color: #0284c7; padding: 5px 14px; border-radius: 20px; font-weight: 700; font-size: 0.85rem;"><i class="fas fa-robot"></i> ATS Optimized Format</span>
+                <h2 id="modal-r-title"
+                    style="color: var(--primary-dark); font-size: 1.8rem; margin-bottom: 0.6rem; font-weight: 700;">
+                    Loading Strategy...</h2>
+                <span
+                    style="display: inline-block; background: #e0f2fe; color: #0284c7; padding: 5px 14px; border-radius: 20px; font-weight: 700; font-size: 0.85rem;"><i
+                        class="fas fa-robot"></i> ATS Optimized Format</span>
             </div>
 
             <div style="margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e7eb;">
-                <h4 style="color: #374151; font-weight: 700; font-size: 1.1rem; margin-bottom: 0.6rem;"><i class="fas fa-info-circle" style="color: var(--logo-color-1); margin-right: 6px;"></i> Strategic Overview</h4>
+                <h4 style="color: #374151; font-weight: 700; font-size: 1.1rem; margin-bottom: 0.6rem;"><i
+                        class="fas fa-info-circle" style="color: var(--logo-color-1); margin-right: 6px;"></i> Strategic
+                    Overview</h4>
                 <p id="modal-r-desc" style="color: #4b5563; font-size: 0.95rem; line-height: 1.7;"></p>
             </div>
 
             <div style="margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e7eb;">
-                <h4 style="color: #374151; font-weight: 700; font-size: 1.1rem; margin-bottom: 0.6rem;"><i class="fas fa-lightbulb" style="color: var(--logo-color-4); margin-right: 6px;"></i> Core Philosophy</h4>
+                <h4 style="color: #374151; font-weight: 700; font-size: 1.1rem; margin-bottom: 0.6rem;"><i
+                        class="fas fa-lightbulb" style="color: var(--logo-color-4); margin-right: 6px;"></i> Core
+                    Philosophy</h4>
                 <p id="modal-r-phil" style="color: #4b5563; font-size: 0.95rem; line-height: 1.7;"></p>
             </div>
 
             <div style="margin-bottom: 1.5rem;">
-                <h4 style="color: #374151; font-weight: 700; font-size: 1.1rem; margin-bottom: 0.8rem;"><i class="fas fa-check-circle" style="color: var(--logo-color-2); margin-right: 6px;"></i> ATS Optimizations Included</h4>
-                <ul id="modal-r-ats" style="color: #4b5563; font-size: 0.95rem; line-height: 1.7; padding-left: 1.2rem; margin: 0;"></ul>
+                <h4 style="color: #374151; font-weight: 700; font-size: 1.1rem; margin-bottom: 0.8rem;"><i
+                        class="fas fa-check-circle" style="color: var(--logo-color-2); margin-right: 6px;"></i> ATS
+                    Optimizations Included</h4>
+                <ul id="modal-r-ats"
+                    style="color: #4b5563; font-size: 0.95rem; line-height: 1.7; padding-left: 1.2rem; margin: 0;"></ul>
             </div>
 
-            <div style="margin-bottom: 2rem; background: #f9fafb; padding: 1.2rem; border-radius: 8px; border: 1px dashed #d1d5db;">
-                <h4 style="color: #374151; font-weight: 700; font-size: 1rem; margin-bottom: 0.8rem;"><i class="fas fa-key" style="color: #f59e0b; margin-right: 6px;"></i> Embedded Power Keywords</h4>
+            <div
+                style="margin-bottom: 2rem; background: #f9fafb; padding: 1.2rem; border-radius: 8px; border: 1px dashed #d1d5db;">
+                <h4 style="color: #374151; font-weight: 700; font-size: 1rem; margin-bottom: 0.8rem;"><i
+                        class="fas fa-key" style="color: #f59e0b; margin-right: 6px;"></i> Embedded Power Keywords</h4>
                 <div id="modal-r-keys" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
             </div>
 
             <div style="text-align: center; margin-top: 1rem;">
-                <a id="modal-r-download" href="#" class="btn btn-primary" style="width: 100%; font-size: 1.15rem; padding: 14px; font-weight: 700;" download><i class="fas fa-file-word"></i> Download .docx Template</a>
+                <a id="modal-r-download" href="#" class="btn btn-primary"
+                    style="width: 100%; font-size: 1.15rem; padding: 14px; font-weight: 700;" download><i
+                        class="fas fa-file-word"></i> Download .docx Template</a>
             </div>
         </div>
     </div>
@@ -323,7 +371,7 @@
             document.getElementById('modal-r-title').textContent = data.title;
             document.getElementById('modal-r-desc').textContent = data.description;
             document.getElementById('modal-r-phil').textContent = data.core_philosophy;
-            
+
             // Build ATS Bullet Points
             const atsList = document.getElementById('modal-r-ats');
             atsList.innerHTML = '';
@@ -356,9 +404,9 @@
             // Display Modal FIRST so geometry exists
             const modal = document.getElementById('resume-modal');
             const modalContent = document.getElementById('resume-modal-content');
-            
+
             modal.style.display = 'flex';
-            
+
             // NOW Reset scroll position to top (Browsers ignore scrollTop on display:none)
             if (modalContent) modalContent.scrollTop = 0;
 
@@ -377,7 +425,7 @@
         }
 
         // Close when clicking outside the box
-        document.getElementById('resume-modal').addEventListener('click', function(e) {
+        document.getElementById('resume-modal').addEventListener('click', function (e) {
             if (e.target === this) {
                 closeResumeModal();
             }

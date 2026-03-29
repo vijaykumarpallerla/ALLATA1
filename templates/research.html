@@ -318,7 +318,7 @@
                         </div>
                         <h2 style="font-size: 1.8rem; color: var(--text-main); margin-bottom: 1rem;">Request Received!</h2>
                         <p style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.6; margin-bottom: 2rem;">Your deep-dive research topic has been securely sent to our team. We'll start verifying that right away!</p>
-                        <button onclick="document.getElementById('successPopupModal').style.display='none'" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 1rem; font-size: 1.1rem; border-radius: var(--radius-md);">
+                        <button onclick="document.getElementById('successPopupModal').style.display='none'; document.body.style.overflow='auto';" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 1rem; font-size: 1.1rem; border-radius: var(--radius-md);">
                             Awesome, Thanks!
                         </button>
                     </div>
@@ -361,6 +361,7 @@
 
                             if (data.status === 'success') {
                                 document.getElementById('successPopupModal').style.display = 'flex';
+                                document.body.style.overflow = 'hidden';
                                 // Clear form for the next request
                                 document.getElementById('name').value = '';
                                 document.getElementById('email').value = '';
@@ -490,8 +491,8 @@
                     if (!document.getElementById('researchModal')) {
                         const modalHTML = `
                         <div id="researchModal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; padding: 1rem;">
-                            <div id="research-scrollable-content" class="modal-content" style="background: var(--bg-card); border-radius: var(--radius-lg); padding: 2.5rem; max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; border: 1px solid var(--border-color); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
-                                <button onclick="document.getElementById('researchModal').style.display='none'" style="position: absolute; top: 1.5rem; right: 1.5rem; background: transparent; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer;"><i class="fas fa-times"></i></button>
+                            <div id="research-scrollable-content" class="modal-content" style="background: var(--bg-card); border-radius: var(--radius-lg); padding: 2.5rem; max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; border: 1px solid var(--border-color); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
+                                <button onclick="document.getElementById('researchModal').style.display='none'; document.body.style.overflow='auto';" style="position: absolute; top: 1.5rem; right: 1.5rem; background: transparent; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer;"><i class="fas fa-times"></i></button>
                                 <span id="modalDate" class="research-card-date" style="margin-bottom: 1rem; display: inline-block;"></span>
                                 <h2 id="modalTitle" style="font-size: 2rem; color: var(--text-main); margin-bottom: 1rem;"></h2>
                                 <div id="modalQuery" class="research-card-query" style="margin-bottom: 2rem; font-size: 1.1rem;"></div>
@@ -504,6 +505,7 @@
                         document.getElementById('researchModal').addEventListener('click', function(e) {
                             if (e.target === this) {
                                 this.style.display = 'none';
+                                document.body.style.overflow = 'auto';
                             }
                         });
                     }
@@ -533,6 +535,7 @@
                             
                             // Display the modal FIRST so geometry exists
                             document.getElementById('researchModal').style.display = 'flex';
+                            document.body.style.overflow = 'hidden';
                             
                             // Prevent scroll retention bug
                             const scrollBox = document.getElementById('research-scrollable-content');
