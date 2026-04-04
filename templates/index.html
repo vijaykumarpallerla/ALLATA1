@@ -175,11 +175,11 @@
 <body>
     <nav class="navbar">
         <div class="nav-container">
-            <a href="/" class="nav-logo" aria-label="All At A1">
+            <div class="nav-logo" aria-label="All At A1">
                 <img src="{{ url_for('static', filename='Logo.webp') }}" width="84" height="84" class="logo-img" alt="All At A1 Logo">
                 <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
                         class="color-3">A</span><span class="color-4">1</span></span>
-            </a>
+            </div>
             <div class="menu-toggle" id="mobile-menu"><i class="fas fa-bars"></i></div>
             <div class="nav-menu" id="nav-menu">
                 <a href="/" class="nav-link active">Tech Insights</a>
@@ -187,6 +187,13 @@
                     style="color: var(--logo-color-3); font-weight: 700;"><i class="fas fa-graduation-cap"></i>
                     Students</a>
                 <a href="/browse-jobs" class="nav-link">Browse Jobs</a>
+                <div class="nav-dropdown">
+                    <a href="/research" class="nav-link">Our Products <i class="fas fa-chevron-down dropdown-icon"></i></a>
+                    <div class="dropdown-content">
+                        <a href="/research">Research Desk</a>
+                        <a href="/resume-kits">Resume Kits</a>
+                    </div>
+                </div>
                 <div class="nav-dropdown">
                     <a href="/privacy-policy" class="nav-link">Legal Agreements <i
                             class="fas fa-chevron-down dropdown-icon"></i></a>
@@ -246,11 +253,11 @@
     <footer>
         <div class="footer-content">
             <div class="footer-col">
-                <a href="/" class="nav-logo" aria-label="All At A1">
+                <div class="nav-logo" aria-label="All At A1">
                     <img src="{{ url_for('static', filename='Logo.webp') }}" width="56" height="56" class="logo-img-footer" alt="All At A1 Logo" loading="lazy">
                     <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
                             class="color-3">A</span><span class="color-4">1</span></span>
-                </a>
+                </div>
                 <p>A premier career hub dedicated to connecting top talent with high-quality, expert-verified
                     opportunities.</p>
             </div>
