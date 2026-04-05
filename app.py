@@ -753,11 +753,12 @@ def job_detail():
     job_id = request.args.get('jobid')
     
     if not job_id:
-        return "Missing job ID", 400
+        return render_template('404.html'), 404
         
     job = db.session.get(Job, job_id)
     if not job:
-        return "Job not found", 404
+        # A 410 status code tells the Google Bot "This URL has been permanently deleted, remove it from Search"
+        return render_template('job_deleted.html'), 410
         
     try:
         html = render_template('job_detail.html')

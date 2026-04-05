@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="icon" type="image/webp" href="{{ url_for('static', filename='Logo.webp') }}" />
+    <meta charset="UTF-8">
+    <meta name="description" content="This job position has been filled or expired. Please browse our active roles.">
+    <!-- Extremely Important: Tells Google NOT to index this page, confirming deletion -->
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Expired | ALL AT A1</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+    <link rel="preload" href="{{ url_for('static', filename='Logo.webp') }}" as="image" type="image/webp">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .expired-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem 1rem;
+            min-height: 60vh;
+        }
+
+        .expired-illustration {
+            width: 100%;
+            max-width: 250px;
+            margin-bottom: 0.5rem;
+        }
+
+        .expired-title {
+            font-size: 2.2rem;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .expired-desc {
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            max-width: 600px;
+            line-height: 1.5;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-md);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .action-hub {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 1rem;
+            width: 100%;
+            max-width: 650px;
+            justify-content: center;
+        }
+        
+        .action-hub button {
+            flex: 1 1 calc(33.333% - 1rem);
+            min-width: 180px;
+            padding: 0.8rem;
+            font-size: 1rem;
+        }
+
+        .btn-wa {
+            background: #25D366;
+            color: white;
+            border-color: #25D366;
+        }
+        .btn-wa:hover {
+            background: #1eb356;
+            border-color: #1eb356;
+        }
+
+        .btn-li {
+            background: #0077b5;
+            color: white;
+            border-color: #0077b5;
+        }
+        .btn-li:hover {
+            background: #005e93;
+            border-color: #005e93;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-logo" aria-label="All At A1">
+                <img src="{{ url_for('static', filename='Logo.webp') }}" width="84" height="84" class="logo-img" alt="All At A1 Logo">
+                <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
+                        class="color-3">A</span><span class="color-4">1</span></span>
+            </a>
+            <div class="menu-toggle" id="mobile-menu"><i class="fas fa-bars"></i></div>
+            <div class="nav-menu" id="nav-menu">
+                <a href="/" class="nav-link">Tech Insights</a>
+                <a href="/student-library" class="nav-link" style="color: var(--logo-color-3); font-weight: 700;"><i class="fas fa-graduation-cap"></i> Students</a>
+                <a href="/browse-jobs" class="nav-link">Browse Jobs</a>
+                <div class="nav-dropdown">
+                    <a href="/research" class="nav-link">Our Products <i class="fas fa-chevron-down dropdown-icon"></i></a>
+                    <div class="dropdown-content">
+                        <a href="/research">Research Desk</a>
+                        <a href="/resume-kits">Resume Kits</a>
+                    </div>
+                </div>
+                <div class="nav-dropdown">
+                    <a href="/privacy-policy" class="nav-link">Legal Agreements <i class="fas fa-chevron-down dropdown-icon"></i></a>
+                    <div class="dropdown-content">
+                        <a href="/terms-and-conditions">Terms and Conditions</a>
+                        <a href="/privacy-policy">Privacy Policy</a>
+                        <a href="/about-us">About Us</a>
+                    </div>
+                </div>
+                <a href="/contact-us" class="nav-link">Contact Us</a>
+                <a href="/jobs" class="nav-link nav-link-mobile">Post a Job</a>
+            </div>
+            <div class="nav-actions">
+                <button class="btn btn-primary" onclick="window.location.href='/jobs'">Post a Job</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="expired-container">
+            <!-- Job Expired / Position Filled SVG Illustration -->
+            <svg class="expired-illustration" viewBox="0 30 500 360" xmlns="http://www.w3.org/2000/svg">
+                <!-- Background Blob -->
+                <path d="M 250 50 C 400 50, 450 150, 450 250 C 450 350, 350 380, 250 380 C 100 380, 50 300, 50 200 C 50 80, 150 50, 250 50 Z" fill="#f8fafc" />
+                
+                <!-- The Desk / Base -->
+                <path d="M 100 320 L 400 320 M 120 320 L 120 380 M 380 320 L 380 380" fill="none" stroke="#475569" stroke-width="8" stroke-linecap="round" />
+                <rect x="150" y="300" width="200" height="20" rx="4" fill="#64748b" />
+
+                <!-- The Resume Document -->
+                <rect x="180" y="120" width="140" height="180" rx="4" fill="#ffffff" stroke="#cbd5e1" stroke-width="4" transform="rotate(-5, 250, 200)" />
+                <rect x="200" y="150" width="100" height="8" rx="4" fill="#e2e8f0" transform="rotate(-5, 250, 200)" />
+                <rect x="200" y="170" width="80" height="8" rx="4" fill="#e2e8f0" transform="rotate(-5, 250, 200)" />
+                <rect x="200" y="190" width="90" height="8" rx="4" fill="#e2e8f0" transform="rotate(-5, 250, 200)" />
+                <rect x="200" y="210" width="60" height="8" rx="4" fill="#e2e8f0" transform="rotate(-5, 250, 200)" />
+                <rect x="200" y="230" width="85" height="8" rx="4" fill="#e2e8f0" transform="rotate(-5, 250, 200)" />
+                <circle cx="280" cy="180" r="15" fill="#f1f5f9" transform="rotate(-5, 250, 200)" />
+
+                <!-- Big "FILLED" Stamp Overlay -->
+                <!-- Timestamp Outline -->
+                <rect x="175" y="200" width="160" height="50" rx="5" fill="none" stroke="#ef4444" stroke-width="6" transform="rotate(-15, 250, 220)" />
+                <!-- Stamp Text -->
+                <text x="255" y="238" font-family="'Outfit', sans-serif" font-size="34" font-weight="800" fill="#ef4444" text-anchor="middle" letter-spacing="4" transform="rotate(-15, 250, 220)">FILLED</text>
+                
+                <!-- Empty Office Coffee Mug showing it's over -->
+                <path d="M 340 300 L 345 260 C 345 255, 375 255, 375 260 L 380 300 Z" fill="#94a3b8" />
+                <path d="M 375 270 C 390 270, 390 290, 375 290" fill="none" stroke="#94a3b8" stroke-width="6" />
+
+                <!-- Sand Hourglass (Time Ran Out) -->
+                <path d="M 120 250 L 160 250 L 145 275 L 160 300 L 120 300 L 135 275 Z" fill="#0ea5e9" stroke="#0284c7" stroke-width="4" />
+                <path d="M 120 250 L 160 250 M 120 300 L 160 300" fill="none" stroke="#0284c7" stroke-width="6" />
+                <polygon points="125,295 155,295 140,275" fill="#bae6fd" />
+            </svg>
+
+            <h1 class="expired-title">You just missed this one!</h1>
+            
+            <div class="expired-desc">
+                <strong>Top roles like this fill up incredibly fast.</strong> Don't miss out next time. Join our exclusive community below to get notified of our newest, expert-verified jobs before we even post them publicly!
+            </div>
+
+            <div class="action-hub">
+                <button class="btn btn-primary" onclick="window.location.href='/browse-jobs'">
+                    <i class="fas fa-search" style="margin-right: 8px;"></i> Browse Active Jobs
+                </button>
+
+                <button class="btn btn-wa" onclick="window.open('https://whatsapp.com/channel/0029Vb7sVZW9hXEz9CVcxz1k', '_blank')">
+                    <i class="fab fa-whatsapp" style="margin-right: 8px;"></i> Join WhatsApp Alerts
+                </button>
+
+                <button class="btn btn-li" onclick="window.open('https://www.linkedin.com/company/all-at-a1/', '_blank')">
+                    <i class="fab fa-linkedin-in" style="margin-right: 8px;"></i> Follow on LinkedIn
+                </button>
+            </div>
+            
+            <div style="margin-top: 2rem; color: var(--text-muted); font-size: 0.9rem;">
+                <a href="/" style="color: var(--primary-color); text-decoration: none;">&larr; Return to Homepage</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <a href="/" class="nav-logo" aria-label="All At A1">
+                    <img src="{{ url_for('static', filename='Logo.webp') }}" width="56" height="56" class="logo-img-footer" alt="All At A1 Logo" loading="lazy">
+                    <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
+                            class="color-3">A</span><span class="color-4">1</span></span>
+                </a>
+                <p>A premier career hub dedicated to connecting top talent with high-quality, expert-verified
+                    opportunities.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Our Products</h4>
+                <a href="/research">Research Desk</a>
+                <a href="/resume-kits">Resume Kits</a>
+            </div>
+            <div class="footer-col">
+                <h4>For Employers</h4>
+                <a href="/jobs">Post a Job</a>
+                <a href="/browse-jobs">Browse Jobs</a>
+            </div>
+            <div class="footer-col">
+                <h4>Support & Legal</h4>
+                <a href="/about-us">About Us</a>
+                <a href="/contact-us">Contact Us</a>
+                <a href="/privacy-policy">Privacy Policy</a>
+                <a href="/terms-and-conditions">Terms of Service</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 ALL AT A1. All rights reserved.</p>
+            <div class="footer-social">
+                <a href="https://whatsapp.com/channel/0029Vb7sVZW9hXEz9CVcxz1k" class="wa" id="footer-whatsapp-link" aria-label="WhatsApp" title="WhatsApp" target="_blank" rel="noopener">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+                <a href="https://www.linkedin.com/company/all-at-a1/" class="li" id="footer-linkedin-link" aria-label="LinkedIn" title="LinkedIn" target="_blank" rel="noopener">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</body>
+
+</html>

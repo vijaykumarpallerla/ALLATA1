@@ -930,3 +930,20 @@ UPDATE: 04/04/2026 - VIJAY
 - **Global Favicon Integration:** 
   - Successfully deployed Logo.webp as the site’s official browser favicon across all 24 HTML templates. 
   - Leveraged the optimized 4KB WebP format to guarantee instant tab-loading without impacting server performance or PageSpeed scores.
+
+==============================================================================
+UPDATE: 05/04/2026 - VIJAY
+==============================================================================
+
+- **Research Desk Data Update (`static/data/researches.json`)**:
+  - Added Research ID 9 ("Self-Hosted AI Attendance & Payroll System") to the JSON structure.
+  - Formatted strictly according to the A1 Research Theme HTML guidelines with the mandatory "A1 NOTE" disclaimer.
+
+- **Research Gallery UX Enhancement (`templates/research.html`)**:
+  - Implemented `.reverse()` array methodology in the frontend Javascript to correctly render the newest research posts at the top of the gallery automatically.
+
+- **SEO & Deleted Job Handling (`templates/job_deleted.html`, `app.py`)**:
+  - Engineered a beautiful new UI (`job_deleted.html`) for old jobs deleted from the DB. 
+  - Designed an original "FILLED" SVG graphic and added horizontal social retention buttons (WhatsApp, LinkedIn, Browse Jobs) side-by-side using Flexbox layout to prevent unnecessary scrolling.
+  - Implemented strict SEO best practices by wrapping the page with `<meta name="robots" content="noindex, nofollow">`.
+  - Upgraded Python logic in `app.py`'s `/job` route. It explicitly delivers an HTTP `410 Gone` status code to Google bots, forcing them to instantly purge the dead link from internet search results rather than logging it as a generic soft 404 error.
