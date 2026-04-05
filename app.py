@@ -229,6 +229,10 @@ def home():
 def google_verification():
     return render_template('google57b6f02c4dd10a3a.html')
 
+@app.route('/google01b4a3df9fc30f17.html')
+def google_verification1():
+    return render_template('google01b4a3df9fc30f17.html')
+
 @app.route('/resume-kits')
 def resume_kits():
     return render_template('resume_kits.html')
