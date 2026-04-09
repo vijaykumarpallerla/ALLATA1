@@ -14,6 +14,7 @@ from authlib.integrations.flask_client import OAuth
 import difflib
 import requests
 import json
+import markdown
 
 load_dotenv()
 
@@ -214,6 +215,7 @@ with app.app_context():
         print(f"[DB Migration] Company name fix skipped: {e}")
 
 import json
+import markdown
 
 @app.route('/')
 def home():
@@ -768,13 +770,65 @@ def job_detail():
         html = html.replace('<!-- JOB_LOCATION -->', job.location)
         html = html.replace('<!-- JOB_TYPE -->', job.job_type)
         html = html.replace('<!-- JOB_SALARY -->', job.salary if job.salary else "Competitive")
-        html = html.replace('<!-- JOB_DURATION -->', job.duration if job.duration else "Not Specified")
+        
+        # Hide Duration field if empty or 'Not Specified'
+        import re
+        clean_dur = str(job.duration).strip().lower() if job.duration else ""
+        if not clean_dur or clean_dur == 'not specified' or clean_dur == 'none':
+            html = re.sub(r'<!-- JOB_DURATION_START -->.*?<!-- JOB_DURATION_END -->\n?', '', html, flags=re.DOTALL)
+        else:
+            html = html.replace('<!-- JOB_DURATION_START -->\n', '')
+            html = html.replace('\n<!-- JOB_DURATION_END -->', '')
+            html = html.replace('<!-- JOB_DURATION -->', job.duration)
+
         html = html.replace('<!-- JOB_EXPERIENCE -->', job.experience)
         
-        # Pass description securely as JSON string so marked.js can parse it cleanly
+        # SEO Enhancement: Dynamic Meta Description
+        import re
+        import markdown
         import json
-        desc_json = json.dumps(job.description)
-        html = html.replace('<!-- JOB_DESCRIPTION_JSON -->', desc_json)
+        clean_text = re.sub(r'<[^>]+>', '', job.description)
+        clean_text = clean_text.replace('\n', ' ').replace('"', "'")
+        desc_snippet = (clean_text[:155] + '...') if len(clean_text) > 155 else clean_text
+        old_meta = 'content="View job details on ALL AT A1. Explore roles in AI, data science, and software engineering from verified employers."'
+        html = html.replace(old_meta, f'content="{desc_snippet}"')
+
+        # SEO Enhancement: Server-Side Markdown Rendering
+        rendered_md = markdown.markdown(job.description, extensions=['tables', 'fenced_code', 'nl2br'])
+        html = html.replace('<!-- RENDERED_MARKDOWN -->', rendered_md)
+        
+        # SEO Enhancement: Google Jobs Schema
+        try:
+            emp_type = "FULL_TIME"
+            job_type_upper = job.job_type.upper()
+            if "CONTRACT" in job_type_upper: emp_type = "CONTRACTOR"
+            elif "PART" in job_type_upper: emp_type = "PART_TIME"
+            schema_data = {
+                "@context": "https://schema.org/",
+                "@type": "JobPosting",
+                "title": job.title,
+                "description": rendered_md,
+                "datePosted": datetime.now(timezone.utc).isoformat(),
+                "employmentType": emp_type,
+                "hiringOrganization": {
+                    "@type": "Organization",
+                    "name": job.company,
+                    "sameAs": "https://all-at-a1.in",
+                    "logo": "https://all-at-a1.in/static/Logo.webp"
+                },
+                "jobLocation": {
+                    "@type": "Place",
+                    "address": {
+                        "@type": "PostalAddress",
+                        "addressLocality": job.location,
+                        "addressCountry": "US"
+                    }
+                }
+            }
+            schema_script = f'<script type="application/ld+json">\n{json.dumps(schema_data, indent=2)}\n</script>'
+            html = html.replace('</head>', f'{schema_script}\n</head>')
+        except Exception as e:
+            pass
         
         html = html.replace('<!-- JOB_POSTED -->', job.posted)
         
@@ -979,7 +1033,7 @@ def get_admin_jobs():
             "type": j.job_type,
             "experience": j.experience,
             "salary": j.salary,
-            "duration": j.duration or "Not Specified",
+            "duration": j.duration if j.duration and j.duration.strip().lower() not in ["not specified", "none"] else "",
             "apply_url": j.apply_url or "",
             "description": j.description,
             "is_algorithm": j.is_algorithm,

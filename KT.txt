@@ -947,3 +947,14 @@ UPDATE: 05/04/2026 - VIJAY
   - Designed an original "FILLED" SVG graphic and added horizontal social retention buttons (WhatsApp, LinkedIn, Browse Jobs) side-by-side using Flexbox layout to prevent unnecessary scrolling.
   - Implemented strict SEO best practices by wrapping the page with `<meta name="robots" content="noindex, nofollow">`.
   - Upgraded Python logic in `app.py`'s `/job` route. It explicitly delivers an HTTP `410 Gone` status code to Google bots, forcing them to instantly purge the dead link from internet search results rather than logging it as a generic soft 404 error.
+
+==============================================================================
+UPDATE: 09/04/2026 - VIJAY
+==============================================================================
+
+- **AI Employment Type Rectification (`adminpost.py`):** Fixed a critical AI parsing bug where the model was confusing "Working Models" (Remote/Hybrid) with "Employment Types" (Full-time/Contract). Forced the AI SYSTEM_PROMPT to strictly extract only true employment types and reject location modifiers for the `job_type` JSON field.
+- **Smart Salary Estimation (`adminpost.py`):** Rewrote the AI Salary logic. Instead of outputting a generic "Competitive", the AI now uses predictive intelligence to estimate realistic numerical salaries based on role and experience. It outputs hourly rates (e.g. `$50 - $60/hr`) for Contract jobs and annual salaries (e.g. `$110k - $130k/yr`) for Full-time jobs.
+- **AI Duration Precision (`adminpost.py`):** Prohibited the AI from ever using the phrase "Not Specified" for Duration. Instructed the model to forcefully return an empty string (`""`) if the role is Full-time or if no duration exists in a contract description.
+- **Dynamic HTML Pruning (`app.py` & `job_detail.html`):** Built advanced DOM manipulation inside the `app.py` server-side rendering logic. If a job is pushed to the public site without a duration, the Python engine physically wipes the entire HTML block (including the clock icon and labels) from the generated webpage, preventing blank fields or "Not Specified" from cluttering the UX. Appends retroactively to all existing old jobs.
+- **Admin Dashboard UI Flow (`admin.html`):** The AI Job Preview grid now embeds the Duration edit box natively inline. It uses Javascript conditionals to hide the Duration block entirely if the AI returns an empty string, while safely handling POST requests without throwing null reference errors.
+- **Admin API Cleanup (`app.py`):** Cleared legacy "Not Specified" fallback strings from the `/api/admin/jobs` endpoint so the Admin tables remain perfectly pristine for older jobs.

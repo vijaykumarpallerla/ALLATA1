@@ -19,9 +19,9 @@ You MUST return a valid JSON object with the following keys and values:
 - "title": The extracted Job title.
 - "company": The EXACT company name. IF NO COMPANY IS MENTIONED, you MUST USE the exact phrase "Not Disclosed". DO NOT use "Confidential". DO NOT guess or hallucinate.
 - "location": The extracted Job location.
-- "job_type": e.g., "Full-time", "Contract", "Remote", etc.
+- "job_type": MUST strictly be an employment type: e.g., "Full-time", "Part-time", "Internship", or "Contract". DO NOT use location modifiers like "Remote" or "Hybrid" here.
 - "experience": Brief summary of required experience/skills (MAX 100 characters. e.g., "5+ years, Java").
-- "salary": The extracted salary or "Competitive".
+- "salary": The extracted salary. IF NO salary is mentioned in the text: If it is a "Contract" role, intelligently guess a highly realistic approximate hourly rate based on the role and experience (e.g., "$50 - $60/hr"). If it is a "Full-time" role, guess an approximate annual salary (e.g., "$110k - $130k/yr"). DO NOT use words like "Competitive" or "Not Specified" anymore; always provide a numerical estimate if missing.
 - "duration": The project/contract duration (e.g. "6 Months", "Long-term"). Extracted from text.
 - "apply_url": The primary URL or email address found in the text for applying. Look specifically for links following keywords like "Apply Here:", "Link:", "LinkedIn:", or "Application:". NEVER omit an application URL if one is present. If multiple are found, pick the most direct one. If none found, leave as empty string "".
 - "description": The rewritten, unique Career Guide in Markdown format.

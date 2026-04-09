@@ -7,3 +7,4 @@ requests
 Authlib
 groq
 python-docx
+markdown

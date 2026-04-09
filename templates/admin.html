@@ -1759,6 +1759,7 @@
                             <div><strong style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Type</strong><div id="edit-type-${uniqueJobId}" contenteditable="true" style="border: 1px solid transparent; padding: 2px; border-radius: 4px;" onfocus="this.style.background='#fff'; this.style.borderColor='var(--primary-color)'" onblur="this.style.background='transparent'; this.style.borderColor='transparent'">${job.job_type}</div></div>
                             <div><strong style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Experience</strong><div id="edit-exp-${uniqueJobId}" contenteditable="true" style="border: 1px solid transparent; padding: 2px; border-radius: 4px;" onfocus="this.style.background='#fff'; this.style.borderColor='var(--primary-color)'" onblur="this.style.background='transparent'; this.style.borderColor='transparent'">${job.experience}</div></div>
                             <div><strong style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Salary</strong><div id="edit-salary-${uniqueJobId}" contenteditable="true" style="border: 1px solid transparent; padding: 2px; border-radius: 4px;" onfocus="this.style.background='#fff'; this.style.borderColor='var(--primary-color)'" onblur="this.style.background='transparent'; this.style.borderColor='transparent'">${job.salary}</div></div>
+                            ${job.duration ? `<div><strong style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Duration</strong><div id="edit-duration-${uniqueJobId}" contenteditable="true" style="border: 1px solid transparent; padding: 2px; border-radius: 4px;" onfocus="this.style.background='#fff'; this.style.borderColor='var(--primary-color)'" onblur="this.style.background='transparent'; this.style.borderColor='transparent'">${job.duration}</div></div>` : ''}
                             <div style="grid-column: 1 / -1;"><strong style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Apply URL / Email</strong><div id="edit-apply-${uniqueJobId}" contenteditable="true" style="color: var(--primary-color); word-break: break-all; border: 1px solid transparent; padding: 2px; border-radius: 4px;" onfocus="this.style.background='#fff'; this.style.borderColor='var(--primary-color)'" onblur="this.style.background='transparent'; this.style.borderColor='transparent'">${job.apply_url || ''}</div></div>
                         </div>
 
@@ -1801,6 +1802,8 @@
             jobData.job_type = document.getElementById(`edit-type-${btnId}`).innerText.trim();
             jobData.experience = document.getElementById(`edit-exp-${btnId}`).innerText.trim();
             jobData.salary = document.getElementById(`edit-salary-${btnId}`).innerText.trim();
+            const durEl = document.getElementById(`edit-duration-${btnId}`);
+            jobData.duration = durEl ? durEl.innerText.trim() : "";
             jobData.apply_url = document.getElementById(`edit-apply-${btnId}`).innerText.trim();
 
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Posting...';

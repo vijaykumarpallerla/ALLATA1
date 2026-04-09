@@ -192,8 +192,10 @@
                 <li><i class="fas fa-briefcase"></i> <span><strong>Job Type:</strong> <!-- JOB_TYPE --></span></li>
                 <li><i class="fas fa-money-bill-wave"></i> <span><strong>Salary:</strong> <!-- JOB_SALARY --></span>
                 </li>
+<!-- JOB_DURATION_START -->
                 <li><i class="fas fa-clock"></i> <span><strong>Duration:</strong> <!-- JOB_DURATION --></span>
                 </li>
+<!-- JOB_DURATION_END -->
                 <li><i class="fas fa-chart-line"></i> <span><strong>Experience:</strong> <!-- JOB_EXPERIENCE --></span>
                 </li>
             </ul>
@@ -203,7 +205,7 @@
 
                 <div id="rendered-job-description" class="markdown-body"
                     style="line-height: 1.8; color: var(--text-main); font-size: 1.05rem;">
-                    <!-- Javascript will inject parsed markdown here -->
+                    <!-- RENDERED_MARKDOWN -->
                 </div>
             </div>
 
@@ -258,27 +260,7 @@
         </div>
     </footer>
 
-    <div id="raw-description-json" style="display:none;"><!-- JOB_DESCRIPTION_JSON --></div>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script>
-        const rawJsonElement = document.getElementById('raw-description-json').textContent;
-        let rawMarkdown = "";
-        try {
-            rawMarkdown = JSON.parse(rawJsonElement);
-        } catch (e) {
-            rawMarkdown = rawJsonElement;
-        }
-
-        marked.setOptions({
-            breaks: true, // Converts single newlines to <br> if needed
-            gfm: true     // Enables GitHub Flavored Markdown (tables)
-        });
-
-        // Parse markdown to HTML
-        const htmlContent = marked.parse(rawMarkdown);
-        document.getElementById('rendered-job-description').innerHTML = htmlContent;
-    </script>
-    <style>
+        <style>
         /* Markdown generated content styles */
         .markdown-body h1,
         .markdown-body h2,
