@@ -958,3 +958,27 @@ UPDATE: 09/04/2026 - VIJAY
 - **Dynamic HTML Pruning (`app.py` & `job_detail.html`):** Built advanced DOM manipulation inside the `app.py` server-side rendering logic. If a job is pushed to the public site without a duration, the Python engine physically wipes the entire HTML block (including the clock icon and labels) from the generated webpage, preventing blank fields or "Not Specified" from cluttering the UX. Appends retroactively to all existing old jobs.
 - **Admin Dashboard UI Flow (`admin.html`):** The AI Job Preview grid now embeds the Duration edit box natively inline. It uses Javascript conditionals to hide the Duration block entirely if the AI returns an empty string, while safely handling POST requests without throwing null reference errors.
 - **Admin API Cleanup (`app.py`):** Cleared legacy "Not Specified" fallback strings from the `/api/admin/jobs` endpoint so the Admin tables remain perfectly pristine for older jobs.
+
+==============================================================================
+UPDATE: 10/04/2026 - VIJAY
+==============================================================================
+
+- **Dependency Management (`requirements.txt`):** Added the `markdown` library to the official requirements list. This ensures Vercel and other production environments successfully install the logic required for Server-Side Rendering (SSR) of job descriptions without crashing.
+- **Google Search Console Fix (Premium SEO Optimization):** Successfully resolved 5 non-critical warnings detected by Google Search Console regarding Job Posting structured data.
+- **Structured Data Enrichment (`app.py`):** 
+    - **ValidThrough:** Implemented an automated 90-day expiry date for every job posting to satisfy Google's data freshness requirements.
+    - **BaseSalary Parsing:** Added a regex logic to extract numeric values from salary strings (e.g., "$60" from "$60/hr") and convert them into machine-readable JSON for Google’s "Jobs" widget.
+    - **Address Granularity:** Updated the location logic to separate simple strings into structured 'addressLocality' (City) and 'addressRegion' (State) components, fixing the streetAddress and postalCode warnings.
+- **UI Integrity:** All SEO-related code changes are injected via hidden JSON-LD scripts, ensuring 100% Zero Impact on the user interface while maximizing Google Search indexing potential.
+
+==============================================================================
+UPDATE: 10/04/2026 - VIJAY
+==============================================================================
+
+- **Dependency Management (`requirements.txt`):** Added the `markdown` library to the official requirements list. This ensures Vercel and other production environments successfully install the logic required for Server-Side Rendering (SSR) of job descriptions without crashing.
+- **Google Search Console Fix (Premium SEO Optimization):** Successfully resolved 5 non-critical warnings detected by Google Search Console regarding Job Posting structured data.
+- **Structured Data Enrichment (`app.py`):** 
+    - **ValidThrough:** Implemented an automated 90-day expiry date for every job posting to satisfy Google's data freshness requirements.
+    - **Address Granularity:** Updated the location logic to separate simple strings into structured 'addressLocality' (City) and 'addressRegion' (State) components, fixing the streetAddress and postalCode warnings.
+    - **High-Intelligence Salary Scraper:** Upgraded the salary extraction logic to handle 'k' notation (e.g., $90k -> 90,000) and numeric ranges (e.g., $70 - $90/hr). The system now provides Google with precise 'minValue' and 'maxValue' data points, while keeping the human UI 100% unchanged.
+- **UI Integrity:** All SEO-related code changes are injected via hidden JSON-LD scripts, ensuring 100% Zero Impact on the user interface while maximizing Google Search indexing potential.

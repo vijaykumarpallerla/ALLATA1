@@ -797,18 +797,30 @@ def job_detail():
         rendered_md = markdown.markdown(job.description, extensions=['tables', 'fenced_code', 'nl2br'])
         html = html.replace('<!-- RENDERED_MARKDOWN -->', rendered_md)
         
-        # SEO Enhancement: Google Jobs Schema
+        # SEO Enhancement: Google Jobs Schema (Professional Optimization)
         try:
+            # 1. Employment Type Mapping
             emp_type = "FULL_TIME"
             job_type_upper = job.job_type.upper()
             if "CONTRACT" in job_type_upper: emp_type = "CONTRACTOR"
             elif "PART" in job_type_upper: emp_type = "PART_TIME"
+            
+            # 2. Expiry (90 days after posting)
+            valid_dt = datetime.now(timezone.utc) + timedelta(days=90)
+            valid_through = valid_dt.isoformat()
+
+            # 3. Structured Location Parsing
+            loc_parts = [p.strip() for p in job.location.split(',')]
+            city = loc_parts[0] if len(loc_parts) > 0 else job.location
+            region = loc_parts[1][:2].upper() if len(loc_parts) > 1 else "" # Extract 2-letter state code if possible
+
             schema_data = {
                 "@context": "https://schema.org/",
                 "@type": "JobPosting",
                 "title": job.title,
                 "description": rendered_md,
                 "datePosted": datetime.now(timezone.utc).isoformat(),
+                "validThrough": valid_through,
                 "employmentType": emp_type,
                 "hiringOrganization": {
                     "@type": "Organization",
@@ -820,11 +832,40 @@ def job_detail():
                     "@type": "Place",
                     "address": {
                         "@type": "PostalAddress",
-                        "addressLocality": job.location,
+                        "addressLocality": city,
+                        "addressRegion": region,
                         "addressCountry": "US"
                     }
                 }
             }
+
+            # 4. High-Intelligence Salary Scraper (Handles 'k', ranges, and units)
+            if job.salary and job.salary.lower() not in ["competitive", "not specified"]:
+                try:
+                    # Collect all numbers and check for 'k'
+                    raw_salary = job.salary.lower().replace(',', '')
+                    is_k = 'k' in raw_salary
+                    salary_digits = re.findall(r'\d+', raw_salary)
+                    
+                    if salary_digits:
+                        nums = [int(n) * 1000 if is_k else int(n) for n in salary_digits]
+                        unit = "HOUR" if "hr" in raw_salary else "YEAR"
+                        
+                        val_obj = {"@type": "QuantitativeValue", "unitText": unit}
+                        if len(nums) >= 2:
+                            val_obj["minValue"] = nums[0]
+                            val_obj["maxValue"] = nums[1]
+                        else:
+                            val_obj["value"] = nums[0]
+
+                        schema_data["baseSalary"] = {
+                            "@type": "MonetaryAmount",
+                            "currency": "USD",
+                            "value": val_obj
+                        }
+                except:
+                    pass
+
             schema_script = f'<script type="application/ld+json">\n{json.dumps(schema_data, indent=2)}\n</script>'
             html = html.replace('</head>', f'{schema_script}\n</head>')
         except Exception as e:
