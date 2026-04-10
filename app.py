@@ -832,8 +832,10 @@ def job_detail():
                     "@type": "Place",
                     "address": {
                         "@type": "PostalAddress",
+                        "streetAddress": "Not Disclosed",
                         "addressLocality": city,
                         "addressRegion": region,
+                        "postalCode": "00000",
                         "addressCountry": "US"
                     }
                 }
