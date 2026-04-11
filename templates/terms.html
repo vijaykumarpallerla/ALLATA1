@@ -4,14 +4,18 @@
 <head>
     <link rel="icon" type="image/webp" href="{{ url_for('static', filename='Logo.webp') }}" />
     <meta charset="UTF-8">
-    <meta name="description" content="Review the ALL AT A1 Terms and Conditions governing the use of our career hub, job board, and research platform.">
+    <meta name="description"
+        content="Review the ALL AT A1 Terms and Conditions governing the use of our career hub, job board, and research platform.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Terms and Conditions | ALL AT A1</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style"
+        onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    </noscript>
     <link rel="preload" href="{{ url_for('static', filename='Logo.webp') }}" as="image" type="image/webp">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
@@ -21,17 +25,20 @@
     <nav class="navbar">
         <div class="nav-container">
             <a href="/" class="nav-logo" aria-label="All At A1">
-                <img src="{{ url_for('static', filename='Logo.webp') }}" width="84" height="84" class="logo-img" alt="All At A1 Logo">
+                <img src="{{ url_for('static', filename='Logo.webp') }}" width="84" height="84" class="logo-img"
+                    alt="All At A1 Logo">
                 <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
                         class="color-3">A</span><span class="color-4">1</span></span>
             </a>
             <div class="menu-toggle" id="mobile-menu"><i class="fas fa-bars"></i></div>
             <div class="nav-menu" id="nav-menu">
                 <a href="/" class="nav-link">Tech Insights</a>
-                <a href="/student-library" class="nav-link" style="color: var(--logo-color-3); font-weight: 700;"><i class="fas fa-graduation-cap"></i> Students</a>
+                <a href="/student-library" class="nav-link" style="color: var(--logo-color-3); font-weight: 700;"><i
+                        class="fas fa-graduation-cap"></i> Students</a>
                 <a href="/browse-jobs" class="nav-link">Browse Jobs</a>
                 <div class="nav-dropdown">
-                    <a href="/research" class="nav-link">Our Products <i class="fas fa-chevron-down dropdown-icon"></i></a>
+                    <a href="/research" class="nav-link">Our Products <i
+                            class="fas fa-chevron-down dropdown-icon"></i></a>
                     <div class="dropdown-content">
                         <a href="/research">Research Desk</a>
                         <a href="/resume-kits">Resume Kits</a>
@@ -59,7 +66,7 @@
     <main class="container legal-container">
         <div class="legal-content">
             <h1>Terms and Conditions for ALL AT A1</h1>
-            <p class="last-updated">Last Updated: March 24, 2026</p>
+            <p class="last-updated">Last Updated: April 11, 2026</p>
 
             <section class="legal-section">
                 <h2>1. Acceptance of Terms</h2>
@@ -71,108 +78,160 @@
                 <h2>2. Nature of the Service (Career Hub & Educational Platform)</h2>
                 <p>ALL AT A1 is a multi-faceted platform designed to empower career growth. Our services include:</p>
                 <ul>
-                    <li><strong>Job Search Engine:</strong> A curated discovery engine featuring highly targeted and strictly verified career opportunities.</li>
-                    <li><strong>Educational Content (For Students):</strong> Specialized resources, roadmaps, and technical guides designed to bridge the gap between education and employment.</li>
-                    <li><strong>Tech Insights & Blogs:</strong> In-depth articles and technical analysis focused on industry trends and technical deep-dives.</li>
+                    <li><strong>Job Search Engine:</strong> A curated discovery engine featuring highly targeted and
+                        strictly verified career opportunities.</li>
+                    <li><strong>Educational Content (For Students):</strong> Specialized resources, roadmaps, and
+                        technical guides designed to bridge the gap between education and employment.</li>
+                    <li><strong>Tech Insights & Blogs:</strong> In-depth articles and technical analysis focused on
+                        industry trends and technical deep-dives.</li>
                 </ul>
             </section>
 
             <section class="legal-section">
                 <h2>3. Educational & Informational Use Only (Blogs & Student Projects)</h2>
-                <p>All content provided within our <strong>Tech Insights (Blogs)</strong>, <strong>Student Projects</strong>, <strong>Project Ideas</strong>, and <strong>Research Desk</strong> is intended strictly for <strong>educational and informational purposes only</strong>.</p>
+                <p>All content provided within our <strong>Tech Insights (Blogs)</strong>, <strong>Student
+                        Projects</strong>, <strong>Project Ideas</strong>, and <strong>Research Desk</strong> is
+                    intended strictly for <strong>educational and informational purposes only</strong>.</p>
                 <ul>
-                    <li>The provided project architectures, code blueprints, and system designs are meant to serve as learning tools and conceptual frameworks. They are not guaranteed to be production-ready or error-free.</li>
-                    <li>ALL AT A1 assumes absolutely no liability for any technical failures, data loss, or system damage resulting from users actively deploying or interacting with our educational projects in their own environments.</li>
-                    <li>You are solely responsible for independently verifying all technical guidelines and cybersecurity parameters before implementing any of our provided ideas.</li>
+                    <li>The provided project architectures, code blueprints, and system designs are meant to serve as
+                        learning tools and conceptual frameworks. They are not guaranteed to be production-ready or
+                        error-free.</li>
+                    <li>ALL AT A1 assumes absolutely no liability for any technical failures, data loss, or system
+                        damage resulting from users actively deploying or interacting with our educational projects in
+                        their own environments.</li>
+                    <li>You are solely responsible for independently verifying all technical guidelines and
+                        cybersecurity parameters before implementing any of our provided ideas.</li>
                 </ul>
             </section>
 
             <section class="legal-section">
                 <h2>4. Intellectual Property (Blogs & Insights)</h2>
-                <p>The original content in our "Tech Insights" and "Students" sections—including specialized metaphors and custom guides—is the property of ALL AT A1. Unauthorized commercial reproduction is strictly prohibited.</p>
+                <p>The original content in our "Tech Insights" and "Students" sections—including specialized metaphors
+                    and custom guides—is the property of ALL AT A1. Unauthorized commercial reproduction is strictly
+                    prohibited.</p>
             </section>
 
             <section class="legal-section">
                 <h2>5. Third-Party Links</h2>
-                <p>Clicking on job listings or external resource links will direct you to third-party websites. ALL AT A1 is not responsible for any interactions or disputes on these external platforms.</p>
+                <p>Clicking on job listings or external resource links will direct you to third-party websites. ALL AT
+                    A1 is not responsible for any interactions or disputes on these external platforms.</p>
             </section>
 
             <section class="legal-section">
                 <h2>6. Acceptable Use</h2>
-                <p>Users must use the platform lawfully. You are strictly prohibited from using automated bots or scrapers to extract our listings, blog content, or educational resources.</p>
+                <p>Users must use the platform lawfully. You are strictly prohibited from using automated bots or
+                    scrapers to extract our listings, blog content, or educational resources.</p>
             </section>
 
             <section class="legal-section">
                 <h2>7. Disclaimer of Employment Guarantees</h2>
-                <p>The service is provided strictly "AS IS". ALL AT A1 is solely a discovery platform. While our system carefully aggregates and verifies high-quality job postings, we are not a recruitment agency and we do not procure jobs for you.</p>
-                <p><strong>We absolutely do not guarantee employment, job offers, interviews, or any specific career outcome</strong> as a result of using our search engine, educational roadmaps, or services.</p>
+                <p>The service is provided strictly "AS IS". ALL AT A1 is solely a discovery platform. While our system
+                    carefully aggregates and verifies high-quality job postings, we are not a recruitment agency and we
+                    do not procure jobs for you.</p>
+                <p><strong>We absolutely do not guarantee employment, job offers, interviews, or any specific career
+                        outcome</strong> as a result of using our search engine, educational roadmaps, or services.</p>
+                <p><strong>Salary Accuracy Disclaimer:</strong> Salary ranges displayed on our portal are <strong>estimated based on market data and industry benchmarks</strong>. These figures are strictly for informational purposes and do not represent a guaranteed offer. The final compensation is determined solely by the hiring employer at their own discretion.</p>
             </section>
 
             <section class="legal-section">
                 <h2>8. Limitation of Liability</h2>
-                <p>In no event shall ALL AT A1 be liable for damages resulting from your use of the website or your reliance on any educational or job-related information.</p>
+                <p>In no event shall ALL AT A1 be liable for damages resulting from your use of the website or your
+                    reliance on any educational or job-related information.</p>
             </section>
 
             <section class="legal-section">
                 <h2>9. No Data Scraping</h2>
-                <p>Unauthorized automated extraction of our job listings, blog posts, or student roadmaps is strictly prohibited and subject to legal action.</p>
+                <p>Unauthorized automated extraction of our job listings, blog posts, or student roadmaps is strictly
+                    prohibited and subject to legal action.</p>
             </section>
 
             <section class="legal-section">
                 <h2>10. Job Enhancement & Expert Insights</h2>
-                <p>When an employer or recruiter submits a job posting to ALL AT A1, they acknowledge and agree that our team of experts reserves the right to enhance the listing with proprietary high-value insights. This includes, but is not limited to, the addition of:</p>
+                <p>When an employer or recruiter submits a job posting to ALL AT A1, they acknowledge and agree that our
+                    team of experts reserves the right to enhance the listing with proprietary high-value insights. This
+                    includes, but is not limited to, the addition of:</p>
                 <ul>
                     <li><strong>Job Summary:</strong> Expertly crafted overviews of the role's impact and scope.</li>
-                    <li><strong>Top 3 Critical Skills Table:</strong> Expert-curated tables highlighting essential technical competencies.</li>
-                    <li><strong>Interview Preparation:</strong> Strategic guidance for candidates on how to succeed in the specific role.</li>
-                    <li><strong>Resume Optimization:</strong> Tailored advice on how applicants can best showcase their experience for the position.</li>
-                    <li><strong>Application Strategy:</strong> Insights into the best way to approach the hiring process for that company.</li>
-                    <li><strong>Career Roadmap:</strong> Projections of growth opportunities and career trajectory from the role.</li>
+                    <li><strong>Top 3 Critical Skills Table:</strong> Expert-curated tables highlighting essential
+                        technical competencies.</li>
+                    <li><strong>Interview Preparation:</strong> Strategic guidance for candidates on how to succeed in
+                        the specific role.</li>
+                    <li><strong>Resume Optimization:</strong> Tailored advice on how applicants can best showcase their
+                        experience for the position.</li>
+                    <li><strong>Application Strategy:</strong> Insights into the best way to approach the hiring process
+                        for that company.</li>
+                    <li><strong>Career Roadmap:</strong> Projections of growth opportunities and career trajectory from
+                        the role.</li>
                 </ul>
-                <p><strong>Note for Recruiters:</strong> These enhancements are a core part of the ALL AT A1 value when you post a job on our website. If you are not comfortable with your job listing being enriched with these expert technical insights, please do not use our services for job distribution.</p>
+                <p><strong>Note for Recruiters:</strong> These enhancements are a core part of the ALL AT A1 value when
+                    you post a job on our website. If you are not comfortable with your job listing being enriched with
+                    these expert technical insights, please do not use our services for job distribution.</p>
             </section>
 
             <section class="legal-section">
                 <h2>11. Deep-Dive Research Desk</h2>
-                <p>The "Research Desk" feature is a service where users may submit specific, complex technical queries. By submitting a topic:</p>
+                <p>The "Research Desk" feature is a service where users may submit specific, complex technical queries.
+                    By submitting a topic:</p>
                 <ul>
-                    <li>You acknowledge that our engineering team provides this research on a best-effort, informational basis.</li>
-                    <li>ALL AT A1 retains the exclusive right to publicly publish, modify, or archive the resulting generated research report within our public platform gallery.</li>
-                    <li>We explicitly do not guarantee a minimum timeframe for a response, and we reserve the right to unilaterally reject or delete submitted topics at our sole discretion.</li>
+                    <li>You acknowledge that our engineering team provides this research on a best-effort, informational
+                        basis.</li>
+                    <li>ALL AT A1 retains the exclusive right to publicly publish, modify, or archive the resulting
+                        generated research report within our public platform gallery.</li>
+                    <li>We explicitly do not guarantee a minimum timeframe for a response, and we reserve the right to
+                        unilaterally reject or delete submitted topics at our sole discretion.</li>
                 </ul>
             </section>
 
             <section class="legal-section">
                 <h2>12. Resume Kits & Templates</h2>
-                <p>The "Resume Kits" section provides downloadable templates and strategic framework guides for candidates.</p>
+                <p>The "Resume Kits" section provides downloadable templates and strategic framework guides for
+                    candidates.</p>
                 <ul>
-                    <li>These templates are intended exclusively for personal, non-commercial use by individual job seekers.</li>
-                    <li>While our templates are designed closely around top industry standards, implementing them does not guarantee employment, interviews, or callbacks.</li>
-                    <li>You are strictly forbidden from repackaging, reselling, or commercially distributing the ALL AT A1 Resume Kits and any of their associated documentation.</li>
+                    <li>These templates are intended exclusively for personal, non-commercial use by individual job
+                        seekers.</li>
+                    <li>While our templates are designed closely around top industry standards, implementing them does
+                        not guarantee employment, interviews, or callbacks.</li>
+                    <li>You are strictly forbidden from repackaging, reselling, or commercially distributing the ALL AT
+                        A1 Resume Kits and any of their associated documentation.</li>
                 </ul>
             </section>
 
             <section class="legal-section">
                 <h2>13. Strict Platform Moderation Guidelines</h2>
-                <p>To maintain absolute quality across our portal, all incoming public job submissions undergo a rigorous, multi-tier screening process. By submitting a listing to ALL AT A1, you expressly agree that our moderation team has full, unconditional authority to silently reject, flag, or permanently delete any post deemed "spam," "fraudulent," or "unprofessional" without prior notice. Blocked submissions are final and not subject to an appeal process.</p>
+                <p>To maintain absolute quality across our portal, all incoming public job submissions undergo a
+                    rigorous, multi-tier screening process. By submitting a listing to ALL AT A1, you expressly agree
+                    that our moderation team has full, unconditional authority to silently reject, flag, or permanently
+                    delete any post deemed "spam," "fraudulent," or "unprofessional" without prior notice. Blocked
+                    submissions are final and not subject to an appeal process.</p>
             </section>
 
             <section class="legal-section">
                 <h2>14. Independence from External Employers</h2>
-                <p>ALL AT A1 strictly serves as an independent discovery and educational engine. Although we host an aggregator containing thousands of verified jobs, we have zero formal affiliation with the respective external employers, nor do we actively participate in interview, selection, or hiring decisions.</p>
+                <p>ALL AT A1 strictly serves as an independent discovery and educational engine. Although we host an
+                    aggregator containing thousands of verified jobs, we have zero formal affiliation with the
+                    respective external employers, nor do we actively participate in interview, selection, or hiring
+                    decisions.</p>
                 <ul>
-                    <li>Users who choose to apply externally via provided URL links or direct email buttons do so entirely at their own risk.</li>
-                    <li>ALL AT A1 explicitly claims zero liability for fake external postings, communication breakdowns with recruiters, or any disputes arising from actions taken outside the immediate confines of this domain.</li>
+                    <li>Users who choose to apply externally via provided URL links or direct email buttons do so
+                        entirely at their own risk.</li>
+                    <li>ALL AT A1 explicitly claims zero liability for fake external postings, communication breakdowns
+                        with recruiters, or any disputes arising from actions taken outside the immediate confines of
+                        this domain.</li>
                 </ul>
             </section>
 
             <section class="legal-section">
-                <h2>15. Changes to These Terms</h2>
+                <h2>15. Salary Estimation & Market Data</h2>
+                <p>You acknowledge that the salary data provided on this platform is for informational use only. ALL AT A1 does not guarantee that external employers will honor these estimated salary ranges. Recruiters and employers maintain absolute authority over their compensation structures and may pay according to their own internal policies, regardless of the data presented on our site.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>16. Changes to These Terms</h2>
                 <p>We reserve the right to modify these terms at any time. Your continued use of the website constitutes acceptance of the updated terms.</p>
             </section>
 
             <section class="legal-section">
-                <h2>16. Contact Us</h2>
+                <h2>17. Contact Us</h2>
                 <p>If you have any questions about these Terms, please contact us at:</p>
                 <p>Email: allata1@googlegroups.com</p>
             </section>
@@ -184,7 +243,8 @@
         <div class="footer-content">
             <div class="footer-col">
                 <a href="/" class="nav-logo" aria-label="All At A1">
-                    <img src="{{ url_for('static', filename='Logo.webp') }}" width="56" height="56" class="logo-img-footer" alt="All At A1 Logo" loading="lazy">
+                    <img src="{{ url_for('static', filename='Logo.webp') }}" width="56" height="56"
+                        class="logo-img-footer" alt="All At A1 Logo" loading="lazy">
                     <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
                             class="color-3">A</span><span class="color-4">1</span></span>
                 </a>
@@ -209,13 +269,15 @@
                 <a href="/terms-and-conditions">Terms of Service</a>
             </div>
         </div>
-                <div class="footer-bottom">
+        <div class="footer-bottom">
             <p>&copy; 2026 ALL AT A1. All rights reserved.</p>
             <div class="footer-social">
-                <a href="https://whatsapp.com/channel/0029Vb7sVZW9hXEz9CVcxz1k" class="wa" id="footer-whatsapp-link" aria-label="WhatsApp" title="WhatsApp" target="_blank" rel="noopener">
+                <a href="https://whatsapp.com/channel/0029Vb7sVZW9hXEz9CVcxz1k" class="wa" id="footer-whatsapp-link"
+                    aria-label="WhatsApp" title="WhatsApp" target="_blank" rel="noopener">
                     <i class="fab fa-whatsapp"></i>
                 </a>
-                <a href="https://www.linkedin.com/company/all-at-a1/" class="li" id="footer-linkedin-link" aria-label="LinkedIn" title="LinkedIn" target="_blank" rel="noopener">
+                <a href="https://www.linkedin.com/company/all-at-a1/" class="li" id="footer-linkedin-link"
+                    aria-label="LinkedIn" title="LinkedIn" target="_blank" rel="noopener">
                     <i class="fab fa-linkedin-in"></i>
                 </a>
             </div>
