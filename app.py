@@ -813,6 +813,8 @@ def job_detail():
             loc_parts = [p.strip() for p in job.location.split(',')]
             city = loc_parts[0] if len(loc_parts) > 0 else job.location
             region = loc_parts[1][:2].upper() if len(loc_parts) > 1 else "" # Extract 2-letter state code if possible
+            if not region:
+                region = "Not Disclosed"
 
             schema_data = {
                 "@context": "https://schema.org/",
