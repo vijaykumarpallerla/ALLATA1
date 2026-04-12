@@ -1108,6 +1108,30 @@ def toggle_job_approval(job_id):
         db.session.rollback()
         return jsonify({"status": "error", "message": str(e)}), 500
 
+@app.route('/admin/job/update/<int:job_id>', methods=['POST'])
+@admin_required
+def update_admin_job(job_id):
+    try:
+        job = db.session.get(Job, job_id)
+        if not job:
+            return jsonify({"status": "error", "message": "Job not found"}), 404
+        
+        data = request.get_json()
+        job.title = data.get('title', job.title)
+        job.company = data.get('company', job.company)
+        job.location = data.get('location', job.location)
+        job.job_type = data.get('job_type', job.job_type)
+        job.salary = data.get('salary', job.salary)
+        job.duration = data.get('duration', job.duration)
+        job.experience = data.get('experience', job.experience)
+        job.apply_url = data.get('apply_url', job.apply_url)
+        job.description = data.get('description', job.description)
+        
+        db.session.commit()
+        return jsonify({"status": "success"})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"status": "error", "message": str(e)}), 500
 @app.route('/api/admin/jobs/<int:job_id>', methods=['DELETE'])
 @admin_required
 def delete_admin_job(job_id):

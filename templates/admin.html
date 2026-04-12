@@ -478,6 +478,19 @@
             100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
         }
 
+        .editable-field {
+            cursor: text;
+            transition: all 0.2s;
+        }
+        .editable-field:focus {
+            outline: 2px dashed rgba(33, 150, 243, 0.7);
+            background: #fff;
+            color: #000;
+        }
+        .editable-field:hover {
+            background: rgba(33, 150, 243, 0.05);
+        }
+
         /* Responsive Admin Global Navbar */
         @media (max-width: 768px) {
             .admin-nav-hide-mobile {
@@ -636,7 +649,7 @@
     <div id="jobDetailModal" class="modal">
         <div class="modal-content" style="max-width: 680px;">
             <div class="modal-header" style="justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
-                <h3 id="jd-modal-title" style="font-size:1.2rem; flex:1;">Job Details</h3>
+                <h3 id="jd-modal-title" class="editable-field" contenteditable="true" spellcheck="false" style="font-size:1.2rem; flex:1; padding: 4px; border-radius: 4px; border: 1px dashed transparent;">Job Details</h3>
                 <div style="display:flex; align-items:center; gap:0.75rem;">
                     <!-- Approve / Reject toggle — only shown for AI-checked jobs -->
                     <button id="jd-toggle-btn"
@@ -657,27 +670,27 @@
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
                     <div class="modal-detail-group">
                         <div class="modal-detail-label">Company</div>
-                        <div class="modal-detail-value" id="jd-company"></div>
+                        <div class="modal-detail-value editable-field" id="jd-company" contenteditable="true" spellcheck="false"></div>
                     </div>
                     <div class="modal-detail-group">
                         <div class="modal-detail-label">Location</div>
-                        <div class="modal-detail-value" id="jd-location"></div>
+                        <div class="modal-detail-value editable-field" id="jd-location" contenteditable="true" spellcheck="false"></div>
                     </div>
                     <div class="modal-detail-group">
                         <div class="modal-detail-label">Job Type</div>
-                        <div class="modal-detail-value" id="jd-type"></div>
+                        <div class="modal-detail-value editable-field" id="jd-type" contenteditable="true" spellcheck="false"></div>
                     </div>
                     <div class="modal-detail-group">
                         <div class="modal-detail-label">Salary</div>
-                        <div class="modal-detail-value" id="jd-salary"></div>
+                        <div class="modal-detail-value editable-field" id="jd-salary" contenteditable="true" spellcheck="false"></div>
                     </div>
                     <div class="modal-detail-group">
                         <div class="modal-detail-label">Duration</div>
-                        <div class="modal-detail-value" id="jd-duration"></div>
+                        <div class="modal-detail-value editable-field" id="jd-duration" contenteditable="true" spellcheck="false"></div>
                     </div>
                     <div class="modal-detail-group">
                         <div class="modal-detail-label">Experience / Skills</div>
-                        <div class="modal-detail-value" id="jd-experience"></div>
+                        <div class="modal-detail-value editable-field" id="jd-experience" contenteditable="true" spellcheck="false"></div>
                     </div>
                     <div class="modal-detail-group">
                         <div class="modal-detail-label">Date Posted</div>
@@ -688,16 +701,21 @@
                 <!-- Apply URL -->
                 <div class="modal-detail-group" id="jd-apply-group">
                     <div class="modal-detail-label">Apply URL / Email</div>
-                    <div class="modal-detail-value" id="jd-apply"></div>
+                    <div class="modal-detail-value editable-field" id="jd-apply" contenteditable="true" spellcheck="false"></div>
                 </div>
 
                 <!-- Description -->
                 <div class="modal-detail-group">
                     <div class="modal-detail-label" id="jd-description-label">Job Description</div>
-                    <div class="modal-detail-value" id="jd-description"
+                    <div class="modal-detail-value editable-field" id="jd-description" contenteditable="true" spellcheck="false"
                         style="min-height:120px; white-space:pre-wrap; line-height:1.6;"></div>
                 </div>
 
+            </div>
+            
+            <div id="jd-edit-actions" style="padding: 1rem 1.5rem; border-top: 1px solid var(--border-color); display:flex; justify-content: flex-end; gap: 1rem; background-color: var(--bg-card); border-bottom-left-radius: var(--radius-lg); border-bottom-right-radius: var(--radius-lg);">
+                <button class="btn btn-cancel" onclick="document.getElementById('jobDetailModal').classList.remove('active')">Cancel</button>
+                <button class="btn btn-primary" id="saveJobBtn" onclick="saveJobChanges()">Save Changes</button>
             </div>
         </div>
     </div>
@@ -1397,11 +1415,10 @@
                 // Apply URL
                 const applyEl = document.getElementById('jd-apply');
                 if (job.apply_url) {
-                    applyEl.innerHTML = job.apply_url.includes('@')
-                        ? `<a href="mailto:${job.apply_url}" style="color:var(--primary-color);">${job.apply_url}</a>`
-                        : `<a href="${job.apply_url}" target="_blank" style="color:var(--primary-color);">${job.apply_url}</a>`;
+                    applyEl.textContent = job.apply_url;
                     document.getElementById('jd-apply-group').style.display = 'block';
                 } else {
+                    applyEl.textContent = '';
                     document.getElementById('jd-apply-group').style.display = 'none';
                 }
 
@@ -1418,7 +1435,11 @@
                     descValue.textContent = job.description || 'No description provided.';
                 }
 
+                const modalBody = document.querySelector('#jobDetailModal .modal-body');
                 jobDetailModal.classList.add('active');
+                if (modalBody) {
+                    setTimeout(() => { modalBody.scrollTop = 0; }, 20);
+                }
             };
 
             // Renders the status banner + Approve/Reject toggle button
@@ -1444,6 +1465,53 @@
                     toggleBtn.style.display = 'none';
                 }
             }
+
+            window.saveJobChanges = async function() {
+                const jobId = window.currentJobModalId;
+                if (!jobId) return;
+                
+                const btn = document.getElementById('saveJobBtn');
+                const origText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+                btn.disabled = true;
+
+                const payload = {
+                    title: document.getElementById('jd-modal-title').innerText.trim(),
+                    company: document.getElementById('jd-company').innerText.trim(),
+                    location: document.getElementById('jd-location').innerText.trim(),
+                    job_type: document.getElementById('jd-type').innerText.trim(),
+                    salary: document.getElementById('jd-salary').innerText.trim(),
+                    duration: document.getElementById('jd-duration').innerText.trim(),
+                    experience: document.getElementById('jd-experience').innerText.trim(),
+                    apply_url: document.getElementById('jd-apply').innerText.trim(),
+                    description: document.getElementById('jd-description').innerText.trim()
+                };
+
+                try {
+                    const res = await fetch(`/admin/job/update/${jobId}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (res.ok) {
+                        alert("Job updated successfully!");
+                        document.getElementById('jobDetailModal').classList.remove('active');
+                        if (window.loadManageJobs) {
+                            window.loadManageJobs(window.jobsMode || 'all');
+                        } else {
+                            setTimeout(() => { document.getElementById('nav-jobs').click(); }, 100);
+                        }
+                    } else {
+                        alert("Failed to update job.");
+                    }
+                } catch(e) {
+                    console.error(e);
+                    alert("Error updating job.");
+                } finally {
+                    btn.innerHTML = origText;
+                    btn.disabled = false;
+                }
+            };
 
             // Toggle Approve <-> Reject via PATCH, update UI live
             window.toggleJobApproval = async function () {
