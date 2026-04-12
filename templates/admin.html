@@ -713,9 +713,14 @@
 
             </div>
             
-            <div id="jd-edit-actions" style="padding: 1rem 1.5rem; border-top: 1px solid var(--border-color); display:flex; justify-content: flex-end; gap: 1rem; background-color: var(--bg-card); border-bottom-left-radius: var(--radius-lg); border-bottom-right-radius: var(--radius-lg);">
+            <div id="jd-edit-actions" style="padding: 1rem 1.5rem; border-top: 1px solid var(--border-color); display:flex; justify-content: space-between; align-items: center; background-color: var(--bg-card); border-bottom-left-radius: var(--radius-lg); border-bottom-right-radius: var(--radius-lg);">
+                <a id="jd-external-link" href="#" target="_blank" style="color: var(--primary-color); text-decoration: none; font-weight: 600; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 0.5rem; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                    <i class="fas fa-external-link-alt"></i> View Public Post
+                </a>
+                <div style="display:flex; gap: 1rem;">
                 <button class="btn btn-cancel" onclick="document.getElementById('jobDetailModal').classList.remove('active')">Cancel</button>
                 <button class="btn btn-primary" id="saveJobBtn" onclick="saveJobChanges()">Save Changes</button>
+                </div>
             </div>
         </div>
     </div>
@@ -1399,6 +1404,10 @@
 
                 // Title
                 document.getElementById('jd-modal-title').textContent = job.title;
+
+                let titleQuery = job.title ? encodeURIComponent(job.title.replace(/\s+/g, '+')) : '';
+                let extLink = document.getElementById('jd-external-link');
+                if (extLink) extLink.href = window.location.origin + '/job?jobid=' + job.id + '&jobtitle=' + titleQuery;
 
                 // Banner + toggle button
                 renderJobModalStatus(job);

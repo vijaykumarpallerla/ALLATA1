@@ -991,3 +991,65 @@ UPDATE: 10/04/2026 - VIJAY (Structural Data Hotfix)
 - **Mandatory Field Placeholders:** Injected `streetAddress: "Not Disclosed"` and `postalCode: "00000"` into the hidden JSON-LD script. While non-critical for human visitors, these markers are mandatory for Google's automated "Fix Validation" engine to confirm a correction has been made.
 - **Enhanced Regional Mapping:** Upgraded the `addressRegion` extraction to strictly use 2-letter uppercase codes (e.g., "NY") drawn dynamically from the location string.
 - **Validation Status:** Google Search Console has officially accepted the fix and has started the "Validation Cycle" for all affected Job Detail URLs.
+
+
+================================================
+DATE: 2026-04-12 - Vijay Kumar Pallerla
+TOPIC: Admin Dashboard Job Management Updates
+================================================
+
+1. **Inline Edit & Save Feature for Jobs:**
+   - Modified `admin.html` `jobDetailModal` to use `contenteditable="true"` for quick administrative text patching directly on the UI without writing backend scripts.
+   - Created `saveJobChanges()` javascript payload generation bridging inline modified variables.
+   - Created `@app.route('/admin/job/update/<int:job_id>', methods=['POST'])` endpoint in `app.py` under the `@admin_required` decorator to securely patch the database.
+   - Forced automatic native dashboard UI refreshment calling `window.loadManageJobs(window.jobsMode || 'all')` post-fetch response success so updated titles render on layout simultaneously without browser refresh.
+
+2. **Scroll Fix for Job Detail Modal:**
+   - Addressed scrolling layout problem where opening "Job 2" carried over the physical bottom `scrollTop` position of "Job 1".
+   - Implemented a display rendering logic fix (`setTimeout(() => { modalBody.scrollTop = 0; }, 20);`) injected directly after `jobDetailModal.classList.add('active');` so correct dimensions are initialized to 0 immediately before visual load.
+
+3. **External Job URI Cross-Arrow Icon Link:**
+   - Appended a dynamic `<a id="jd-external-link">` anchor tag inside the bottom-left of the administrative footer button bar.
+   - Encoded native frontend dynamic route binding scaling off `window.location.origin` inside the `openJobDetailModal` mapping explicitly: `window.location.origin + '/job?jobid=' + job.id + '&jobtitle=' + encodeURIComponent(job.title)`.
+
+
+================================================
+DATE: 2026-04-12 - vijaykumarpallerla
+TOPIC: Single-Session-Per-Admin Enforcement
+================================================
+
+**Feature:** One Admin = One Active Device at a time.
+
+**Problem Solved:**
+- Previously, the same admin could log in from multiple devices (Laptop + Phone) simultaneously.
+- Now, if Admin A logs in on Phone while already logged in on Laptop, the Laptop session is immediately killed on next request.
+- Admin B is completely unaffected as each admin has their own slot.
+
+**Implementation (app.py only, zero extra packages):**
+
+1. Added `active_admin_sessions = {}` dict near top of app.py:
+   - Maps `admin_email -> session_token (UUID)`
+   - Stores who is the "current valid" logged-in device per admin
+
+2. Updated `admin_required` decorator:
+   - On every protected request, compares `session['session_token']` (from browser cookie) against `active_admin_sessions[email]` (server-side)
+   - If mismatch → newer login on another device → `session.clear()` + redirect to login page instantly
+
+3. Updated `auth_google_callback` (login route):
+   - On successful login, generates `new_token = str(uuid.uuid4())`
+   - Stores it in `active_admin_sessions[email] = new_token` (replaces old device token)
+   - Also saves it in the browser session: `session['session_token'] = new_token`
+
+4. Updated `admin_logout` route:
+   - On explicit logout, removes the email slot from `active_admin_sessions`
+   - Frees the slot so the admin can log in cleanly again
+
+**Testing:**
+- Open Chrome (Device 1) → login as Admin A
+- Open Incognito / Firefox (Device 2) → login as same Admin A
+- Go back to Chrome → any admin page click → instantly redirected to login ✅
+- Admin B on their own browser → completely untouched ✅
+
+**Limitation:**
+- `active_admin_sessions` is in-memory only. Server restart clears it (everyone logs in fresh). Acceptable for this use case.
+- No Redis, no DB table, no extra dependencies required.
