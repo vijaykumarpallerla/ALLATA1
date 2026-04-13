@@ -1440,6 +1440,12 @@ def promptai_page():
 def research_page():
     return render_template('research.html')
 
+@app.route('/ads.txt')
+def ads_txt():
+    content = "google.com, pub-6398444211176745, DIRECT, f08c47fec0942fa0"
+    from flask import Response
+    return Response(content, mimetype='text/plain')
+
 if __name__ == '__main__':
     # Function to automatically open the browser
     def open_browser():
