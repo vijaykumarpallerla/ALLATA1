@@ -84,10 +84,6 @@ app = Flask(__name__)
 active_users = {} # {visitor_id: last_active_timestamp}
 active_users_lock = threading.Lock()
 
-# ----- Single-session-per-admin registry (in-memory) -----
-# Maps admin email -> current valid session token (UUID)
-# If a new login happens, old token is replaced → old device gets logged out
-active_admin_sessions = {}
 
 @app.before_request
 def track_active_users():
@@ -129,18 +125,11 @@ google = oauth.register(
     client_kwargs={'scope': 'openid email profile'},
 )
 
-# ----- Admin Session Guard (with single-device enforcement) -----
+# ----- Admin Session Guard -----
 def admin_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         if not session.get('admin_logged_in'):
-            return redirect(url_for('admin_login'))
-        # Check if this session token is still the active one for this admin
-        email = session.get('admin_email', '')
-        token = session.get('session_token', '')
-        if active_admin_sessions.get(email) != token:
-            # Another device logged in — kill this session
-            session.clear()
             return redirect(url_for('admin_login'))
         return f(*args, **kwargs)
     return decorated
@@ -965,15 +954,11 @@ def auth_google_callback():
             session.clear()
             return render_template('loginbyadmin.html', error=f'Access Denied. {user_email} is not an authorised admin.'), 403
 
-        # Email matched — generate a fresh session token and register it
-        # This invalidates any existing session on another device for this admin
-        new_token = str(uuid.uuid4())
-        active_admin_sessions[user_email] = new_token
+        # Email matched — grant admin session
         session['admin_logged_in'] = True
         session['admin_email'] = user_email
         session['admin_name'] = user_info.get('name', 'Admin')
         session['admin_picture'] = user_info.get('picture', '')
-        session['session_token'] = new_token
         return redirect(url_for('admin_dashboard'))
 
     except Exception as e:
@@ -994,10 +979,6 @@ def admin_dashboard():
 # ── Admin Logout ──
 @app.route('/admin-logout')
 def admin_logout():
-    # Remove from active registry so the slot is freed
-    email = session.get('admin_email', '')
-    if email and active_admin_sessions.get(email) == session.get('session_token'):
-        active_admin_sessions.pop(email, None)
     session.clear()
     return redirect(url_for('admin_login'))
 
