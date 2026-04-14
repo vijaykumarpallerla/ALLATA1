@@ -1446,6 +1446,15 @@ def ads_txt():
     from flask import Response
     return Response(content, mimetype='text/plain')
 
+@app.route('/BingSiteAuth.xml')
+def bing_auth():
+    content = """<?xml version="1.0"?>
+<users>
+	<user>BCAFE9452CA942E4CC1EB95F65F47C25</user>
+</users>"""
+    from flask import Response
+    return Response(content, mimetype='application/xml')
+
 if __name__ == '__main__':
     # Function to automatically open the browser
     def open_browser():
