@@ -1044,12 +1044,35 @@ TOPIC: Single-Session-Per-Admin Enforcement
    - On explicit logout, removes the email slot from `active_admin_sessions`
    - Frees the slot so the admin can log in cleanly again
 
-**Testing:**
-- Open Chrome (Device 1) → login as Admin A
-- Open Incognito / Firefox (Device 2) → login as same Admin A
-- Go back to Chrome → any admin page click → instantly redirected to login ✅
-- Admin B on their own browser → completely untouched ✅
 
-**Limitation:**
-- `active_admin_sessions` is in-memory only. Server restart clears it (everyone logs in fresh). Acceptable for this use case.
-- No Redis, no DB table, no extra dependencies required.
+==============================================================================
+UPDATE: 15-04-2026
+==============================================================================
+
+1. DURATION FIELD - ADMIN SAVE FIX (app.py)
+   - PROBLEM: When a job had no Duration, the Admin Modal showed "—" as a placeholder.
+     If Admin edited any other field and hit "Save Changes", the "—" was being written
+     into the database, causing "Duration: —" to appear on the public job page.
+   - FIX 1 (Save Endpoint): In update_admin_job route, added sanitization — if the
+     incoming duration is "—", "-", "--", "n/a", "not specified", or "none", it is
+     saved as null instead.
+   - FIX 2 (Public Renderer): Added "—" and its variants to the "hide Duration block"
+     condition so old bad data also won't display publicly.
+   - FILES: app.py (~line 1126 save route, ~line 778 SSR renderer)
+
+2. AI LOCATION FORMAT UPGRADE (Algorithm.py & adminpost.py)
+   - PROBLEM: AI was generating bare locations like "San Jose, CA" with no work mode
+     (Onsite/Remote/Hybrid) and no country suffix.
+   - FIX: Updated the "location" prompt instruction in both Algorithm.py and adminpost.py.
+   - NEW FORMAT: "City, State - WorkMode - Country"
+   - RULES:
+     a. Always append country (USA, India, Australia, UK, etc.) from city/state in JD.
+     b. Include work mode only if a real city exists — do NOT repeat "Remote" twice.
+     c. Fully remote job with no city → "Remote - Country" (e.g. "Remote - USA").
+   - EXAMPLES:
+     "San Jose, CA – Onsite"  →  "San Jose, CA - Onsite - USA"
+     Remote, no city          →  "Remote - USA"
+     "Sydney"                 →  "Sydney - Australia"
+     "Hyderabad"              →  "Hyderabad - India"
+     "London – Remote"        →  "London - Remote - UK"
+   - FILES: Algorithm.py (~line 95), adminpost.py (~line 21)

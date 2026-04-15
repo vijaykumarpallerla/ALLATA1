@@ -775,7 +775,7 @@ def job_detail():
         # Hide Duration field if empty or 'Not Specified'
         import re
         clean_dur = str(job.duration).strip().lower() if job.duration else ""
-        if not clean_dur or clean_dur == 'not specified' or clean_dur == 'none':
+        if not clean_dur or clean_dur in ['not specified', 'none', '—', '-', '--', 'n/a']:
             html = re.sub(r'<!-- JOB_DURATION_START -->.*?<!-- JOB_DURATION_END -->\n?', '', html, flags=re.DOTALL)
         else:
             html = html.replace('<!-- JOB_DURATION_START -->\n', '')
@@ -1123,7 +1123,10 @@ def update_admin_job(job_id):
         job.location = data.get('location', job.location)
         job.job_type = data.get('job_type', job.job_type)
         job.salary = data.get('salary', job.salary)
-        job.duration = data.get('duration', job.duration)
+        raw_dur = data.get('duration', job.duration)
+        if raw_dur and str(raw_dur).strip() in ['—', '-', '--', 'n/a', 'not specified', 'none']:
+            raw_dur = None
+        job.duration = raw_dur
         job.experience = data.get('experience', job.experience)
         job.apply_url = data.get('apply_url', job.apply_url)
         job.description = data.get('description', job.description)
