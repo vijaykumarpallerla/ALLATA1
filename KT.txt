@@ -1076,3 +1076,12 @@ UPDATE: 15-04-2026
      "Hyderabad"              →  "Hyderabad - India"
      "London – Remote"        →  "London - Remote - UK"
    - FILES: Algorithm.py (~line 95), adminpost.py (~line 21)
+
+
+3. ADMIN DASHBOARD PRODUCTIVITY SHORTCUTS (admin.html)
+   - Double-Enter to Send: In the "Post a Job" AI chat, pressing Enter twice rapidly (within 600ms) now triggers the Send button. Single Enter still allows for newlines (useful for pasting JDs).
+   - Empty JD Warning: If an admin tries to send an empty JD, a yellow warning bubble ("Please paste or enter a Job Description") appears in the chat window, auto-hiding after 1.5 seconds.
+   - Spacebar to Focus: Pressing Spacebar while in the "Post a Job" tab (and not already typing in a field) instantly focuses the JD input box.
+   - Double Ctrl+A to All Jobs: Pressing Ctrl+A twice rapidly (within 600ms) now acts as a global shortcut to jump to the "All Jobs" tab. 
+   - Smart Shortcut Guard: All keyboard shortcuts include a "focus check"—they will never trigger if the user is currently typing in an input, textarea, or a content-editable field (like the job edit popup), ensuring normal browser behavior (selecting text, typing spaces) is never hijacked.
+   - FILES: admin.html (JavaScript logic added to the bottom script block)

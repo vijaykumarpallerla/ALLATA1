@@ -1762,7 +1762,27 @@
             const placeholder = document.getElementById('post-chat-placeholder');
             const jdText = inputField.value.trim();
 
-            if (!jdText) return;
+            if (!jdText) {
+                // Show inline warning in the chat window
+                const chatWindow = document.getElementById('post-chat-window');
+                const placeholder = document.getElementById('post-chat-placeholder');
+                if (placeholder) placeholder.style.display = 'none';
+
+                // Remove any existing warning first
+                const existingWarn = document.getElementById('jd-empty-warning');
+                if (existingWarn) existingWarn.remove();
+
+                const warnMsg = document.createElement('div');
+                warnMsg.id = 'jd-empty-warning';
+                warnMsg.style.cssText = "background: #fff8e1; border: 1px solid #f59e0b; padding: 0.85rem 1rem; border-radius: 8px; margin-bottom: 1rem; align-self: flex-start; max-width: 90%; color: #92400e; font-size: 0.9rem;";
+                warnMsg.innerHTML = `<i class="fas fa-exclamation-triangle" style="color: #f59e0b; margin-right: 0.5rem;"></i> <strong>Please paste or enter a Job Description</strong> before sending.`;
+                chatWindow.appendChild(warnMsg);
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+
+                // Auto-hide warning after 4 seconds
+                setTimeout(() => { if (warnMsg.parentNode) warnMsg.remove(); }, 1500);
+                return;
+            }
 
             if (placeholder) {
                 placeholder.style.display = 'none';
@@ -1914,6 +1934,76 @@
                 btn.style.opacity = '1';
             }
         };
+        // --- Double-Enter Shortcut for Post a Job Send Button ---
+        (function() {
+            let lastEnterTime = 0;
+            const DOUBLE_ENTER_THRESHOLD = 600; // ms between two Enter presses
+
+            document.addEventListener('keydown', function(e) {
+                // Only trigger on the post-chat-input textarea
+                const inputField = document.getElementById('post-chat-input');
+                if (!inputField || document.activeElement !== inputField) return;
+
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    const now = Date.now();
+                    if (now - lastEnterTime < DOUBLE_ENTER_THRESHOLD) {
+                        // Double Enter detected — fire Send
+                        e.preventDefault();
+                        lastEnterTime = 0;
+                        window.submitPostJob();
+                    } else {
+                        // First Enter — record time, allow newline
+                        lastEnterTime = now;
+                    }
+                }
+            });
+        })();
+        // --- Spacebar → Focus JD Input (Post a Job tab only) ---
+        (function() {
+            document.addEventListener('keydown', function(e) {
+                if (e.key !== ' ') return;
+
+                // Only active in Post a Job tab
+                if (localStorage.getItem('activeAdminTab') !== 'nav-jobs-post') return;
+
+                const inputField = document.getElementById('post-chat-input');
+                if (!inputField) return;
+
+                // Don't hijack if user is already typing somewhere
+                const tag = document.activeElement.tagName.toLowerCase();
+                const isEditable = document.activeElement.isContentEditable;
+                if (tag === 'input' || tag === 'textarea' || isEditable) return;
+
+                // Prevent page scroll, focus the input
+                e.preventDefault();
+                inputField.focus();
+            });
+        })();
+        // --- Ctrl+A+A (double) → All Jobs (Admin page only, not inside text fields) ---
+        (function() {
+            let lastCtrlATime = 0;
+            const DOUBLE_CTRLA_THRESHOLD = 600; // ms
+
+            document.addEventListener('keydown', function(e) {
+                if (!e.ctrlKey || e.key.toLowerCase() !== 'a') return;
+
+                // Always allow normal Select All inside inputs, textareas, contenteditable
+                const tag = document.activeElement.tagName.toLowerCase();
+                const isEditable = document.activeElement.isContentEditable;
+                if (tag === 'input' || tag === 'textarea' || isEditable) return;
+
+                const now = Date.now();
+                if (now - lastCtrlATime < DOUBLE_CTRLA_THRESHOLD) {
+                    // Double Ctrl+A detected → go to All Jobs
+                    e.preventDefault();
+                    lastCtrlATime = 0;
+                    window.loadManageJobs('all');
+                } else {
+                    // First Ctrl+A → record time, let browser do Select All normally
+                    lastCtrlATime = now;
+                }
+            });
+        })();
     </script>
 </body>
 
