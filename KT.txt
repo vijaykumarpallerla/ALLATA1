@@ -1085,3 +1085,60 @@ UPDATE: 15-04-2026
    - Double Ctrl+A to All Jobs: Pressing Ctrl+A twice rapidly (within 600ms) now acts as a global shortcut to jump to the "All Jobs" tab. 
    - Smart Shortcut Guard: All keyboard shortcuts include a "focus check"—they will never trigger if the user is currently typing in an input, textarea, or a content-editable field (like the job edit popup), ensuring normal browser behavior (selecting text, typing spaces) is never hijacked.
    - FILES: admin.html (JavaScript logic added to the bottom script block)
+
+====================================================================================================
+📅 DATE: 2026-04-16
+====================================================================================================
+
+🔧 CHANGE: Resume Kits Page — Converted to Dynamic Rendering
+
+FILES MODIFIED:
+  - static/data/resumes.json
+  - templates/resume_kits.html
+
+WHAT WAS DONE:
+  1. Converted resumes.json from a hardcoded dictionary {} to an array []
+     (same pattern as blogs.json and researches.json)
+
+  2. Added 2 new fields to each resume entry:
+       - "id"               → used to identify the kit (e.g. "full-stack")
+       - "icon"             → Font Awesome class for the card icon
+       - "card_description" → short text shown on the card itself
+
+  3. Removed all 9 hardcoded <article> cards from resume_kits.html
+
+  4. Added renderKitCards() JavaScript function that auto-generates
+     cards from resumes.json on page load — no HTML changes needed
+     when adding new kits in future
+
+  5. Updated openResumeModal() to use .find() on array instead of
+     direct key lookup on dictionary
+
+RESULT:
+  To add a new resume kit → just add a new entry to resumes.json.
+  The card appears automatically. Zero HTML changes required.
+
+---
+
+🔧 CHANGE: Added Power BI Developer Resume Kit
+
+FILES MODIFIED:
+  - static/data/resumes.json       → new entry added at end of array
+  - static/resumes/power_bi_developer.docx  → new file created
+
+WHAT WAS DONE:
+  1. Added "power-bi" entry to resumes.json with:
+       - icon: fas fa-chart-bar
+       - Full description, core philosophy, 4 ATS optimizations
+       - 12 power keywords (DAX, Power Query, RLS, Azure Synapse, etc.)
+       - download_file: power_bi_developer.docx
+
+  2. Generated power_bi_developer.docx using python-docx with:
+       - Professional Summary
+       - Technical Skills (categorized: BI Tools, DAX/M, Data Modeling,
+         Data Sources, Power Platform, Databases, Other Tools)
+       - 3 Projects (Sales Dashboard, Finance Tracker, HR Attrition)
+       - Education section
+       - Certifications: PL-300, DP-900, Google Data Analytics
+
+FILE SIZE: 38,884 bytes

@@ -131,7 +131,8 @@
                         class="fas fa-graduation-cap"></i> Students</a>
                 <a href="/browse-jobs" class="nav-link">Browse Jobs</a>
                 <div class="nav-dropdown">
-                    <a href="/research" class="nav-link">Our Products <i class="fas fa-chevron-down dropdown-icon"></i></a>
+                    <a href="/research" class="nav-link">Our Products <i
+                            class="fas fa-chevron-down dropdown-icon"></i></a>
                     <div class="dropdown-content">
                         <a href="/research">Research Desk</a>
                         <a href="/resume-kits">Resume Kits</a>
@@ -161,96 +162,8 @@
             <h1 style="user-select: none;">Role-Specific, <span class="color-1">Robot-Friendly</span> Resume Kits</h1>
         </div>
 
-        <div class="kits-grid">
-            <!-- Full Stack Developer -->
-            <article class="kit-card">
-                <div class="kit-icon"><i class="fas fa-laptop-code"></i></div>
-                <h3>Full Stack Developer</h3>
-                <p>Pre-filled with optimized power words for both frontend and backend engineering, matching top ATS
-                    requirements.</p>
-                <button onclick="openResumeModal('full-stack')" class="btn btn-primary"><i class="fas fa-eye"></i> View
-                    Strategy & Download</button>
-            </article>
-
-            <!-- Data Scientist -->
-            <article class="kit-card">
-                <div class="kit-icon"><i class="fas fa-chart-pie"></i></div>
-                <h3>Data Scientist</h3>
-                <p>Highlight your statistical modeling, machine learning, and data visualization expertise using
-                    verified industry phrasing.</p>
-                <button onclick="openResumeModal('data-scientist')" class="btn btn-primary"><i class="fas fa-eye"></i>
-                    View Strategy & Download</button>
-            </article>
-
-            <!-- Data Analyst -->
-            <article class="kit-card">
-                <div class="kit-icon"><i class="fas fa-chart-line"></i></div>
-                <h3>Data Analyst</h3>
-                <p>Packed with actionable verbs and data translation keywords designed strictly to bypass initial
-                    automated screenings.</p>
-                <button onclick="openResumeModal('data-analyst')" class="btn btn-primary"><i class="fas fa-eye"></i>
-                    View Strategy & Download</button>
-            </article>
-
-            <!-- Machine Learning Engineer -->
-            <article class="kit-card">
-                <div class="kit-icon"><i class="fas fa-brain"></i></div>
-                <h3>Machine Learning Engineer</h3>
-                <p>Targeted ATS templates packed with power words for model deployment, NLP, deep learning, and MLOps.
-                </p>
-                <button onclick="openResumeModal('machine-learning')" class="btn btn-primary"><i class="fas fa-eye"></i>
-                    View Strategy & Download</button>
-            </article>
-
-            <!-- Data Engineer -->
-            <article class="kit-card">
-                <div class="kit-icon"><i class="fas fa-database"></i></div>
-                <h3>Data Engineer</h3>
-                <p>Features optimal vocabulary for ETL pipelines, big data integration, and data warehousing to stand
-                    out to recruiter AIs.</p>
-                <button onclick="openResumeModal('data-engineer')" class="btn btn-primary"><i class="fas fa-eye"></i>
-                    View Strategy & Download</button>
-            </article>
-
-            <!-- Software Engineer -->
-            <article class="kit-card">
-                <div class="kit-icon"><i class="fas fa-code"></i></div>
-                <h3>Software Engineer</h3>
-                <p>Standardized, cleanly formatted generic engineering templates filled with algorithmic problem-solving
-                    and SDLC buzzwords.</p>
-                <button onclick="openResumeModal('software-engineer')" class="btn btn-primary"><i
-                        class="fas fa-eye"></i> View Strategy & Download</button>
-            </article>
-
-            <!-- Business Analyst -->
-            <article class="kit-card">
-                <div class="kit-icon"><i class="fas fa-briefcase"></i></div>
-                <h3>Business Analyst</h3>
-                <p>Communicate stakeholder engagement, requirement gathering, and process optimization strictly in
-                    ATS-friendly language.</p>
-                <button onclick="openResumeModal('business-analyst')" class="btn btn-primary"><i class="fas fa-eye"></i>
-                    View Strategy & Download</button>
-            </article>
-
-            <!-- AI Engineer -->
-            <article class="kit-card">
-                <div class="kit-icon"><i class="fas fa-robot"></i></div>
-                <h3>AI Engineer</h3>
-                <p>Modernized templates with prompt engineering, LLM integration, and generative AI keywords formatted
-                    for robots.</p>
-                <button onclick="openResumeModal('ai-engineer')" class="btn btn-primary"><i class="fas fa-eye"></i> View
-                    Strategy & Download</button>
-            </article>
-
-            <!-- Cloud Engineer -->
-            <article class="kit-card">
-                <div class="kit-icon"><i class="fas fa-cloud"></i></div>
-                <h3>Cloud Engineer</h3>
-                <p>Pre-populated with essential power phrases for AWS/Azure/GCP architecture, CI/CD pipelines, and
-                    infrastructure as code.</p>
-                <button onclick="openResumeModal('cloud-engineer')" class="btn btn-primary"><i class="fas fa-eye"></i>
-                    View Strategy & Download</button>
-            </article>
+        <div class="kits-grid" id="kits-grid">
+            <!-- Cards auto-rendered from resumes.json -->
         </div>
     </main>
 
@@ -358,30 +271,48 @@
         </div>
     </div>
 
-    <!-- Data Injection Engine -->
+    <!-- Dynamic Card Rendering Engine -->
     <script>
-        let resumeData = {};
+        let resumeData = [];
 
-        // Fetch JSON on load so Googlebots can pre-read the network traffic
         window.addEventListener('DOMContentLoaded', async () => {
             try {
                 const res = await fetch('/static/data/resumes.json');
                 resumeData = await res.json();
+                renderKitCards();
             } catch (e) {
-                console.error("Failed to fetch AdSense resume SEO data:", e);
+                console.error("Failed to fetch resume data:", e);
             }
         });
 
-        function openResumeModal(roleKey) {
-            const data = resumeData[roleKey];
+        function renderKitCards() {
+            const grid = document.getElementById('kits-grid');
+            grid.innerHTML = '';
+            resumeData.forEach(kit => {
+                const article = document.createElement('article');
+                article.className = 'kit-card';
+                article.innerHTML = `
+                    <div>
+                        <div class="kit-icon"><i class="${kit.icon}"></i></div>
+                        <h3>${kit.title}</h3>
+                        <p>${kit.card_description}</p>
+                    </div>
+                    <button onclick="openResumeModal('${kit.id}')" class="btn btn-primary">
+                        <i class="fas fa-eye"></i> View Strategy &amp; Download
+                    </button>
+                `;
+                grid.appendChild(article);
+            });
+        }
+
+        function openResumeModal(roleId) {
+            const data = resumeData.find(k => k.id === roleId);
             if (!data) return;
 
-            // Inject SEO-rich text into DOM
             document.getElementById('modal-r-title').textContent = data.title;
             document.getElementById('modal-r-desc').textContent = data.description;
             document.getElementById('modal-r-phil').textContent = data.core_philosophy;
 
-            // Build ATS Bullet Points
             const atsList = document.getElementById('modal-r-ats');
             atsList.innerHTML = '';
             data.ats_optimizations.forEach(opt => {
@@ -391,34 +322,21 @@
                 atsList.appendChild(li);
             });
 
-            // Build Keyword Pills
             const keyBox = document.getElementById('modal-r-keys');
             keyBox.innerHTML = '';
             data.power_keywords.forEach(kw => {
                 const span = document.createElement('span');
-                span.style.background = 'white';
-                span.style.border = '1px solid #d1d5db';
-                span.style.color = '#374151';
-                span.style.padding = '4px 10px';
-                span.style.borderRadius = '20px';
-                span.style.fontSize = '0.8rem';
-                span.style.fontWeight = '600';
+                span.style.cssText = 'background:white;border:1px solid #d1d5db;color:#374151;padding:4px 10px;border-radius:20px;font-size:0.8rem;font-weight:600;';
                 span.textContent = kw;
                 keyBox.appendChild(span);
             });
 
-            // Set Download Link
             document.getElementById('modal-r-download').href = '/static/resumes/' + data.download_file;
 
-            // Display Modal FIRST so geometry exists
             const modal = document.getElementById('resume-modal');
             const modalContent = document.getElementById('resume-modal-content');
-
             modal.style.display = 'flex';
-
-            // NOW Reset scroll position to top (Browsers ignore scrollTop on display:none)
             if (modalContent) modalContent.scrollTop = 0;
-
             modal.style.opacity = '0';
             setTimeout(() => modal.style.opacity = '1', 10);
             document.body.style.overflow = 'hidden';
@@ -433,11 +351,8 @@
             }, 200);
         }
 
-        // Close when clicking outside the box
         document.getElementById('resume-modal').addEventListener('click', function (e) {
-            if (e.target === this) {
-                closeResumeModal();
-            }
+            if (e.target === this) closeResumeModal();
         });
     </script>
 </body>
