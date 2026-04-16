@@ -1153,3 +1153,24 @@ WHAT WAS DONE:
        - Certifications: PL-300, DP-900, Google Data Analytics
 
 FILE SIZE: 38,884 bytes
+
+
+
+Date: 16/04/2026
+
+1. SEO & Indexing Infrastructure (Fixing Search Console Issues)
+Canonical Tags: Implemented <link rel="canonical"> logic in the /job route to resolve "Duplicate Content" errors caused by extra URL parameters (jobtitle).
+Schema.org Stability: Patched the datePosted field in the Google Job Schema. Replaced datetime.now() with the actual job creation date parsed from the database. This prevents Google from rejecting "freshness-faked" pages.
+Dynamic Meta Descriptions: Configured app.py to auto-generate unique 155-character meta descriptions for every job post, replacing the static site-wide description. This resolves the "Crawled - currently not indexed" status locally.
+2. New Feature: Dynamic Career Roadmaps
+Architecture: Implemented a JSON-driven architecture for roadmaps, matching the project's standard pattern (Blogs/Resumes).
+roadmaps.html: Built a premium overview page with hover-reactive career path cards (AI, Full Stack, Data, etc.).
+Detail_roadmap.html: Created a dynamic "3-Tier journey" template. It automatically renders Entry, Intermediate, and Advanced curriculum details for any roadmap.
+roadmap.json: Curated original, high-quality content for three major paths:
+Python Developer (Logic & Foundations)
+Power BI Consultant (Decision Intelligence)
+GenAI Architect (Agentic Engineering)
+Backend Integration: Added dynamic routing (/roadmaps and /roadmap/<slug>) in app.py to handle the new directory.
+3. Files Modified/Created:
+Modified: app.py, templates/index.html, templates/roadmaps.html
+Created: templates/Detail_roadmap.html, static/data/roadmap.json

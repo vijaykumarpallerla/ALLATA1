@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="icon" type="image/webp" href="{{ url_for('static', filename='Logo.webp') }}" />
+    <meta charset="UTF-8">
+    <meta name="description"
+        content="Master your tech career with ALL AT A1's expert-curated roadmaps. Step-by-step guides for AI Engineering, Full Stack, Data Science, and more.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Roadmaps | ALL AT A1</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style"
+        onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    </noscript>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .roadmaps-hero {
+            text-align: center;
+            padding: 5rem 1rem;
+            background: radial-gradient(circle at top right, rgba(37, 99, 235, 0.05), transparent),
+                radial-gradient(circle at bottom left, rgba(124, 58, 237, 0.05), transparent);
+        }
+
+        .roadmaps-hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+            margin-bottom: 1.5rem;
+            letter-spacing: -1px;
+        }
+
+        .roadmaps-hero p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .roadmaps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-bottom: 6rem;
+        }
+
+        .roadmap-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+        }
+
+        .roadmap-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary-color);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .roadmap-icon-wrapper {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .roadmap-card:hover .roadmap-icon-wrapper {
+            background: var(--primary-color);
+            color: white;
+            transform: rotate(-5deg) scale(1.1);
+        }
+
+        .roadmap-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 1rem;
+        }
+
+        .roadmap-card p {
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 2rem;
+            flex-grow: 1;
+        }
+
+        .roadmap-steps-count {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .floating-blob {
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            width: 100px;
+            height: 100px;
+            background: var(--primary-color);
+            opacity: 0.05;
+            border-radius: 50%;
+            filter: blur(40px);
+            z-index: 0;
+        }
+
+        @media (max-width: 768px) {
+            .roadmaps-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .roadmaps-grid {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-logo" aria-label="All At A1">
+                <img src="{{ url_for('static', filename='Logo.webp') }}" width="84" height="84" class="logo-img"
+                    alt="All At A1 Logo">
+                <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
+                        class="color-3">A</span><span class="color-4">1</span></span>
+            </a>
+            <div class="menu-toggle" id="mobile-menu"><i class="fas fa-bars"></i></div>
+            <div class="nav-menu" id="nav-menu">
+                <a href="/" class="nav-link">Tech Insights</a>
+                <a href="/student-library" class="nav-link" style="color: var(--logo-color-3); font-weight: 700;"><i
+                        class="fas fa-graduation-cap"></i> Students</a>
+                <a href="/browse-jobs" class="nav-link">Browse Jobs</a>
+                <div class="nav-dropdown">
+                    <a href="/research" class="nav-link active">Our Products <i
+                            class="fas fa-chevron-down dropdown-icon"></i></a>
+                    <div class="dropdown-content">
+                        <a href="/research">Research Desk</a>
+                        <a href="/resume-kits">Resume Kits</a>
+                    </div>
+                </div>
+                <div class="nav-dropdown">
+                    <a href="/privacy-policy" class="nav-link">Legal Agreements <i
+                            class="fas fa-chevron-down dropdown-icon"></i></a>
+                    <div class="dropdown-content">
+                        <a href="/terms-and-conditions">Terms and Conditions</a>
+                        <a href="/privacy-policy">Privacy Policy</a>
+                        <a href="/about-us">About Us</a>
+                    </div>
+                </div>
+                <a href="/contact-us" class="nav-link">Contact Us</a>
+                <a href="/jobs" class="nav-link nav-link-mobile">Post a Job</a>
+            </div>
+            <div class="nav-actions">
+                <a href="/jobs" class="btn btn-primary" style="text-decoration: none;">Post a Job</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="roadmaps-hero">
+        <div class="container">
+            <h1 style="user-select: none;">Master Your <span class="color-1">Future</span></h1>
+            <p>Expert-curated, step-by-step learning paths designed for the 2026 tech landscape. From foundations to
+                advanced architecture.</p>
+        </div>
+    </section>
+
+    <!-- Grid Area -->
+    <main class="container">
+        <div id="roadmap-container" class="roadmaps-grid">
+            <!-- Dynamic items will load here -->
+        </div>
+        
+        <div id="no-roadmaps" style="display: none; text-align: center; padding: 4rem 1rem; color: var(--text-muted);">
+            <i class="fas fa-map-marked-alt" style="font-size: 3rem; margin-bottom: 1.5rem; opacity: 0.5;"></i>
+            <h3>Dynamic Career Paths Coming Soon</h3>
+            <p>Our experts are crafting step-by-step guides for the 2026 tech landscape.</p>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <a href="/" class="nav-logo" aria-label="All At A1">
+                    <img src="{{ url_for('static', filename='Logo.webp') }}" width="56" height="56"
+                        class="logo-img-footer" alt="All At A1 Logo">
+                    <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
+                            class="color-3">A</span><span class="color-4">1</span></span>
+                </a>
+                <p>A premier career hub dedicated to connecting top talent with high-quality, expert-verified
+                    opportunities.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Our Products</h4>
+                <a href="/research">Research Desk</a>
+                <a href="/resume-kits">Resume Kits</a>
+                <a href="/roadmaps">Career Roadmaps</a>
+            </div>
+            <div class="footer-col">
+                <h4>For Employers</h4>
+                <a href="/jobs">Post a Job</a>
+                <a href="/browse-jobs">Browse Jobs</a>
+            </div>
+            <div class="footer-col">
+                <h4>Support & Legal</h4>
+                <a href="/about-us">About Us</a>
+                <a href="/contact-us">Contact Us</a>
+                <a href="/privacy-policy">Privacy Policy</a>
+                <a href="/terms-and-conditions">Terms of Service</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 ALL AT A1. All rights reserved.</p>
+            <div class="footer-social">
+                <a href="https://whatsapp.com/channel/0029Vb7sVZW9hXEz9CVcxz1k" class="wa" id="footer-whatsapp-link"
+                    aria-label="WhatsApp" title="WhatsApp" target="_blank" rel="noopener">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+                <a href="https://www.linkedin.com/company/all-at-a1/" class="li" id="footer-linkedin-link"
+                    aria-label="LinkedIn" title="LinkedIn" target="_blank" rel="noopener">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('/static/data/roadmap.json')
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('roadmap-container');
+                    const noRoadmaps = document.getElementById('no-roadmaps');
+
+                    if (!data || data.length === 0) {
+                        noRoadmaps.style.display = 'block';
+                        return;
+                    }
+
+                    data.forEach(item => {
+                        const card = document.createElement('a');
+                        card.href = `/roadmap/${item.slug}`;
+                        card.className = 'roadmap-card';
+                        
+                        // Set custom color theme if provided
+                        const color = item.accent_color || '#2563eb';
+                        const bgLight = item.accent_bg || 'rgba(37, 99, 235, 0.1)';
+
+                        card.innerHTML = `
+                            <div class="floating-blob"></div>
+                            <div class="roadmap-icon-wrapper" style="background: ${bgLight}; color: ${color};">
+                                <i class="${item.icon || 'fas fa-map'}"></i>
+                            </div>
+                            <h3>${item.title}</h3>
+                            <p>${item.description}</p>
+                            <div class="roadmap-steps-count" style="color: ${color};">
+                                <i class="fas fa-layer-group"></i> ${item.modules || '0'} Modules
+                            </div>
+                        `;
+                        container.appendChild(card);
+                    });
+                })
+                .catch(err => {
+                    console.error('Error loading roadmaps:', err);
+                    document.getElementById('no-roadmaps').style.display = 'block';
+                });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,80 @@
+[
+  {
+    "slug": "python-developer",
+    "title": "Python Developer",
+    "description": "Beyond syntax: Master the art of clean-code craftsmanship. Build your professional foundation on first-principles thinking.",
+    "icon": "fab fa-python",
+    "modules": "24",
+    "accent_color": "#10b981",
+    "accent_bg": "rgba(16, 185, 129, 0.1)",
+    "levels": {
+      "entry": {
+        "title": "Foundation & Logic",
+        "description": "Mastering the Zen of Python. Learning how computers 'think' using memory management, data structures, and algorithmic efficiency.",
+        "topics": ["Memory Referencing", "Functional Paradigms", "Error Engineering", "List Comprehensions"]
+      },
+      "intermediate": {
+        "title": "Backend Architecture",
+        "description": "Moving into industry-grade development. Building scalable systems with multi-threading, asynchronous logic, and professional API design.",
+        "topics": ["Asynchronous I/O", "Decorators & Metadata", "Database ORM Logic", "Concurrency Patterns"]
+      },
+      "advanced": {
+        "title": "Distributed Systems",
+        "description": "Creating production-ready ecosystems. Focusing on microservices, cloud-native deployments, and high-performance computation.",
+        "topics": ["Microservices Design", "Kubernetes Orchestration", "C-Extensions", "Distributed Tasks"]
+      }
+    }
+  },
+  {
+    "slug": "power-bi-consultant",
+    "title": "Power BI Consultant",
+    "description": "Convert silent data into strategic narratives. Bridge the gap between raw datasets and decision-intelligence.",
+    "icon": "fas fa-chart-pie",
+    "modules": "18",
+    "accent_color": "#f59e0b",
+    "accent_bg": "rgba(245, 158, 11, 0.1)",
+    "levels": {
+      "entry": {
+        "title": "Visual Storytelling",
+        "description": "Learning the psychology of color and layout. Transforming basic spreadsheets into interactive, human-readable visual stories.",
+        "topics": ["Power Query M-Logic", "Data Normalization", "Visual Hierarchy", "DAX Foundations"]
+      },
+      "intermediate": {
+        "title": "Decision Intelligence",
+        "description": "Advanced modeling for business impact. Using context-aware calculations and complex data relationships to find 'The Why'.",
+        "topics": ["Advanced DAX Patterns", "Row-Level Security", "Tabular Modeling", "Incremental Refresh"]
+      },
+      "advanced": {
+        "title": "Enterprise Analytics",
+        "description": "Architecting large-scale BI ecosystems. Integrating Azure Synapse, automated pipelines, and custom governance strategies.",
+        "topics": ["Fabric Integration", "Deployment Pipelines", "API Embedding", "Performance Tuning"]
+      }
+    }
+  },
+  {
+    "slug": "genai-architect",
+    "title": "GenAI Architect",
+    "description": "Architect the next evolution of autonomy. Dive into Agentic reasoning patterns and neural mechanics.",
+    "icon": "fas fa-microchip",
+    "modules": "30",
+    "accent_color": "#8b5cf6",
+    "accent_bg": "rgba(139, 92, 246, 0.1)",
+    "levels": {
+      "entry": {
+        "title": "LLM Fundamentals",
+        "description": "Understanding the transformer architecture. Learning how tokens, embeddings, and attention mechanisms create artificial reasoning.",
+        "topics": ["Tokenization Logic", "Vector Embeddings", "Prompt Engineering", "Semantic Search"]
+      },
+      "intermediate": {
+        "title": "Agentic Engineering",
+        "description": "Building AI that takes action. Mastering RAG (Retrieval-Augmented Generation) and autonomous tool-calling loops.",
+        "topics": ["Vector Databases", "RAG Optimization", "Tool Use Frameworks", "Context Injection"]
+      },
+      "advanced": {
+        "title": "Neural Autonomy",
+        "description": "Deploying custom-tuned intelligence. Focusing on fine-tuning strategies, multi-modal agents, and AI safety guardrails.",
+        "topics": ["LoRA Fine-tuning", "Multi-modal RAG", "Evaluation Frameworks", "Model Quantization"]
+      }
+    }
+  }
+]

@@ -240,6 +240,14 @@ def google_verification1():
 def resume_kits():
     return render_template('resume_kits.html')
 
+@app.route('/roadmaps')
+def roadmaps():
+    return render_template('roadmaps.html')
+
+@app.route('/roadmap/<slug>')
+def roadmap_detail(slug):
+    return render_template('Detail_roadmap.html', slug=slug)
+
 @app.route('/blog/<blog_id>')
 def read_blog(blog_id):
     try:
