@@ -772,6 +772,10 @@ def job_detail():
         html = html.replace('<!-- JOB_TYPE -->', job.job_type)
         html = html.replace('<!-- JOB_SALARY -->', job.salary if job.salary else "Competitive")
         
+        # SEO: Add Canonical Tag to prevent duplicate content errors
+        canonical_link = f'<link rel="canonical" href="https://all-at-a1.in/job?jobid={job.id}" />'
+        html = html.replace('</head>', f'    {canonical_link}\n</head>')
+        
         # Hide Duration field if empty or 'Not Specified'
         import re
         clean_dur = str(job.duration).strip().lower() if job.duration else ""
@@ -784,16 +788,12 @@ def job_detail():
 
         html = html.replace('<!-- JOB_EXPERIENCE -->', job.experience)
         
-        # SEO Enhancement: Dynamic Meta Description
-        import re
-        import markdown
-        import json
-        clean_text = re.sub(r'<[^>]+>', '', job.description)
-        clean_text = clean_text.replace('\n', ' ').replace('"', "'")
+        # SEO: Unique Meta Description for each job
+        clean_text = re.sub(r'<[^>]+>', '', job.description).replace('\n', ' ').replace('"', "'")
         desc_snippet = (clean_text[:155] + '...') if len(clean_text) > 155 else clean_text
         old_meta = 'content="View job details on ALL AT A1. Explore roles in AI, data science, and software engineering from verified employers."'
         html = html.replace(old_meta, f'content="{desc_snippet}"')
-
+        
         # SEO Enhancement: Server-Side Markdown Rendering
         rendered_md = markdown.markdown(job.description, extensions=['tables', 'fenced_code', 'nl2br'])
         html = html.replace('<!-- RENDERED_MARKDOWN -->', rendered_md)
@@ -817,12 +817,18 @@ def job_detail():
             if not region:
                 region = "Not Disclosed"
 
+            # Note: We parse job.posted so Google sees a consistent date, not "now"
+            try:
+                posted_iso = datetime.strptime(job.posted.split(' ')[0], "%d/%m/%Y").strftime("%Y-%m-%d")
+            except:
+                posted_iso = "2026-04-12" # Fallback
+
             schema_data = {
                 "@context": "https://schema.org/",
                 "@type": "JobPosting",
                 "title": job.title,
                 "description": rendered_md,
-                "datePosted": datetime.now(timezone.utc).isoformat(),
+                "datePosted": posted_iso,
                 "validThrough": valid_through,
                 "employmentType": emp_type,
                 "hiringOrganization": {
