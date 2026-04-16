@@ -1013,6 +1013,12 @@ TOPIC: Admin Dashboard Job Management Updates
    - Encoded native frontend dynamic route binding scaling off `window.location.origin` inside the `openJobDetailModal` mapping explicitly: `window.location.origin + '/job?jobid=' + job.id + '&jobtitle=' + encodeURIComponent(job.title)`.
 
 
+
+
+
+
+
+=============================================================Feature is Removed ====================================================================
 ================================================
 DATE: 2026-04-12 - vijaykumarpallerla
 TOPIC: Single-Session-Per-Admin Enforcement
@@ -1043,6 +1049,11 @@ TOPIC: Single-Session-Per-Admin Enforcement
 4. Updated `admin_logout` route:
    - On explicit logout, removes the email slot from `active_admin_sessions`
    - Frees the slot so the admin can log in cleanly again
+=============================================================Feature is Removed ====================================================================
+
+
+
+
 
 
 ==============================================================================
