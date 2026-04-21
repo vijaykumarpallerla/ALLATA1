@@ -141,55 +141,116 @@
     <!-- Navbar -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="/" class="nav-logo">
-                <img src="{{ url_for('static', filename='Logo.webp') }}" width="84" height="84" class="logo-img">
-                <span class="logo-text">ALL AT A1</span>
+            <a href="/" class="nav-logo" aria-label="All At A1">
+                <img src="{{ url_for('static', filename='Logo.webp') }}" width="84" height="84" class="logo-img"
+                    alt="All At A1 Logo">
+                <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
+                        class="color-3">A</span><span class="color-4">1</span></span>
             </a>
-            <div class="nav-menu">
-                <a href="/roadmaps" class="nav-link active">Back to Roadmaps</a>
+            <div class="menu-toggle" id="mobile-menu"><i class="fas fa-bars"></i></div>
+            <div class="nav-menu" id="nav-menu">
+                <a href="/" class="nav-link">Tech Insights</a>
+                <a href="/student-library" class="nav-link" style="color: var(--logo-color-3); font-weight: 700;"><i
+                        class="fas fa-graduation-cap"></i> Students</a>
+                <a href="/browse-jobs" class="nav-link">Browse Jobs</a>
+                <div class="nav-dropdown">
+                    <a href="/research" class="nav-link active">Our Products <i
+                            class="fas fa-chevron-down dropdown-icon"></i></a>
+                    <div class="dropdown-content">
+                        <a href="/research">Research Desk</a>
+                        <a href="/resume-kits">Resume Kits</a>
+                    </div>
+                </div>
+                <div class="nav-dropdown">
+                    <a href="/privacy-policy" class="nav-link">Legal Agreements <i
+                            class="fas fa-chevron-down dropdown-icon"></i></a>
+                    <div class="dropdown-content">
+                        <a href="/terms-and-conditions">Terms and Conditions</a>
+                        <a href="/privacy-policy">Privacy Policy</a>
+                        <a href="/about-us">About Us</a>
+                    </div>
+                </div>
+                <a href="/contact-us" class="nav-link">Contact Us</a>
+                <a href="/jobs" class="nav-link nav-link-mobile">Post a Job</a>
+            </div>
+            <div class="nav-actions">
+                <a href="/jobs" class="btn btn-primary" style="text-decoration: none;">Post a Job</a>
             </div>
         </div>
     </nav>
 
     <!-- Hero -->
-    <header class="detail-hero">
+    <header class="detail-hero" id="hero-section" style="transition: all 0.3s ease;">
         <div class="container">
-            <div id="roadmap-icon" style="font-size: 4rem; margin-bottom: 2rem; color: var(--primary-color);"></div>
+            <div id="roadmap-icon" style="font-size: 3.5rem; margin-bottom: 2rem; display: inline-flex; width: 100px; height: 100px; background: rgba(255,255,255,0.15); border-radius: 50%; align-items: center; justify-content: center; color: var(--primary-color);"></div>
             <h1 id="roadmap-title">Loading...</h1>
             <p id="roadmap-desc"></p>
         </div>
     </header>
 
+    <!-- NEW CONTENT BLOCK: Rich Editorial Overview (AdSense Proof) -->
+    <section class="container" style="max-width: 900px; margin: 0 auto 2rem; text-align: left;">
+        <div style="background: white; padding: 3rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
+            <h3 style="color: var(--primary-dark); margin-bottom: 1rem; font-size: 1.5rem;">The Architecture of the Role</h3>
+            <p id="roadmap-overview" style="color: var(--text-main); line-height: 1.8; margin-bottom: 2rem; font-size: 1.05rem;"></p>
+            
+            <h3 style="color: var(--primary-dark); margin-bottom: 1rem; font-size: 1.3rem;">Market Insight & Employer Demands</h3>
+            <p id="roadmap-market" style="color: var(--text-muted); line-height: 1.7; margin-bottom: 2rem; border-left: 4px solid var(--primary-color); padding-left: 1.5rem;"></p>
+            
+            <h3 style="color: var(--primary-dark); margin-bottom: 1rem; font-size: 1.3rem;">Salary & Negotiation Leverage</h3>
+            <p id="roadmap-salary" style="color: var(--text-muted); line-height: 1.7;"></p>
+        </div>
+    </section>
+
     <!-- Path -->
     <main class="path-container" id="path-content">
+        
+        <!-- NEW CONTENT BLOCK: Trends -->
+        <section class="level-card" style="grid-template-columns: 1fr; padding: 2rem;">
+            <h2 style="color: var(--text-main); font-size: 1.5rem; margin-bottom: 1.5rem;"><i class="fas fa-rocket" style="color: #ef4444;"></i> 2026 Modern Trends to Watch</h2>
+            <div class="topics-grid" id="roadmap-trends" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));"></div>
+        </section>
+
         <!-- Level: Entry -->
         <section class="level-card">
             <div class="level-info">
-                <div class="level-badge">Step 1: Entry Level</div>
+                <div class="level-badge" id="entry-badge">Phase 1</div>
                 <h2 id="entry-title">...</h2>
+                <div id="entry-target" style="font-weight: 600; color: var(--primary-color); margin-bottom: 1rem; font-size: 0.95rem;"></div>
                 <p id="entry-desc" style="color: var(--text-muted); line-height: 1.6;"></p>
             </div>
-            <div class="topics-grid" id="entry-topics"></div>
+            <div class="topics-grid" style="grid-template-columns: 1fr;" id="entry-topics"></div>
         </section>
 
         <!-- Level: Intermediate -->
         <section class="level-card">
             <div class="level-info">
-                <div class="level-badge" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;">Step 2: Intermediate</div>
+                <div class="level-badge" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;" id="inter-badge">Phase 2</div>
                 <h2 id="inter-title" style="color: #f59e0b;">...</h2>
+                <div id="inter-target" style="font-weight: 600; color: #f59e0b; margin-bottom: 1rem; font-size: 0.95rem;"></div>
                 <p id="inter-desc" style="color: var(--text-muted); line-height: 1.6;"></p>
             </div>
-            <div class="topics-grid" id="inter-topics"></div>
+            <div class="topics-grid" style="grid-template-columns: 1fr;" id="inter-topics"></div>
         </section>
 
         <!-- Level: Advanced -->
         <section class="level-card">
             <div class="level-info">
-                <div class="level-badge" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6;">Step 3: Advanced</div>
+                <div class="level-badge" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6;" id="adv-badge">Phase 3</div>
                 <h2 id="adv-title" style="color: #8b5cf6;">...</h2>
+                <div id="adv-target" style="font-weight: 600; color: #8b5cf6; margin-bottom: 1rem; font-size: 0.95rem;"></div>
                 <p id="adv-desc" style="color: var(--text-muted); line-height: 1.6;"></p>
             </div>
-            <div class="topics-grid" id="adv-topics"></div>
+            <div class="topics-grid" style="grid-template-columns: 1fr;" id="adv-topics"></div>
+        </section>
+
+        <!-- Capstone Project -->
+        <section class="level-card" id="project-container" style="display: none; grid-template-columns: 1fr; padding: 2.5rem; background: rgba(37, 99, 235, 0.03); border: 2px dashed rgba(37, 99, 235, 0.3);">
+            <div style="text-align: center;">
+                <div class="level-badge" style="display: inline-block; margin-bottom: 1rem; background: var(--primary-color); color: white;"><i class="fas fa-laptop-code"></i> Capstone Project</div>
+                <h2 id="project-title" style="color: var(--primary-dark); font-size: 1.6rem; margin-bottom: 1rem;">...</h2>
+                <p id="project-desc" style="color: var(--text-main); line-height: 1.7; font-size: 1.05rem; max-width: 800px; margin: 0 auto;"></p>
+            </div>
         </section>
     </main>
 
@@ -212,43 +273,139 @@
                     document.getElementById('roadmap-icon').innerHTML = `<i class="${roadmap.icon}"></i>`;
                     document.title = `${roadmap.title} Roadmap | ALL AT A1`;
 
+                    // Dynamic Hero Styling (Matches Blog Header)
+                    if (roadmap.accent_color) {
+                        const hero = document.getElementById('hero-section');
+                        hero.style.backgroundColor = roadmap.accent_color;
+                        hero.style.backgroundImage = 'radial-gradient(rgba(255, 255, 255, 0.15) 2px, transparent 2px)';
+                        hero.style.backgroundSize = '30px 30px';
+                        hero.style.backgroundPosition = '0 0, 15px 15px';
+                        
+                        document.getElementById('roadmap-title').style.color = '#ffffff';
+                        document.getElementById('roadmap-desc').style.color = 'rgba(255, 255, 255, 0.9)';
+                        document.getElementById('roadmap-icon').style.color = '#ffffff';
+                        
+                        // Adjust header padding to make it flow identically to the blog
+                        hero.style.padding = '8rem 1rem 6rem';
+                    }
+
+                    // Update Rich AdSense Content
+                    if(document.getElementById('roadmap-overview')) {
+                        document.getElementById('roadmap-overview').textContent = roadmap.overview || "Overview currently being updated by our architect team.";
+                    }
+                    if(document.getElementById('roadmap-market')) {
+                        document.getElementById('roadmap-market').textContent = roadmap.market_insight || "Market insights currently being analyzed.";
+                    }
+                    if(document.getElementById('roadmap-salary')) {
+                        document.getElementById('roadmap-salary').textContent = roadmap.salary_expectations || "Salary bounds actively being calculated.";
+                    }
+
+                    // Update Trends
+                    if (roadmap.trends && document.getElementById('roadmap-trends')) {
+                        renderTopics('roadmap-trends', roadmap.trends);
+                    }
+
+                    // Update Project
+                    if (roadmap.project) {
+                        document.getElementById('project-container').style.display = 'block';
+                        document.getElementById('project-title').textContent = roadmap.project.title;
+                        document.getElementById('project-desc').textContent = roadmap.project.desc;
+                    }
+
                     // Update Levels
                     const levels = roadmap.levels;
                     
                     // Entry
                     document.getElementById('entry-title').textContent = levels.entry.title;
+                    if (levels.entry.target) document.getElementById('entry-target').textContent = levels.entry.target;
                     document.getElementById('entry-desc').textContent = levels.entry.description;
-                    renderTopics('entry-topics', levels.entry.topics);
+                    renderTopics('entry-topics', levels.entry.sections || levels.entry.topics);
 
                     // Intermediate
                     document.getElementById('inter-title').textContent = levels.intermediate.title;
+                    if (levels.intermediate.target) document.getElementById('inter-target').textContent = levels.intermediate.target;
                     document.getElementById('inter-desc').textContent = levels.intermediate.description;
-                    renderTopics('inter-topics', levels.intermediate.topics);
+                    renderTopics('inter-topics', levels.intermediate.sections || levels.intermediate.topics);
 
                     // Advanced
                     document.getElementById('adv-title').textContent = levels.advanced.title;
+                    if (levels.advanced.target) document.getElementById('adv-target').textContent = levels.advanced.target;
                     document.getElementById('adv-desc').textContent = levels.advanced.description;
-                    renderTopics('adv-topics', levels.advanced.topics);
+                    renderTopics('adv-topics', levels.advanced.sections || levels.advanced.topics);
                 });
         });
 
-        function renderTopics(containerId, topics) {
+        function renderTopics(containerId, items) {
             const container = document.getElementById(containerId);
-            topics.forEach(topic => {
-                const item = document.createElement('div');
-                item.className = 'topic-item';
-                item.innerHTML = `<i class="fas fa-check-circle"></i> ${topic}`;
-                container.appendChild(item);
+            container.innerHTML = '';
+            items.forEach(item => {
+                const el = document.createElement('div');
+                el.className = 'topic-item';
+                
+                // Handle objects (new format) vs strings (old format backup)
+                if (typeof item === 'object') {
+                    el.style.flexDirection = 'column';
+                    el.style.alignItems = 'flex-start';
+                    el.innerHTML = `
+                        <div style="font-weight: 700; color: var(--text-main); margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-check-circle" style="color: var(--primary-color);"></i> ${item.name}</div>
+                        <div style="font-size: 0.95rem; font-weight: 400; color: var(--text-muted); padding-left: 1.5rem; line-height: 1.5;">${item.desc}</div>
+                    `;
+                } else {
+                    el.innerHTML = `<i class="fas fa-check-circle"></i> ${item}`;
+                }
+                container.appendChild(el);
             });
         }
     </script>
 
     <!-- Footer -->
-    <footer style="margin-top: 5rem;">
-        <div class="footer-content" style="text-align: center;">
-            <p>&copy; 2026 ALL AT A1. Built for professional growth.</p>
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <a href="/" class="nav-logo" aria-label="All At A1">
+                    <img src="{{ url_for('static', filename='Logo.webp') }}" width="56" height="56"
+                        class="logo-img-footer" alt="All At A1 Logo">
+                    <span class="logo-text"><span class="color-1">ALL</span> <span class="color-2">AT</span> <span
+                            class="color-3">A</span><span class="color-4">1</span></span>
+                </a>
+                <p>A premier career hub dedicated to connecting top talent with high-quality, expert-verified
+                    opportunities.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Our Products</h4>
+                <a href="/research">Research Desk</a>
+                <a href="/resume-kits">Resume Kits</a>
+            </div>
+            <div class="footer-col">
+                <h4>For Employers</h4>
+                <a href="/jobs">Post a Job</a>
+                <a href="/browse-jobs">Browse Jobs</a>
+            </div>
+            <div class="footer-col">
+                <h4>Support & Legal</h4>
+                <a href="/about-us">About Us</a>
+                <a href="/contact-us">Contact Us</a>
+                <a href="/privacy-policy">Privacy Policy</a>
+                <a href="/terms-and-conditions">Terms of Service</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 ALL AT A1. All rights reserved.</p>
+            <div class="footer-social">
+                <a href="https://whatsapp.com/channel/0029Vb7sVZW9hXEz9CVcxz1k" class="wa" id="footer-whatsapp-link"
+                    aria-label="WhatsApp" title="WhatsApp" target="_blank" rel="noopener">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+                <a href="https://www.linkedin.com/company/all-at-a1/" class="li" id="footer-linkedin-link"
+                    aria-label="LinkedIn" title="LinkedIn" target="_blank" rel="noopener">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+            </div>
         </div>
     </footer>
+    
+    <!-- Include mobile menu functionality -->
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
 </body>
 
 </html>

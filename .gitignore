@@ -15,6 +15,23 @@ allata1.json
 Documents
 
 # Environments
+.env
+__pycache__/
+Content 
+Content.txt
+upload_2_jobs.py 
+database.db
+
+# Exclude AI-generated Word Documents (Keep text notes safe for reference)
+*.docx
+!static/resumes/*.docx
+*.txt
+
+# Ignore Google OAuth credentials
+allata1.json
+Documents
+
+# Environments
 all-at-a1/
 
 # VS Code
@@ -22,3 +39,6 @@ all-at-a1/
 
 # Local Info
 commit_id.txt
+all at a1 sharing.pdf
+Text files/ALL AT A1.pdf
+Text files/ALL AT A1 (1).pdf
