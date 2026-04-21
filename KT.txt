@@ -1174,3 +1174,96 @@ Backend Integration: Added dynamic routing (/roadmaps and /roadmap/<slug>) in ap
 3. Files Modified/Created:
 Modified: app.py, templates/index.html, templates/roadmaps.html
 Created: templates/Detail_roadmap.html, static/data/roadmap.json
+
+
+
+
+==============================================================================
+UPDATE: 21-04-2026 - Career Roadmaps Transformation
+==============================================================================
+
+- **Content Quality Overhaul (AdSense Compliance):**
+  - Reworked 
+oadmap.json to feature over 650+ words of rich, conversational editorial content per roadmap.
+  - Added 'overview', 'market_insight', 'salary_expectations', and 'trends' sections to provide authoritative, human-readable insights to bypass thin-content flags.
+
+- **Dynamic UI Upgrades (Detail_roadmap.html):**
+  - Integrated a new dynamic 'hero-section' utilizing javascript to match the brand ccent_color with a blog-style radial dot-matrix background overlay.
+  - Added an automated Capstone Project UI box securely mapped to the bottom of the roadmap trajectory.
+
+- **Consistency & Layout Optimization:**
+  - Refactored 
+oadmaps.html to eliminate generic dummy module counts, replacing them natively with a \'3 Core Phases\' metric.
+  - Cleaned up duplicated header and footer links (removed the redundant \'Career Roadmaps\' link globally).
+ 
+
+
+ ============================================================================================================================================
+Roadmap Prompt 
+============================================================================================================================================
+You are a Senior Developer. I am building a custom career roadmap for my website using a strict JSON schema.
+
+Your Task: Create a brand new roadmap for the role of: [INSERT_ROLE_HERE] (e.g., React Developer, Cloud Engineer).
+
+CRITICAL RULES FOR CONTENT:
+
+Use 100% natural, conversational, 10th-grade English. Speak like a friendly human mentor.
+DO NOT use AI buzzwords like "delve", "unleash", "architect", "transformative", or "hyperscale." Keep it grounded and easily readable.
+Your entire response must ONLY be the raw JSON object. Do not say "Here is your JSON".
+STRICT JSON SCHEMA:
+
+json
+{
+  "slug": "kebab-case-slug",
+  "title": "Role Title",
+  "description": "A 1-sentence simple explanation of the role.",
+  "icon": "fas fa-[FONT_AWESOME_ICON]",
+  "modules": "3 Core Phases",
+  "accent_color": "#[HEX]",
+  "accent_bg": "rgba([R], [G], [B], 0.1)",
+  "overview": "A heavy 4-5 sentence conversational paragraph about what this job actually does in the real world and why standard tutorials fail.",
+  "market_insight": "A 3-4 sentence paragraph about what hiring managers are actually looking for right now.",
+  "salary_expectations": "A 3-4 sentence paragraph discussing entry-level vs senior pay depending on their skill depth.",
+  "trends": [
+    {"name": "Trend 1", "desc": "1-sentence conversational explanation."},
+    {"name": "Trend 2", "desc": "1-sentence conversational explanation."},
+    {"name": "Trend 3", "desc": "1-sentence conversational explanation."}
+  ],
+  "levels": {
+    "entry": {
+      "title": "Phase 1: The Foundation (Beginner)",
+      "target": "1-2 Months • Conversational focus tip here.",
+      "description": "1-sentence description.",
+      "sections": [
+        {"name": "Skill 1", "desc": "Conversational reasoning for this skill."},
+        {"name": "Skill 2", "desc": "Conversational reasoning for this skill."},
+        {"name": "Skill 3", "desc": "Conversational reasoning for this skill."}
+      ]
+    },
+    "intermediate": {
+      "title": "Phase 2: Deep Dive (Intermediate)",
+      "target": "2-4 Months • Conversational focus tip here.",
+      "description": "1-sentence description.",
+      "sections": [
+        {"name": "Skill 1", "desc": "Conversational reasoning for this skill."},
+        {"name": "Skill 2", "desc": "Conversational reasoning for this skill."},
+        {"name": "Skill 3", "desc": "Conversational reasoning for this skill."}
+      ]
+    },
+    "advanced": {
+      "title": "Phase 3: The Specialization (Advanced)",
+      "target": "4+ Months • Conversational focus tip here.",
+      "description": "1-sentence description.",
+      "sections": [
+        {"name": "Track A", "desc": "Conversational reasoning for this skill."},
+        {"name": "Track B", "desc": "Conversational reasoning for this skill."},
+        {"name": "Track C", "desc": "Conversational reasoning for this skill."}
+      ]
+    }
+  },
+  "project": {
+    "title": "Build a [Cool System Name]",
+    "desc": "A 2-3 sentence description of a real-world, highly specific final project that puts everything they learned together."
+  }
+}
+ ========================================================================================================================================

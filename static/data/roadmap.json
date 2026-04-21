@@ -2,79 +2,169 @@
   {
     "slug": "python-developer",
     "title": "Python Developer",
-    "description": "Beyond syntax: Master the art of clean-code craftsmanship. Build your professional foundation on first-principles thinking.",
+    "description": "Learn the exact skills you need to go from writing simple python scripts to building professional web applications.",
     "icon": "fab fa-python",
-    "modules": "24",
+    "modules": "3 Core Phases",
     "accent_color": "#10b981",
     "accent_bg": "rgba(16, 185, 129, 0.1)",
+    "overview": "If you look up how to learn Python, you will find thousands of tutorials that teach you the same basic things: variables, loops, and simple calculators. The problem is that learning these basics won’t actually get you a job. In the real world, companies need Python developers who can build reliable backends, manage databases, and create web APIs that don't break when people try to use them. This roadmap is designed to pull you out of what people call 'tutorial hell.' Step by step, we will cover the actual skills that senior developers use on daily projects—from basic logic, all the way to cloud servers and microservices.",
+    "market_insight": "Right now, the job market is pretty flooded with junior developers who only know the basics. Hiring managers are desperately looking for people who understand how to structure a project cleanly and handle unexpected errors. If you can show an employer that you know how to build a scalable backend with database connections and secure user logins, your resume will instantly stand out from the crowd.",
+    "salary_expectations": "Python salaries can vary wildly depending on what you can actually build. Entry-level scripters usually make standard junior wages, but if you push through to Phase 3 and learn how to deploy Docker containers or build fast API services, you become much more valuable. Strong backend Python developers frequently negotiate top-tier salaries because they are the ones keeping the company's core software running.",
+    "trends": [
+      {"name": "AI Coding Tools", "desc": "Don't ignore tools like Cursor or GitHub Copilot. The best developers today use AI to write boilerplate code faster so they can focus on the big picture."},
+      {"name": "Python is Getting Faster", "desc": "Usually, Python is known for being somewhat slow, but recent updates are severely improving its speed. Knowing how to write fast code is becoming a big selling point."},
+      {"name": "Type Hinting", "desc": "Adding strict types to your Python code helps prevent annoying bugs before they happen. Most serious tech companies require this now."}
+    ],
     "levels": {
       "entry": {
-        "title": "Foundation & Logic",
-        "description": "Mastering the Zen of Python. Learning how computers 'think' using memory management, data structures, and algorithmic efficiency.",
-        "topics": ["Memory Referencing", "Functional Paradigms", "Error Engineering", "List Comprehensions"]
+        "title": "Phase 1: The Foundation (Beginner)",
+        "target": "1–2 Months • Focus on understanding basic logic before jumping into complex frameworks.",
+        "description": "Learn the core rules of Python so you can easily read other people's code and write your own scripts.",
+        "sections": [
+          {"name": "Syntax & Basics", "desc": "Variables, Numbers, Strings, and basic math operators."},
+          {"name": "Control Flow", "desc": "Making decisions with If-Else statements and running repeat tasks using For and While loops."},
+          {"name": "Functions", "desc": "Grouping code into reusable blocks. Learn how to pass arguments into functions easily."},
+          {"name": "Data Structures", "desc": "Lists, Dictionaries, and Sets. This is how you store information in the computer's memory while your code runs."},
+          {"name": "File Handling", "desc": "Reading text and JSON files from your computer and saving new data to them."},
+          {"name": "Basic Git", "desc": "Saving and tracking your code changes using Git and GitHub."}
+        ]
       },
       "intermediate": {
-        "title": "Backend Architecture",
-        "description": "Moving into industry-grade development. Building scalable systems with multi-threading, asynchronous logic, and professional API design.",
-        "topics": ["Asynchronous I/O", "Decorators & Metadata", "Database ORM Logic", "Concurrency Patterns"]
+        "title": "Phase 2: Deep Dive (Intermediate)",
+        "target": "2–3 Months • Transitioning from simple 'scripting' to 'software engineering.'",
+        "description": "This is where you start building programs that feel like real, professional software.",
+        "sections": [
+          {"name": "Object-Oriented Programming", "desc": "Organizing your code using Classes and Objects so large projects don't turn into a messy soup of functions."},
+          {"name": "Error Handling", "desc": "Using Try/Except blocks so your program politely handles errors instead of just crashing."},
+          {"name": "Databases", "desc": "Learning basic SQL so you can safely store user data in PostgreSQL or SQLite."},
+          {"name": "Working with APIs", "desc": "Using the requests library to grab live data from the internet (like weather or financial stats)."},
+          {"name": "Virtual Environments", "desc": "Keeping your project packages separated so they don't corrupt your main computer."}
+        ]
       },
       "advanced": {
-        "title": "Distributed Systems",
-        "description": "Creating production-ready ecosystems. Focusing on microservices, cloud-native deployments, and high-performance computation.",
-        "topics": ["Microservices Design", "Kubernetes Orchestration", "C-Extensions", "Distributed Tasks"]
+        "title": "Phase 3: The Specialization (Advanced)",
+        "target": "4+ Months • Picking a real-world track to make yourself hirable.",
+        "description": "Pick a specialty. Once you finish one of these paths, you are ready to apply for jobs.",
+        "sections": [
+          {"name": "Path A: Web Development", "desc": "Learn FastAPI or Django to build the invisible backends behind modern websites."},
+          {"name": "Path B: Data & AI", "desc": "Use NumPy and Pandas to clean messy data, or try Scikit-Learn to build basic predictive models."},
+          {"name": "Path C: Automation & DevOps", "desc": "Learn how to put your code online safely using Docker and cloud services like AWS or Google Cloud."}
+        ]
       }
+    },
+    "project": {
+      "title": "Build a Custom Job Board Backend API",
+      "desc": "Put everything from the roadmap together by building a real backend application. You will create a system where users can safely log in, post job listings, and save them to a real PostgreSQL database. Finally, you will hook it up to FastAPI and host it live on the internet so employers can actually test your code."
     }
   },
   {
     "slug": "power-bi-consultant",
     "title": "Power BI Consultant",
-    "description": "Convert silent data into strategic narratives. Bridge the gap between raw datasets and decision-intelligence.",
+    "description": "Learn how to turn messy company data into clean, interactive dashboards that managers actually want to use.",
     "icon": "fas fa-chart-pie",
-    "modules": "18",
+    "modules": "3 Core Phases",
     "accent_color": "#f59e0b",
     "accent_bg": "rgba(245, 158, 11, 0.1)",
+    "overview": "Having data is useless if no one can understand what it means. Companies collect massive amounts of information every single day, from sales numbers to employee hours, but most managers don't have the time or coding skills to understand it. That is where a Power BI Consultant steps in. Your job isn't just to make a pie chart—it's to connect the dots. You will learn how to clean messy spreadsheets automatically, link different tables together, and build interactive dashboards that tell a clear business story. By the end of this roadmap, you will know exactly how to give executives the immediate insights they need to make smart decisions.",
+    "market_insight": "A lot of people know how to open Power BI and drag a chart onto the screen, but companies don't pay well for that. They pay for people who know how to manage business logic. If you know how to set up secure permissions (so people only see the data they are allowed to see) and how to write clear formulas to calculate things like 'Year-over-Year Growth', you will be highly sought after in the job market.",
+    "salary_expectations": "Entry-level roles focus heavily on cleaning data and fixing simple dashboard requests, which pays a standard junior salary. However, once you reach Phase 3 and can handle complete enterprise setups—like managing automated data refreshes and dealing with large-scale server settings—you usually transition into higher-paying consultant territory.",
+    "trends": [
+      {"name": "Microsoft Fabric", "desc": "Microsoft is pushing its new all-in-one 'Fabric' platform. Knowing your way around it is a huge bonus right now."},
+      {"name": "AI Co-pilot for DAX", "desc": "You can now use AI inside Power BI to help write complicated math formulas, which speeds up your work tremendously."},
+      {"name": "Live Dashboards", "desc": "Clients increasingly expect dashboards that update the very second a new sale happens, instead of waiting for overnight refreshes."}
+    ],
     "levels": {
       "entry": {
-        "title": "Visual Storytelling",
-        "description": "Learning the psychology of color and layout. Transforming basic spreadsheets into interactive, human-readable visual stories.",
-        "topics": ["Power Query M-Logic", "Data Normalization", "Visual Hierarchy", "DAX Foundations"]
+        "title": "Phase 1: The Foundation (Beginner)",
+        "target": "1-2 Months • Grabbing raw files and making them make sense.",
+        "description": "Learn to load raw data files and build your first clean visual reports.",
+        "sections": [
+          {"name": "Power Query", "desc": "How to connect to messy Excel files or databases and clean up errors before the data even enters your dashboard."},
+          {"name": "Basic Data Modeling", "desc": "How to link two tables together so they can share information properly."},
+          {"name": "Choosing Visuals", "desc": "Knowing when to use a bar chart instead of a pie chart so the data isn't confusing to read."},
+          {"name": "Simple DAX", "desc": "Writing basic formulas to calculate totals, averages, and basic filters."}
+        ]
       },
       "intermediate": {
-        "title": "Decision Intelligence",
-        "description": "Advanced modeling for business impact. Using context-aware calculations and complex data relationships to find 'The Why'.",
-        "topics": ["Advanced DAX Patterns", "Row-Level Security", "Tabular Modeling", "Incremental Refresh"]
+        "title": "Phase 2: Deep Dive (Intermediate)",
+        "target": "2-4 Months • Automating business logic.",
+        "description": "Graduating from simple math to answering complex business questions.",
+        "sections": [
+          {"name": "The Star Schema", "desc": "Organizing your tables perfectly. Doing this wrong makes reports run painfully slow; doing it right makes them lightning fast."},
+          {"name": "Time Intelligence", "desc": "Using DAX to easily compare this month's sales to the exact same month last year."},
+          {"name": "Security (RLS)", "desc": "Setting it up so the CEO sees everything, but the Texas manager only sees the Texas data on the exact same dashboard."},
+          {"name": "Query Folding", "desc": "Making the main database do the heavy lifting so Power BI doesn't have to work as hard."}
+        ]
       },
       "advanced": {
-        "title": "Enterprise Analytics",
-        "description": "Architecting large-scale BI ecosystems. Integrating Azure Synapse, automated pipelines, and custom governance strategies.",
-        "topics": ["Fabric Integration", "Deployment Pipelines", "API Embedding", "Performance Tuning"]
+        "title": "Phase 3: Enterprise Architecture (Advanced)",
+        "target": "4+ Months • Becoming a high-level organizational consultant.",
+        "description": "Learning how to share your completed dashboards securely across thousands of employees.",
+        "sections": [
+          {"name": "Path A: Cloud Workspaces", "desc": "Using the Power BI service online to manage apps, automate refreshing data, and collaborate with teams safely."},
+          {"name": "Path B: Embedded Reports", "desc": "Learning how to take a Power BI dashboard and directly embed it into a custom company website."},
+          {"name": "Path C: Optimization", "desc": "Finding memory leaks and shrinking the file sizes of massive enterprise models so they load instantly."}
+        ]
       }
+    },
+    "project": {
+      "title": "Build an Automated Corporate Sales Dashboard",
+      "desc": "Take a folder full of messy, broken Excel files from a fictional hardware store and completely automate them. You will link the files together in Power Query, write DAX formulas to calculate year-over-year profit, and publish a live, interactive dashboard that securely updates itself every single day."
     }
   },
   {
     "slug": "genai-architect",
     "title": "GenAI Architect",
-    "description": "Architect the next evolution of autonomy. Dive into Agentic reasoning patterns and neural mechanics.",
+    "description": "Learn how to build real AI applications and secure intelligent chatbots using modern large language models.",
     "icon": "fas fa-microchip",
-    "modules": "30",
+    "modules": "3 Core Phases",
     "accent_color": "#8b5cf6",
     "accent_bg": "rgba(139, 92, 246, 0.1)",
+    "overview": "Artificial intelligence isn't just a buzzword anymore—it's how modern software gets built. The problem is that most people only know how to use ChatGPT through a web browser. A Generative AI Architect actually knows how to plug those massive AI brains directly into company apps. This roadmap takes you past basic prompt typing. You will learn how to safely feed private company documents into an AI without leaking secrets, how to force an AI to follow strict formatting rules, and how to stop it from making things up. By following this guide, you will be able to build systems that act as smart assistants capable of searching through thousands of pages of text in seconds to find the exact answers businesses need.",
+    "market_insight": "There is a massive gold rush going on right now for developers who understand AI. However, companies have figured out that simply making an 'API call' to OpenAI is not enough. They want engineers who can prevent the AI from hallucinating (making up fake answers) and keep cloud costs down. If you can build a secure Chatbot that correctly references the company HR manuals to answer employee questions, you become incredibly valuable.",
+    "salary_expectations": "Because this space is so new and highly demanded, the compensation is excellent. Knowing how to write a good text prompt might get you in the door, but the huge salaries go to the developers who understand how to run small models locally or build reliable RAG (document-reading) systems from scratch.",
+    "trends": [
+      {"name": "AI Agents that Take Action", "desc": "The newest trend is AI that doesn't just talk, but actually performs tasks—like searching the web or booking a flight on its own."},
+      {"name": "Running AI Locally", "desc": "Companies want privacy, so they are increasingly looking to run small AI models entirely offline on their own computers."},
+      {"name": "Vector Databases", "desc": "Standard databases are bad at handling AI knowledge. Learning to use a 'vector' database like Pinecone is slowly becoming a required skill."}
+    ],
     "levels": {
       "entry": {
-        "title": "LLM Fundamentals",
-        "description": "Understanding the transformer architecture. Learning how tokens, embeddings, and attention mechanisms create artificial reasoning.",
-        "topics": ["Tokenization Logic", "Vector Embeddings", "Prompt Engineering", "Semantic Search"]
+        "title": "Phase 1: APIs & Prompts (Beginner)",
+        "target": "1-2 Months • Learning how to talk to machines effectively.",
+        "description": "Building a solid understanding of how language models actually behave under the hood.",
+        "sections": [
+          {"name": "Advanced Prompting", "desc": "Learning the subtle tricks to force an AI to stick to facts instead of guessing creatively."},
+          {"name": "Using the OpenAI API", "desc": "Making your very first connections to OpenAI servers from your own Python code."},
+          {"name": "LangChain Basics", "desc": "A popular library that makes it much easier to chain multiple AI tasks together in a row."},
+          {"name": "Local AI testing", "desc": "Downloading a program called Ollama so you can run AI models directly on your laptop for free."}
+        ]
       },
       "intermediate": {
-        "title": "Agentic Engineering",
-        "description": "Building AI that takes action. Mastering RAG (Retrieval-Augmented Generation) and autonomous tool-calling loops.",
-        "topics": ["Vector Databases", "RAG Optimization", "Tool Use Frameworks", "Context Injection"]
+        "title": "Phase 2: RAG & Chatbots (Intermediate)",
+        "target": "2-3 Months • Giving the AI access to private data.",
+        "description": "This is where you solve the famous 'hallucination' problem by building smart search pipelines.",
+        "sections": [
+          {"name": "Vector Math Basics", "desc": "Understanding that AI reads words as long lists of numbers, mapping out how similar ideas are to each other."},
+          {"name": "Vector Databases", "desc": "Setting up special databases that store your PDFs and documents in a way the AI can quickly read."},
+          {"name": "Chunking Text", "desc": "You can't hand an AI a 500-page book at once. You must learn how to slice text into small, readable chunks."},
+          {"name": "Building RAG", "desc": "Creating a system where the AI searches your database first, reads your documents, and *only* answers based on your facts."}
+        ]
       },
       "advanced": {
-        "title": "Neural Autonomy",
-        "description": "Deploying custom-tuned intelligence. Focusing on fine-tuning strategies, multi-modal agents, and AI safety guardrails.",
-        "topics": ["LoRA Fine-tuning", "Multi-modal RAG", "Evaluation Frameworks", "Model Quantization"]
+        "title": "Phase 3: Autonomy & Fine-Tuning (Advanced)",
+        "target": "4+ Months • Creating customized AI experiences.",
+        "description": "Building AI that can fix its own errors and run entirely autonomously.",
+        "sections": [
+          {"name": "Path A: AI Agents", "desc": "Creating multi-agent setups where you have two AI bots talking to each other to solve a complex coding task together."},
+          {"name": "Path B: Fine Tuning", "desc": "Actually training an open-source model slightly on a specialized dataset so it changes its permanent tone and behavior."},
+          {"name": "Path C: Edge Deplyoment", "desc": "Shrinking large AI models down so they can reliably run safely and quickly on mobile phones or weak corporate servers."}
+        ]
       }
+    },
+    "project": {
+      "title": "Build a Secure Private Document Chatbot",
+      "desc": "Create an AI assistant that actually reads real PDF documents instead of making things up. You will build a Python system where users can upload a 50-page company HR manual, and the AI will securely read it and correctly answer employee questions without leaking any private data to the public internet."
     }
   }
 ]
