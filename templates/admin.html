@@ -1421,15 +1421,10 @@
                 document.getElementById('jd-experience').textContent = job.experience || '—';
                 document.getElementById('jd-posted').textContent = job.posted || '—';
 
-                // Apply URL
+                // Apply URL - Always show in Admin so it can be edited if empty
                 const applyEl = document.getElementById('jd-apply');
-                if (job.apply_url) {
-                    applyEl.textContent = job.apply_url;
-                    document.getElementById('jd-apply-group').style.display = 'block';
-                } else {
-                    applyEl.textContent = '';
-                    document.getElementById('jd-apply-group').style.display = 'none';
-                }
+                applyEl.textContent = job.apply_url || '';
+                document.getElementById('jd-apply-group').style.display = 'block';
 
                 // Description or Memory
                 const currentMode = localStorage.getItem('activeAdminTab');

@@ -1268,3 +1268,16 @@ json
 }
  ========================================================================================================================================
 =========================================================================================================================================
+
+==============================================================================
+UPDATE: 23-04-2026 - Admin Concurrency & Job Editing Fix
+==============================================================================
+
+- **Admin Concurrency Audit:**
+  - Verified that multiple admins can post jobs simultaneously. AI sessions are isolated, and the database (Supabase) handles concurrent commits safely.
+  - Duplicate prevention logic (85% fuzzy match) remains active to prevent accidental double-posting of identical JDs.
+
+- **Admin UI Fix (Job Editing):**
+  - Fixed a bug in admin.html where the 'Apply URL / Email' field was completely hidden if it was empty.
+  - This fix allows admins to click on the empty space and manually add an email or link to jobs that were posted without one, enabling the 'Save Changes' feature for missing data.
+  - All core job fields (Title, Company, Location, etc.) remain contenteditable for easy manual overrides directly in the dashboard.
