@@ -24,31 +24,27 @@ You MUST return a valid JSON object with the following keys and values:
 - "salary": The extracted salary. IF NO salary is mentioned in the text: If it is a "Contract" role, intelligently guess a highly realistic approximate hourly rate based on the role and experience (e.g., "$50 - $60/hr"). If it is a "Full-time" role, guess an approximate annual salary (e.g., "$110k - $130k/yr"). DO NOT use words like "Competitive" or "Not Specified" anymore; always provide a numerical estimate if missing.
 - "duration": The project/contract duration (e.g. "6 Months", "Long-term"). Extracted from text.
 - "apply_url": The primary URL or email address found in the text for applying. Look specifically for links following keywords like "Apply Here:", "Link:", "LinkedIn:", or "Application:". NEVER omit an application URL if one is present. If multiple are found, pick the most direct one. If none found, leave as empty string "".
-- "description": The rewritten, unique Career Guide in Markdown format.
+- "description": The rewritten, humanized Job Review in Markdown format.
 
-The "description" string MUST follow this EXACT sequence and Markdown structure. ALWAYS use `#` for H1 headings where specified below:
+The "description" string MUST read like an honest, peer-to-peer technical breakdown from a Senior Engineer. DO NOT use robotic structures, generic marketing fluff, or AI cliches like "In today's fast-paced world", "Master the art of", or "Elevate your career". 
 
-(Begin description string immediately with a 3-sentence, conversational introduction explaining why this niche is currently important and why this job is a great opportunity. Do NOT include a title for this intro. Just write the text directly.)
+Write the description using the following narrative flow, using standard Markdown for formatting (use `###` for headings, `**` for bold):
 
-# Job Summary
-(Summarize the role in a clean, professional way.)
+(Begin directly with a 2-3 sentence honest take on the job. Skip the fluff. Tell the developer exactly what this job is and why it matters in the real world.)
 
-# Top 3 Critical Skills Table
-(Create a Markdown table exactly with columns: 'Skill', 'Why it's critical', and 'Mastery Level' (Junior/Mid/Senior). Do not forget to format it properly as a markdown table using | and - characters.)
+### What You'll Actually Be Doing
+(Write a conversational paragraph breaking down what the day-to-day actually looks like. Be specific and grounded. Talk about the real challenges they will face.)
 
-# Interview Preparation
-(Provide 5 deep-dive technical questions based on the JD, followed by 'What the interviewer is looking for' for each.)
+### The Core Tech Stack
+(Do not give a generic bulleted list. Write a paragraph highlighting the absolute most critical skills the candidate MUST know, and explain *why* the company needs them based on the JD. Sound like a senior dev explaining it over coffee.)
 
-# Resume Optimization
-(List 10 specific keywords from the JD that will pass an Applicant Tracking System (ATS). Output them cleanly as a bulleted list.)
+### Interview Expectations
+(Provide 2 highly specific, difficult technical questions the candidate will likely face. Explain what the hiring manager is secretly looking for in the answer. Use conversational language, not lists.)
 
-# Application Strategy
-(Write a guide to the candidate on how to email the recruiter. Do NOT write the exact email draft for them. Instead, tell them to send an email saying "Hello", attaching their resume, and guide them to explicitly mention their top skills, relevant projects, and highlight the exact skills they have that map to this JD. E.g. "Make sure to mention related skills you possess, such as [insert 2-3 specific skills from JD here].")
+### Application Advice
+(Give the candidate realistic advice on how to tweak their resume for this specific role. Tell them exactly which keywords from the JD they need to include to bypass the ATS, but weave it into a human paragraph instead of a robotic bulleted list.)
 
-# Career Roadmap
-(Create a Markdown table showing how to grow from this role to a higher position (e.g., Junior -> Senior -> Director). Use columns: 'Current Role', 'Typical Experience', 'Core Focus', and 'Next Position'.)
-
-Constraint: Return ONLY valid JSON. The "description" value MUST contain the full markdown with exact H1 (#) headings, bold text, and perfectly formatted markdown tables."""
+Constraint: Return ONLY valid JSON. The "description" value MUST contain the full markdown string, completely free of AI-isms, with conversational paragraphs."""
 
 def call_with_rotation(jd_text):
     """Try each API key in a random order until one works."""

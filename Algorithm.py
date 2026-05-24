@@ -93,35 +93,32 @@ You MUST return a valid JSON object with the following keys and values:
 - "title": The extracted Job title.
 - "company": The EXACT company name. IF NO COMPANY IS MENTIONED, you MUST USE the exact phrase "Not Disclosed". DO NOT use "Confidential".
 - "location": The extracted Job location. Format it as: "City, State - WorkMode - Country". Rules: (1) Always append the country at the end (USA, India, Australia, UK, Canada, etc.) inferred from the city/state in the JD. (2) Include work mode (Onsite, Remote, Hybrid) if mentioned, BUT only if the location has a real city — do NOT repeat 'Remote' twice. (3) If the job is fully remote with NO specific city mentioned, just write: "Remote - Country" (e.g. "Remote - USA"). (4) If there IS a city, include work mode: "San Jose, CA - Onsite - USA". (5) More examples: "Sydney - Remote - Australia", "Hyderabad - Hybrid - India", "New York, NY - USA", "London - UK", "Remote - USA".
-- "job_type": e.g., "Full-time", "Contract", "Remote", etc.
+- "job_type": MUST strictly be an employment type: e.g., "Full-time", "Part-time", "Internship", or "Contract". DO NOT use location modifiers like "Remote" or "Hybrid" here.
 - "experience": Brief summary of required experience/skills (MAX 100 characters. e.g., "5+ years, Java").
-- "salary": The extracted salary or "Competitive".
+- "salary": The extracted salary. IF NO salary is mentioned in the text: If it is a "Contract" role, intelligently guess a highly realistic approximate hourly rate based on the role and experience (e.g., "$50 - $60/hr"). If it is a "Full-time" role, guess an approximate annual salary (e.g., "$110k - $130k/yr"). DO NOT use words like "Competitive" or "Not Specified" anymore; always provide a numerical estimate if missing.
 - "duration": The project/contract duration (e.g. "6 Months", "Long-term"). Extracted from text.
-- "apply_url": The primary URL or email address found in the text for applying.
-- "description": The rewritten, unique Career Guide in Markdown format.
+- "apply_url": The primary URL or email address found in the text for applying. Look specifically for links following keywords like "Apply Here:", "Link:", "LinkedIn:", or "Application:". NEVER omit an application URL if one is present. If multiple are found, pick the most direct one. If none found, leave as empty string "".
+- "description": The rewritten, humanized Job Review in Markdown format.
 
-Structure for "description":
-(Begin with a 3-sentence intro about the niche's importance.)
+The "description" string MUST read like an honest, peer-to-peer technical breakdown from a Senior Engineer. DO NOT use robotic structures, generic marketing fluff, or AI cliches like "In today's fast-paced world", "Master the art of", or "Elevate your career". 
 
-# Job Summary
-(Professional summary.)
+Write the description using the following narrative flow, using standard Markdown for formatting (use `###` for headings, `**` for bold):
 
-# Top 3 Critical Skills Table
-(Markdown table: Skill | Why it's critical | Mastery Level)
+(Begin directly with a 2-3 sentence honest take on the job. Skip the fluff. Tell the developer exactly what this job is and why it matters in the real world.)
 
-# Interview Preparation
-(5 technical questions + what interviewer looks for.)
+### What You'll Actually Be Doing
+(Write a conversational paragraph breaking down what the day-to-day actually looks like. Be specific and grounded. Talk about the real challenges they will face.)
 
-# Resume Optimization
-(10 ATS bullet points.)
+### The Core Tech Stack
+(Do not give a generic bulleted list. Write a paragraph highlighting the absolute most critical skills the candidate MUST know, and explain *why* the company needs them based on the JD. Sound like a senior dev explaining it over coffee.)
 
-# Application Strategy
-(Guide on how to email the recruiter.)
+### Interview Expectations
+(Provide 2 highly specific, difficult technical questions the candidate will likely face. Explain what the hiring manager is secretly looking for in the answer. Use conversational language, not lists.)
 
-# Career Roadmap
-(Markdown table: Current Role | Typical Experience | Core Focus | Next Position)
+### Application Advice
+(Give the candidate realistic advice on how to tweak their resume for this specific role. Tell them exactly which keywords from the JD they need to include to bypass the ATS, but weave it into a human paragraph instead of a robotic bulleted list.)
 
-Constraint: Return ONLY valid JSON. The "description" value MUST contain the full markdown with H1 (#) headings and tables."""
+Constraint: Return ONLY valid JSON. The "description" value MUST contain the full markdown string, completely free of AI-isms, with conversational paragraphs."""
 
 def enhance_job_post(jd_text):
     """
