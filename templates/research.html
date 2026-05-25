@@ -483,6 +483,48 @@
     <!-- Scripts -->
     <script src="{{ url_for('static', filename='script.js') }}" defer></script>
     <script>
+        const ACTIVE_TOPIC_ID = "{{ active_topic_id or '' }}";
+        window.researchData = [];
+
+        function openResearchModal(item, pushState = true) {
+            document.getElementById('modalDate').innerText = item.date;
+            document.getElementById('modalTitle').innerText = item.title;
+            document.getElementById('modalQuery').innerHTML = `<strong><i class="fas fa-quote-left"></i> User Query:</strong> ${item.query}`;
+            document.getElementById('modalBody').innerHTML = item.content;
+            
+            if (pushState) {
+                window.history.pushState({topicId: item.id}, '', '/research/' + item.id);
+            }
+            
+            document.getElementById('researchModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            
+            const scrollBox = document.getElementById('research-scrollable-content');
+            if (scrollBox) scrollBox.scrollTop = 0;
+        }
+
+        function closeResearchModal(pushState = true) {
+            const modal = document.getElementById('researchModal');
+            if (modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+            if (pushState) {
+                window.history.pushState({}, '', '/research');
+            }
+        }
+
+        window.addEventListener('popstate', (event) => {
+            const path = window.location.pathname;
+            const parts = path.split('/');
+            if (parts.length === 3 && parts[1] === 'research') {
+                const topicId = parts[2];
+                const item = window.researchData.find(r => r.id === topicId);
+                if(item) openResearchModal(item, false);
+            } else {
+                closeResearchModal(false);
+            }
+        });
         // Directly fetch and populate the Research Gallery without backend route!
         document.addEventListener('DOMContentLoaded', () => {
             fetch("{{ url_for('static', filename='data/researches.json') }}")
@@ -501,7 +543,7 @@
                         const modalHTML = `
                         <div id="researchModal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; padding: 1rem;">
                             <div id="research-scrollable-content" class="modal-content" style="background: var(--bg-card); border-radius: var(--radius-lg); padding: 2.5rem; max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; border: 1px solid var(--border-color); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
-                                <button onclick="document.getElementById('researchModal').style.display='none'; document.body.style.overflow='auto';" style="position: absolute; top: 1.5rem; right: 1.5rem; background: transparent; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer;"><i class="fas fa-times"></i></button>
+                                <button onclick="closeResearchModal()" style="position: absolute; top: 1.5rem; right: 1.5rem; background: transparent; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer;"><i class="fas fa-times"></i></button>
                                 <span id="modalDate" class="research-card-date" style="margin-bottom: 1rem; display: inline-block;"></span>
                                 <h2 id="modalTitle" style="font-size: 2rem; color: var(--text-main); margin-bottom: 1rem;"></h2>
                                 <div id="modalQuery" class="research-card-query" style="margin-bottom: 2rem; font-size: 1.1rem;"></div>
@@ -512,10 +554,7 @@
                         
                         // Close modal if clicked outside the content box
                         document.getElementById('researchModal').addEventListener('click', function(e) {
-                            if (e.target === this) {
-                                this.style.display = 'none';
-                                document.body.style.overflow = 'auto';
-                            }
+                            if (e.target === this) { closeResearchModal(); }
                         });
                     }
 
@@ -537,22 +576,19 @@
                         
                         // Add click event to open the modal
                         card.addEventListener('click', () => {
-                            document.getElementById('modalDate').innerText = item.date;
-                            document.getElementById('modalTitle').innerText = item.title;
-                            document.getElementById('modalQuery').innerHTML = `<strong><i class="fas fa-quote-left"></i> User Query:</strong> ${item.query}`;
-                            document.getElementById('modalBody').innerHTML = item.content;
-                            
-                            // Display the modal FIRST so geometry exists
-                            document.getElementById('researchModal').style.display = 'flex';
-                            document.body.style.overflow = 'hidden';
-                            
-                            // Prevent scroll retention bug
-                            const scrollBox = document.getElementById('research-scrollable-content');
-                            if (scrollBox) scrollBox.scrollTop = 0;
+                            openResearchModal(item, true);
                         });
 
                         grid.appendChild(card);
                     });
+                    window.researchData = data;
+                    if (ACTIVE_TOPIC_ID) {
+                        const topicId = ACTIVE_TOPIC_ID;
+                        const activeItem = window.researchData.find(r => r.id === topicId);
+                        if (activeItem) {
+                            openResearchModal(activeItem, false);
+                        }
+                    }
                 })
                 .catch(err => {
                     console.error("Error fetching research data:", err);

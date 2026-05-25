@@ -248,6 +248,14 @@
                 <p id="modal-r-phil" style="color: #4b5563; font-size: 0.95rem; line-height: 1.7;"></p>
             </div>
 
+            <div style="margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e7eb;">
+                <h4 style="color: #374151; font-weight: 700; font-size: 1.1rem; margin-bottom: 0.8rem;"><i
+                        class="fas fa-quote-left" style="color: var(--logo-color-3); margin-right: 6px;"></i> The Story That Got Me Hired</h4>
+                <div style="background: #f8fafc; border-left: 3px solid var(--logo-color-3); padding: 1.2rem; border-radius: 4px; font-size: 0.95rem; font-style: italic; color: #4b5563; line-height: 1.7;">
+                    "<span id="modal-r-story"></span>"
+                </div>
+            </div>
+
             <div style="margin-bottom: 1.5rem;">
                 <h4 style="color: #374151; font-weight: 700; font-size: 1.1rem; margin-bottom: 0.8rem;"><i
                         class="fas fa-check-circle" style="color: var(--logo-color-2); margin-right: 6px;"></i> ATS
@@ -273,6 +281,7 @@
 
     <!-- Dynamic Card Rendering Engine -->
     <script>
+        const ACTIVE_KIT_ID = "{{ active_kit_id or '' }}";
         let resumeData = [];
 
         window.addEventListener('DOMContentLoaded', async () => {
@@ -280,6 +289,10 @@
                 const res = await fetch('/static/data/resumes.json');
                 resumeData = await res.json();
                 renderKitCards();
+                
+                if (ACTIVE_KIT_ID) {
+                    openResumeModal(ACTIVE_KIT_ID, false);
+                }
             } catch (e) {
                 console.error("Failed to fetch resume data:", e);
             }
@@ -305,13 +318,21 @@
             });
         }
 
-        function openResumeModal(roleId) {
+        function openResumeModal(roleId, pushState = true) {
             const data = resumeData.find(k => k.id === roleId);
             if (!data) return;
+
+            if (pushState) {
+                window.history.pushState({kitId: roleId}, '', '/resume-kits/' + roleId);
+            }
 
             document.getElementById('modal-r-title').textContent = data.title;
             document.getElementById('modal-r-desc').textContent = data.description;
             document.getElementById('modal-r-phil').textContent = data.core_philosophy;
+
+            if (data.personal_story) {
+                document.getElementById('modal-r-story').textContent = data.personal_story;
+            }
 
             const atsList = document.getElementById('modal-r-ats');
             atsList.innerHTML = '';
@@ -342,14 +363,29 @@
             document.body.style.overflow = 'hidden';
         }
 
-        function closeResumeModal() {
+        function closeResumeModal(pushState = true) {
             const modal = document.getElementById('resume-modal');
             modal.style.opacity = '0';
             setTimeout(() => {
                 modal.style.display = 'none';
                 document.body.style.overflow = 'auto';
             }, 200);
+
+            if (pushState) {
+                window.history.pushState({}, '', '/resume-kits');
+            }
         }
+
+        window.addEventListener('popstate', (event) => {
+            const path = window.location.pathname;
+            const parts = path.split('/');
+            // Check if URL is like /resume-kits/full-stack
+            if (parts.length === 3 && parts[1] === 'resume-kits') {
+                openResumeModal(parts[2], false);
+            } else {
+                closeResumeModal(false);
+            }
+        });
 
         document.getElementById('resume-modal').addEventListener('click', function (e) {
             if (e.target === this) closeResumeModal();

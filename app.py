@@ -237,8 +237,9 @@ def google_verification1():
     return render_template('google01b4a3df9fc30f17.html')
 
 @app.route('/resume-kits')
-def resume_kits():
-    return render_template('resume_kits.html')
+@app.route('/resume-kits/<kit_id>')
+def resume_kits(kit_id=None):
+    return render_template('resume_kits.html', active_kit_id=kit_id)
 
 @app.route('/roadmaps')
 def roadmaps():
@@ -270,12 +271,8 @@ def sitemap():
     # 1. Static Pages
     static_paths = [
         '/',
-        '/browse-jobs',
-        '/jobs',
         '/contact-us',
         '/about-us',
-        '/student-library',
-        '/student-projects',
         '/student-projects/project-1',
         '/student-projects/project-2',
         '/student-projects/project-3',
@@ -283,10 +280,8 @@ def sitemap():
         '/dsa-and-ai',
         '/crack-2026',
         '/prompt-engineering',
-        '/research',
         '/terms-and-conditions',
-        '/privacy-policy',
-        '/resume-kits'
+        '/privacy-policy'
     ]
     for path in static_paths:
         pages.append({"loc": f"{base_url}{path}"})
@@ -298,6 +293,26 @@ def sitemap():
             blogs = json.load(f)
             for blog in blogs:
                 pages.append({"loc": f"{base_url}/blog/{blog['id']}"})
+    except:
+        pass
+
+    # 2.5 Dynamic Resume Kits Pages
+    try:
+        resumes_path = os.path.join(app.root_path, 'static', 'data', 'resumes.json')
+        with open(resumes_path, 'r', encoding='utf-8') as f:
+            resumes = json.load(f)
+            for r in resumes:
+                pages.append({"loc": f"{base_url}/resume-kits/{r['id']}"})
+    except:
+        pass
+
+    # 2.6 Dynamic Research Pages
+    try:
+        research_path = os.path.join(app.root_path, 'static', 'data', 'researches.json')
+        with open(research_path, 'r', encoding='utf-8') as f:
+            researches = json.load(f)
+            for r in researches:
+                pages.append({"loc": f"{base_url}/research/{r['id']}"})
     except:
         pass
 
@@ -1454,8 +1469,9 @@ def promptai_page():
     return render_template('students/promptai.html')
 
 @app.route('/research')
-def research_page():
-    return render_template('research.html')
+@app.route('/research/<topic_id>')
+def research_page(topic_id=None):
+    return render_template('research.html', active_topic_id=topic_id)
 
 @app.route('/ads.txt')
 def ads_txt():

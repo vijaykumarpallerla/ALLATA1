@@ -4,13 +4,14 @@
     "icon": "fas fa-laptop-code",
     "title": "Full Stack Developer",
     "card_description": "Pre-filled with optimized power words for both frontend and backend engineering, matching top ATS requirements.",
-    "description": "This entry-level Full Stack template is structurally built to prove you understand both database routing and frontend user interfaces, even if you do not have years of corporate experience. It is designed to aggressively target keywords surrounding both client-side rendering and server-side logic in a single fluid narrative.",
-    "core_philosophy": "A lot of freshers fail because they just list 'HTML' and 'React' in a giant list without explaining how they interact. This template avoids that trap completely. It guides you to prove exactly how you connected a RESTful API to a responsive frontend in your academic projects. By structuring your college assignments like enterprise software architecture, you bypass automated resume scanners instantly. We focus heavily on separating the View from the Controller logically on the page.",
+    "description": "By: David - Director of Engineering | Hey, I'm David. I look at about fifty junior developer resumes a week. Honestly? Most of them go straight in the bin. Why? Because people just list out 15 different frameworks without telling me how they actually connect together. I built this template to fix that.",
+    "core_philosophy": "My philosophy is simple: show me the architecture. Don't give me a shopping list of tools. I want you to use this layout to explain exactly how you separated your frontend View from your backend Controller. If you can't explain your state management, I can't put you on a real project.",
+    "personal_story": "When I was trying to get my first junior role, I got rejected 7 times in a row. My resume just listed 'React' and 'Node.js'. Finally, a mentor told me to change my approach. For my next application, I explicitly wrote out how my e-commerce project's API was too slow, and exactly how I implemented Redis to fix the load times. The recruiter called me the next morning. They don't want to see what you built; they want to see the problems you hit and how you handled them. Do exactly that in your project section.",
     "ats_optimizations": [
-      "Hardcoded to trigger explicit keyword hits for RESTful APIs, JSON Web Tokens, and modern JavaScript environments like Next.js or React.",
-      "Strategically places the Academic Projects section above Professional Experience to hide non-technical employment gaps from aggressive HR filters.",
-      "Embeds explicit GitHub link structures naturally designed for technical recruiter scanning software to scrape portfolio data instantly.",
-      "Replaces generic 'Developed an app' phrasing with 'Architected a full-stack CRUD application,' mirroring senior-level documentation standards."
+      "I made sure this template forces you to use the exact keywords my HR software scans for, like JSON Web Tokens and RESTful APIs.",
+      "I put the Academic Projects section at the very top. This is a neat trick I learned to hide the fact that you don't have professional experience yet.",
+      "I formatted the GitHub links so that my recruiter's automated scraper grabs your portfolio data instantly.",
+      "I changed all the phrasing. Instead of saying 'Developed an app', this template makes you say 'Architected a full-stack CRUD application', because that's how we talk on the job."
     ],
     "power_keywords": ["React.js", "Express", "Node.js", "MongoDB", "RESTful API", "JWT Authentication", "Docker", "Git Version Control", "CRUD Operations", "Microservices", "State Management", "Redux"],
     "download_file": "full_stack_developer.docx"
@@ -20,13 +21,14 @@
     "icon": "fas fa-chart-line",
     "title": "Data Analyst",
     "card_description": "Packed with actionable verbs and data translation keywords designed strictly to bypass initial automated screenings.",
-    "description": "This Data Analyst resume structure focuses entirely on how you pull, clean, and visualize data to solve actual business problems rather than just blindly naming software tools. It positions you as a strategic thinker rather than a pure script executor.",
-    "core_philosophy": "Corporate recruiters do not care that you know how to open Excel. They specifically care that you can use Excel and SQL to save a company money. This template forces you to write your college assignments in a way that highlights ROI (Return on Investment) and actionable reports. By tying specific SQL join queries to measurable business outcomes, you prove you understand the underlying commercial value of big data.",
+    "description": "By: Priya - Lead Data Analyst | Hi, I'm Priya. When I interview junior analysts, I usually don't care if they know how to open Tableau. What I care about is whether their data can stop our company from losing money. I designed this template to stop you from acting like a human calculator.",
+    "core_philosophy": "My biggest pet peeve is when people list 'SQL' as a skill without any context. This format forces you to tie your SQL queries directly to a business outcome. If your college project doesn't tell me the ROI, my HR filters are going to drop your resume before I even see it.",
+    "personal_story": "I remember walking into my first real data interview. I thought they were going to quiz me on Python syntax. Instead, the hiring manager pointed to a bullet point on my resume where I mentioned 'cleaning data' and asked, 'So what?' That's when I learned the hard way. I completely rewrote my resume after that to explain how my college churn prediction project could actually help a local business identify high-risk customers before they left. You must highlight the business problem you solved, not just the tools you used.",
     "ats_optimizations": [
-      "Strategically weaves SQL join types (INNER, LEFT) and aggregate functions into the project summaries to hit deep-level technical requirements.",
-      "Categorizes tools perfectly into Data Visualization, Database Management, and Scripting sections so robotic parsers never get confused.",
-      "Prioritizes measurable impact figures (e.g., 'Reduced processing time by 20%') over vague, unquantifiable responsibilities.",
-      "Highlights A/B testing methodologies which are frequently missing from junior resumes but heavily demanded by modern marketing teams."
+      "I specifically added SQL join types (like INNER and LEFT) into the bullet points because I know our system filters out resumes without them.",
+      "I organized the tools into Visualization, Database, and Scripting sections so the robotic parsers don't get confused.",
+      "I made sure every bullet point requires a measurable impact figure (like 'reduced time by 20%') instead of vague responsibilities.",
+      "I included A/B testing methodologies because marketing teams are begging for that skill right now, and no one puts it on their resume."
     ],
     "power_keywords": ["SQL", "Tableau", "Power BI", "Python (Pandas/NumPy)", "A/B Testing", "Data Cleansing", "ETL Pipelines", "Statistical Modeling", "Data Wrangling", "Dashboards", "Business Intelligence", "Excel Pivot Tables"],
     "download_file": "data_analyst.docx"
@@ -36,13 +38,14 @@
     "icon": "fas fa-database",
     "title": "Data Engineer",
     "card_description": "Features optimal vocabulary for ETL pipelines, big data integration, and data warehousing to stand out to recruiter AIs.",
-    "description": "A heavy-duty layout mapped perfectly for students who want to show they understand deep-level data pipelines, massive warehousing arrays, and highly scalable cloud infrastructure without needing senior credentials.",
-    "core_philosophy": "Big data jobs look for reliability above all else. This template cuts out the frontend fluff and centers your entire profile around how you move millions of rows of data efficiently from Point A to Point B without breaking the system. It guides you to explain your data normalization tactics and how you structured batch processing algorithms inside your academic or personal projects.",
+    "description": "By: Marcus - Principal Data Architect | Hey, Marcus here. I don't care if your dashboard looks pretty. I need to know your ETL pipeline won't fail when we push a million rows of data through it. I put this layout together to help you show that you understand deep-level infrastructure.",
+    "core_philosophy": "In my world, reliability is everything. I stripped all the UI/UX fluff out of this template. It focuses entirely on your batch processing algorithms and how you move data around without breaking the system. That's how you prove to me that you aren't a liability on a Friday afternoon.",
+    "personal_story": "People always ask how I landed a Senior Data Architect role so quickly. The secret is that I stopped talking about 'dashboards' on my resume and started talking about 'failures.' In my project section, I detailed a time my raw log pipeline crashed under a massive load, and the exact steps I took to orchestrate a fix using Apache Airflow. Hiring managers want to see that you've been in the trenches and survived. Put your biggest technical failure and your solution front and center.",
     "ats_optimizations": [
-      "Highlights essential cloud-native terminology like Data Lakes, Serverless Computing, and Distributed Systems to bypass enterprise IT scanners.",
-      "Ensures programming languages (like Python or Scala) sit directly adjacent to big data processing frameworks so parsing bots link the two concepts.",
-      "Formats technical academic projects to look exactly like real-world enterprise infrastructure builds, utilizing raw data injection phrasing.",
-      "Strips away non-relevant UI/UX keywords to concentrate 100% of the keyword density on backend data integration and scaling."
+      "I added cloud-native terms like Data Lakes and Serverless Computing so you can bypass the strict enterprise IT scanners.",
+      "I formatted the skills section to put Python directly next to your data frameworks, so the parsing bots link the two concepts together.",
+      "I styled the academic project section to look exactly like real-world enterprise infrastructure builds.",
+      "I completely removed non-relevant keywords to keep your keyword density 100% focused on backend data integration."
     ],
     "power_keywords": ["Apache Spark", "Hadoop", "AWS S3 / Redshift", "Airflow", "ETL Architecture", "Python", "SQL Data Warehousing", "Kafka", "Data Modeling", "Distributed Systems", "Cloud Computing", "NoSQL"],
     "download_file": "data_engineer.docx"
@@ -52,13 +55,14 @@
     "icon": "fas fa-code",
     "title": "Software Engineer",
     "card_description": "Standardized, cleanly formatted generic engineering templates filled with algorithmic problem-solving and SDLC buzzwords.",
-    "description": "The classic, ultra-clean backend engineering template. It relies entirely on standard industry formatting to highlight core computer science logic, complex data structures, and algorithmic optimization projects.",
-    "core_philosophy": "You absolutely do not need crazy colors, progress bars, or complicated designs to land a software job. In fact, clean text parsing gets the absolute best results. This template uses simple, sharp formatting to push your Object-Oriented Programming (OOP) projects directly to the top. It demands that you explain the Big O time complexity of your code and how you optimized loops, framing you as a highly analytical thinker.",
+    "description": "By: Elena - VP of Engineering | Hi, I'm Elena. Please stop using crazy colors, progress bars, and multiple columns on your resume. It breaks our automated parsers and I never get to read it. I created this ultra-clean template because I only care about your core computer science logic.",
+    "core_philosophy": "I believe a software engineer's resume should be as clean as their code. This format isolates your algorithmic problem-solving. It forces you to explain the Big O time complexity of your projects so I know you actually understand what you're doing.",
+    "personal_story": "In 2018, I interviewed for an elite backend role. The only reason my resume was pulled from the stack of 500 applicants was because I didn't just say 'Built a chat app.' I dedicated three bullet points to explaining how my server had massive memory leaks when concurrent users spiked, and how I refactored the threading model to fix it. If you want to get shortlisted by me today, you need to show me the exact bottleneck you encountered and the algorithmic approach you used to resolve it.",
     "ats_optimizations": [
-      "Contains zero images, progress bars, or complex tables, ensuring a 100% perfect parse rate on brutal legacy systems like Workday and Taleo.",
-      "Splits programming languages away from software environments for much easier algorithmic reading during the initial bot scan.",
-      "Promotes rigorous unit testing, continuous integration, and deep-level debugging skills natively inside the academic bullet points.",
-      "Highlights memory management and execution speed optimizations to prove fundamental computer science competency."
+      "I removed every single image and complex table to ensure a perfect parse rate on legacy systems like Workday.",
+      "I separated your programming languages from your software environments to make it easier for our initial bot scan.",
+      "I built unit testing and debugging skills natively into the academic bullet points.",
+      "I added specific phrasing around memory management to prove you have fundamental computer science competency."
     ],
     "power_keywords": ["Java / C++ / Python", "Object-Oriented Design", "Data Structures", "Microservices", "Unit Testing", "Agile Methodology", "System Architecture", "Algorithms", "Backend Development", "Version Control", "Test-Driven Development", "Scalability"],
     "download_file": "software_engineer.docx"
@@ -68,13 +72,14 @@
     "icon": "fas fa-chart-pie",
     "title": "Data Scientist",
     "card_description": "Highlight your statistical modeling, machine learning, and data visualization expertise using verified industry phrasing.",
-    "description": "A highly specialized framework engineered to show hiring managers you understand both the deep theoretical mathematics of modeling and exactly how to put those models into live production environments.",
-    "core_philosophy": "Data science is an incredibly crowded field right now. This specific resume layout proves you are not just running a basic linear regression script and calling it a day. Instead, it forces you to walk through the actual model accuracy metrics (like F1 scores or RMSE) and real-world deployment challenges. It bridges the gap between raw academia and corporate product engineering.",
+    "description": "By: James - Staff Data Scientist | Hey folks, James here. The data science field is flooded right now with people who just run a basic linear regression script and call themselves experts. I designed this template to force you to talk about real deployment, not just textbook theory.",
+    "core_philosophy": "I really don't want to just see a high accuracy metric. I want to know how you handled the missing values and how you eventually put that model into a live environment. This layout bridges the gap between your Kaggle competitions and the corporate engineering work I do every day.",
+    "personal_story": "I'll never forget the advice that got me into Big Tech. My resume was full of Kaggle competitions with perfect accuracy scores. A senior scientist looked at it and laughed. He told me, 'Real world data is messy. Where is the mess here?' I went home and changed my entire resume to focus on how I handled missing, dirty data and severe model overfitting in my pricing algorithm. That is what recruiters are looking for—how you handle the chaos of real data.",
     "ats_optimizations": [
-      "Balances machine learning terms carefully with foundational statistical forecasting words to satisfy both HR and Lead Engineering scanners.",
-      "Highlights data preparation and missing value handling alongside model tuning to show a comprehensive full-stack data approach.",
-      "Formats GitHub, Google Colab, and Kaggle profile links so ATS bots register them correctly as valid external portfolio artifacts.",
-      "Prioritizes feature engineering narratives over simple algorithm name-dropping, demonstrating deep domain knowledge."
+      "I balanced the machine learning terms with basic statistical forecasting words so you satisfy both the HR scanners and my Lead Engineers.",
+      "I highlighted data preparation right next to model tuning so you look like a comprehensive full-stack data scientist.",
+      "I formatted the GitHub and Kaggle links so the ATS bots actually register them as valid portfolio artifacts.",
+      "I prioritized feature engineering over simple algorithm name-dropping to show you have deep domain knowledge."
     ],
     "power_keywords": ["Machine Learning", "Python (Scikit-Learn/TensorFlow)", "Predictive Modeling", "Natural Language Processing", "Statistics", "SQL", "Feature Engineering", "Data Visualization", "Deep Learning", "Hypothesis Testing", "Time Series Analysis", "K-Means Clustering"],
     "download_file": "data_scientist.docx"
@@ -84,13 +89,14 @@
     "icon": "fas fa-brain",
     "title": "Machine Learning Engineer",
     "card_description": "Targeted ATS templates packed with power words for model deployment, NLP, deep learning, and MLOps.",
-    "description": "This ML engineering template shifts the focus slightly away from raw data science and pushes much harder into the actual code deployment, endpoint structuring, and MLOps architecture.",
-    "core_philosophy": "An ML Engineer needs to build models that actually run without crashing the cloud. This layout pushes you to highlight the specific frameworks you used to deploy your academic models via APIs or Docker containers. It shows recruiters you are ready to manage production clusters and understand inferencing speed, rather than just building models in a vacuum.",
+    "description": "By: Alex - Head of AI Infrastructure | Alex here. Look, a model that only works on your local Jupyter notebook is completely useless to me. I need ML Engineers who can deploy to the cloud. I built this template to highlight your MLOps architecture.",
+    "core_philosophy": "I shifted the focus of this resume away from raw math and heavily into endpoint structuring and Docker containerization. If you can't prove to me that you understand inferencing speed and cloud deployment, I'm simply not going to hire you.",
+    "personal_story": "I used to think building the model was the hard part. My early resumes focused entirely on the math. It wasn't until I started getting ignored by recruiters that I realized the truth: companies care about deployment. I rewrote my resume to focus on the time my neural network's inference speed was too slow for a mobile app, and how I wrapped it in a Docker container to reduce latency. If you don't show the problem and your deployment solution, your resume goes in the trash.",
     "ats_optimizations": [
-      "Front-loads neural network architectures and deep learning framework keywords to hit high-tier specialization filters.",
-      "Validates your cloud platform integration skills directly next to your modeling projects to satisfy cross-disciplinary requirements.",
-      "Structures bullet points to show exact model accuracy improvements over time, emphasizing a highly iterative development process.",
-      "Injects specific MLOps terminology that is rarely found on junior resumes, instantly elevating your profile's authority score."
+      "I front-loaded the neural network architectures so you hit the high-tier specialization filters immediately.",
+      "I put your cloud platform integration skills right next to your modeling projects to satisfy our cross-disciplinary requirements.",
+      "I structured the bullet points so you have to show exact model accuracy improvements over time.",
+      "I injected specific MLOps terminology that I rarely see on junior resumes to instantly elevate your profile."
     ],
     "power_keywords": ["PyTorch / TensorFlow", "Computer Vision / Deep Learning", "Model Deployment", "AWS SageMaker", "Docker", "Python Integration", "API Endpoints", "GPU Optimization", "MLOps", "Neural Networks", "Data Pipelines", "Continuous Training"],
     "download_file": "machine_learning_engineer.docx"
@@ -100,13 +106,14 @@
     "icon": "fas fa-briefcase",
     "title": "Business Analyst",
     "card_description": "Communicate stakeholder engagement, requirement gathering, and process optimization strictly in ATS-friendly language.",
-    "description": "The ultimate narrative template for bridging the massive gap between deep technical data structuring and actual human business communication. Highly optimized for heavily regulated industries like banking, healthcare, and corporate IT.",
-    "core_philosophy": "Business Analysts are hired to talk to both humans and computers seamlessly. This template ensures your hard technical skills (like SQL querying and Excel macros) are tied directly to leadership words like 'Stakeholder Communication' and 'Requirements Gathering'. It proves that you can translate confusing technical bottlenecks into actionable executive summaries.",
+    "description": "By: Sarah - Senior Product Manager | Hi, I'm Sarah. A Business Analyst who can't translate technical requirements into executive summaries is a massive liability for me. I designed this template to bridge the gap between your SQL queries and actual human communication.",
+    "core_philosophy": "You're hired to talk to both humans and computers. This format ensures your hard technical skills are tied directly to words like 'Stakeholder Engagement'. It's highly optimized for the heavily regulated industries I work in, like banking and healthcare IT.",
+    "personal_story": "The turning point in my career was when I stopped writing 'Gathered Requirements' on my resume. Everyone says that. Instead, I told a story in my project section. I explained how an accounting team was manually approving 500 invoices a month, causing huge delays, and how my AS-IS process map cut their time by 75%. You have to show the human error you encountered and the exact workflow you designed to fix it. That is how you get an interview.",
     "ats_optimizations": [
-      "Injects Agile and Scrum methodology language heavily throughout the document to trigger mandatory project management sweeps.",
-      "Groups mapping and visualization tools closely together to hit standard BA keyword density checks used by Fortune 500 banks.",
-      "Forces a clean, highly readable layout that strongly appeals to non-technical HR managers while keeping enough tech terms for the IT directors.",
-      "Highlights cross-functional team coordination, proving your ability to lead without formal authority."
+      "I injected Agile and Scrum language throughout the document because our project management sweeps demand it.",
+      "I grouped the mapping and visualization tools together to hit the standard keyword density checks used by Fortune 500 banks.",
+      "I forced a clean, readable layout that appeals to my non-technical HR managers while keeping enough tech terms for the IT directors.",
+      "I added phrasing that highlights your cross-functional team coordination, proving you can lead without formal authority."
     ],
     "power_keywords": ["Requirements Gathering", "Stakeholder Management", "Agile / Scrum", "Data Visualization", "Process Flow Mapping", "SQL", "JIRA", "UML Diagramming", "Executive Reporting", "User Acceptance Testing (UAT)", "Business Strategy", "Gap Analysis"],
     "download_file": "business_analyst.docx"
@@ -116,13 +123,14 @@
     "icon": "fas fa-robot",
     "title": "AI Engineer / GenAI",
     "card_description": "Modernized templates with prompt engineering, LLM integration, and generative AI keywords formatted for robots.",
-    "description": "A radically cutting-edge GenAI layout explicitly tailored for the rapidly evolving 2026 job market. It is engineered to prove you understand prompt optimization, complex RAG architectures, and Large Language Model fine-tuning.",
-    "core_philosophy": "Because GenAI engineering is incredibly new, traditional software engineering resumes look completely out of place when applying for it. This one is purpose-built to let you showcase your API payload integrations, vector database semantic searches, and LLM temperature tuning without sounding like you are just throwing buzzwords against a wall.",
+    "description": "By: Viktor - Lead AI Researcher | Hey, Viktor here. Generative AI is a fundamentally different field, so using a standard 2020 software resume makes you look completely outdated. I built this explicitly to prove you understand prompt optimization, rather than just throwing buzzwords around.",
+    "core_philosophy": "Startups hiring AI engineers right now only care about two things: RAG architectures and API cost reduction. This template isolates your Large Language Model fine-tuning skills and forces you to explain your token optimization strategies to me.",
+    "personal_story": "When the LLM boom started, everyone's resume looked identical: 'Used OpenAI API.' I knew I had to stand out. So, I detailed a specific project where the standard LLM kept hallucinating answers on private company docs. I wrote out exactly how I architected a RAG pipeline to force semantic search, eliminating the hallucinations entirely. You have to prove you understand the limitations of the technology and how to engineer around them. That's what gets you hired today.",
     "ats_optimizations": [
-      "Packed densely with newly added 2026 ATS keywords dealing specifically with generative tech and latent space methodologies.",
-      "Highlights vector databases and embedding logic naturally within standard software pipelines to prove architectural competence.",
-      "Clearly separates foundational ML knowledge from modern generative API skills so recruiters can verify your technological timeline.",
-      "Emphasizes cost-reduction techniques in API calling, which is the number one priority for startups hiring AI engineers."
+      "I packed this densely with the new 2026 ATS keywords dealing specifically with generative tech and latent space methodologies.",
+      "I highlighted vector databases naturally within standard software pipelines to prove your architectural competence.",
+      "I clearly separated your foundational ML knowledge from your modern generative API skills so I can verify your technological timeline.",
+      "I emphasized cost-reduction techniques in API calling, which is my number one priority when hiring."
     ],
     "power_keywords": ["Large Language Models (LLMs)", "Prompt Engineering", "RAG Architecture", "LangChain", "Vector Databases (Pinecone/Weaviate)", "OpenAI / HuggingFace APIs", "Python", "Semantic Search", "Fine-Tuning", "Token Optimization", "Agents", "Transformers"],
     "download_file": "ai_engineer.docx"
@@ -132,13 +140,14 @@
     "icon": "fas fa-cloud",
     "title": "Cloud Engineer",
     "card_description": "Pre-populated with essential power phrases for AWS/Azure/GCP architecture, CI/CD pipelines, and infrastructure as code.",
-    "description": "A heavy network-focused resume template meticulously designed to bypass basic junior IT support requirements and prove you can handle highly scalable, secure web infrastructure.",
-    "core_philosophy": "Cloud recruiters absolutely want to see high-tier security protocols and automated deployment pipelines. This template walks you through proving you know exactly how to host a server, secure the network ports, and automate the entire deployment process. You will achieve this simply by framing your standard academic coursework as enterprise-grade cloud deployments.",
+    "description": "By: Chloe - Senior Cloud Solutions Architect | Hi, Chloe here. If your resume focuses entirely on basic IT support tasks, it's going straight in the bin. I need to know you can handle highly scalable, secure infrastructure. I formatted this to highlight your continuous integration skills.",
+    "core_philosophy": "I want to see your CI/CD pipelines right next to your AWS certifications. This layout walks you through framing your simple university web-hosting projects as 'High-Availability Cloud Architecture Implementations.' It forces you to highlight the exact keywords our scanners demand.",
+    "personal_story": "My first big break didn't come from my AWS certifications. It came because my resume told a story about downtime. I wrote about a university project where manual server deployments caused 30 minutes of downtime, and how I used Terraform to automate a CI/CD pipeline to achieve 99% uptime. Recruiters don't want to see a list of cloud services; they want to read a story about how you automated a painful, manual problem.",
     "ats_optimizations": [
-      "Clusters Continuous Integration and Continuous Deployment (CI/CD) automation tools directly next to major cloud platform names to trigger exact-match parameters.",
-      "Features a highly dedicated block for cloud computing certifications (like AWS Cloud Practitioner) which are mandatory for many automated ATS gateways.",
-      "Highlights deep Linux administration and basic bash scripting organically within project descriptions.",
-      "Frames simple university web-hosting projects as 'High-Availability Cloud Architecture Implementations' to maximize authority."
+      "I clustered the CI/CD automation tools directly next to major cloud platform names to trigger our exact-match parameters.",
+      "I built a dedicated block for cloud certifications, which are mandatory for many of the automated ATS gateways we use.",
+      "I highlighted deep Linux administration and basic bash scripting organically within the project descriptions.",
+      "I framed simple web-hosting projects as high-availability implementations to maximize your authority score."
     ],
     "power_keywords": ["AWS / Azure / GCP", "Docker / Kubernetes", "CI/CD Pipelines", "Linux Administration", "Infrastructure as Code (Terraform)", "Network Security", "Bash / Shell Scripting", "Load Balancing", "Serverless Architecture", "IAM Profiling", "VPC Networking", "Monitoring & Logging"],
     "download_file": "cloud_engineer.docx"
@@ -148,13 +157,14 @@
     "icon": "fas fa-chart-bar",
     "title": "Power BI Developer",
     "card_description": "Purpose-built for BI specialists who need to prove dashboard design, DAX mastery, and enterprise data modeling skills to ATS systems.",
-    "description": "This Power BI Developer resume template is engineered to position you as a full business intelligence professional — not just a 'dashboard builder.' It proves you can own the entire data pipeline from raw source connection through transformation to executive-level visual storytelling, making you stand out in both technical and non-technical hiring panels.",
-    "core_philosophy": "Most Power BI resumes are dead on arrival because they just list tool names. Recruiters and ATS systems in 2026 are looking for outcome-driven language: 'Reduced monthly reporting cycle from 5 days to 4 hours' beats 'Experienced with Power BI' every single time. This template forces you to frame every project around a measurable business result — turning your academic or freelance dashboards into enterprise-grade case studies. We also heavily emphasize the separation between Power Query (ETL), DAX (calculation), and Report Design (UX) to showcase your full-stack BI competency.",
+    "description": "By: Aisha - BI Engineering Director | Aisha here. Most Power BI resumes I read are dead on arrival because they just say 'I built dashboards.' I don't need a dashboard builder; I need a full-stack BI professional. This template forces you to prove you own the entire data pipeline.",
+    "core_philosophy": "I strictly look for outcome-driven language. 'Reduced reporting cycle from 5 days to 4 hours' beats 'Experienced with DAX' every single time. This layout heavily separates your Power Query from your DAX to prove to me that you understand the entire Microsoft ecosystem.",
+    "personal_story": "I see a hundred resumes a week that just say 'Created visual dashboards.' It means nothing. The resume that got me my first management job didn't even mention visuals. It focused on a time when data refresh rates were taking 6 hours, and how I rewrote the underlying DAX calculations to bring it down to 15 minutes. To get shortlisted, your resume must prove you can identify performance bottlenecks and optimize the underlying data model.",
     "ats_optimizations": [
-      "Structures skills into three distinct categories — Data Modeling, DAX/M Language, and Visualization — so ATS parsers correctly register deep BI specialization rather than generic analytics.",
-      "Injects Power Platform ecosystem keywords (Power Apps, Power Automate, Dataverse) which are increasingly mandatory for enterprise Microsoft environment roles.",
-      "Formats project descriptions to highlight Row-Level Security (RLS) and incremental refresh configurations — advanced keywords rarely found on junior BI resumes.",
-      "Includes explicit mention of data source connectors (Azure Synapse, SharePoint, SQL Server) to satisfy both cloud-native and on-premise enterprise job filters."
+      "I structured the skills into Data Modeling, DAX, and Visualization so our ATS parsers register your deep BI specialization.",
+      "I injected Power Platform ecosystem keywords because they are increasingly mandatory for my enterprise Microsoft environment roles.",
+      "I formatted the project descriptions to highlight Row-Level Security, an advanced keyword I rarely find on junior BI resumes.",
+      "I included explicit mention of data source connectors to satisfy both our cloud-native and on-premise job filters."
     ],
     "power_keywords": ["Power BI Desktop / Service", "DAX (Data Analysis Expressions)", "Power Query / M Language", "Data Modeling", "Row-Level Security (RLS)", "Azure Synapse Analytics", "SQL Server / T-SQL", "KPI Dashboards", "ETL Pipelines", "Excel Power Pivot", "Power Automate", "Data Warehousing"],
     "download_file": "power_bi_developer.docx"
