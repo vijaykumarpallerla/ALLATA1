@@ -488,7 +488,7 @@
 
         function openResearchModal(item, pushState = true) {
             document.getElementById('modalDate').innerText = item.date;
-            document.getElementById('modalTitle').innerText = item.title;
+            document.getElementById('modalTitle').innerHTML = `Research by <a href="${item.author_linkedin}" target="_blank" rel="noopener" style="color: var(--logo-color-3); text-decoration: underline;">${item.author_name}</a>: ${item.title}`;
             document.getElementById('modalQuery').innerHTML = `<strong><i class="fas fa-quote-left"></i> User Query:</strong> ${item.query}`;
             document.getElementById('modalBody').innerHTML = item.content;
             
@@ -565,13 +565,13 @@
                         
                         card.innerHTML = `
                             <span class="research-card-date">${item.date}</span>
-                            <h2 class="research-card-title">${item.title}</h2>
+                            <h2 class="research-card-title">Research by <a href="${item.author_linkedin}" target="_blank" rel="noopener" style="color: inherit; text-decoration: underline;" onclick="event.stopPropagation()">${item.author_name}</a>: ${item.title}</h2>
                             <div class="research-card-query" style="margin-bottom: 0;">
                                 <strong><i class="fas fa-quote-left"></i> User Query:</strong> ${item.query.substring(0, 80)}${item.query.length > 80 ? '...' : ''}
                             </div>
-                            <div style="margin-top: 1.5rem; color: var(--logo-color-3); font-weight: 700; display: flex; align-items: center; gap: 5px;">
+                            <a href="/research/${item.id}" style="margin-top: 1.5rem; color: var(--logo-color-3); font-weight: 700; display: inline-flex; align-items: center; gap: 5px; text-decoration: none;" onclick="event.preventDefault();">
                                 Read Full Research <i class="fas fa-arrow-right"></i>
-                            </div>
+                            </a>
                         `;
                         
                         // Add click event to open the modal

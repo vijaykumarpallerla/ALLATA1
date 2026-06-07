@@ -704,6 +704,12 @@
                     <div class="modal-detail-value editable-field" id="jd-apply" contenteditable="true" spellcheck="false"></div>
                 </div>
 
+                <!-- LinkedIn URL -->
+                <div class="modal-detail-group" id="jd-linkedin-group">
+                    <div class="modal-detail-label">LinkedIn URL</div>
+                    <div class="modal-detail-value editable-field" id="jd-linkedin" contenteditable="true" spellcheck="false" style="color: var(--primary-color);"></div>
+                </div>
+
                 <!-- Description -->
                 <div class="modal-detail-group">
                     <div class="modal-detail-label" id="jd-description-label">Job Description</div>
@@ -1426,6 +1432,12 @@
                 applyEl.textContent = job.apply_url || '';
                 document.getElementById('jd-apply-group').style.display = 'block';
 
+                // LinkedIn URL
+                const linkedinEl = document.getElementById('jd-linkedin');
+                if (linkedinEl) {
+                    linkedinEl.textContent = job.linkedin_url || '';
+                }
+
                 // Description or Memory
                 const currentMode = localStorage.getItem('activeAdminTab');
                 const descLabel = document.getElementById('jd-description-label');
@@ -1488,6 +1500,7 @@
                     duration: document.getElementById('jd-duration').innerText.trim(),
                     experience: document.getElementById('jd-experience').innerText.trim(),
                     apply_url: document.getElementById('jd-apply').innerText.trim(),
+                    linkedin_url: document.getElementById('jd-linkedin') ? document.getElementById('jd-linkedin').innerText.trim() : '',
                     description: document.getElementById('jd-description').innerText.trim()
                 };
 
@@ -1853,6 +1866,7 @@
                             <div><strong style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Salary</strong><div id="edit-salary-${uniqueJobId}" contenteditable="true" style="border: 1px solid transparent; padding: 2px; border-radius: 4px;" onfocus="this.style.background='#fff'; this.style.borderColor='var(--primary-color)'" onblur="this.style.background='transparent'; this.style.borderColor='transparent'">${job.salary}</div></div>
                             ${job.duration ? `<div><strong style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Duration</strong><div id="edit-duration-${uniqueJobId}" contenteditable="true" style="border: 1px solid transparent; padding: 2px; border-radius: 4px;" onfocus="this.style.background='#fff'; this.style.borderColor='var(--primary-color)'" onblur="this.style.background='transparent'; this.style.borderColor='transparent'">${job.duration}</div></div>` : ''}
                             <div style="grid-column: 1 / -1;"><strong style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Apply URL / Email</strong><div id="edit-apply-${uniqueJobId}" contenteditable="true" style="color: var(--primary-color); word-break: break-all; border: 1px solid transparent; padding: 2px; border-radius: 4px;" onfocus="this.style.background='#fff'; this.style.borderColor='var(--primary-color)'" onblur="this.style.background='transparent'; this.style.borderColor='transparent'">${job.apply_url || ''}</div></div>
+                            <div style="grid-column: 1 / -1;"><strong style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Original LinkedIn Post URL (Optional - Builds E-E-A-T Trust)</strong><div id="edit-linkedin-${uniqueJobId}" contenteditable="true" placeholder="https://www.linkedin.com/jobs/view/..." style="color: var(--primary-color); word-break: break-all; border: 1px dashed var(--border-color); padding: 6px; border-radius: 4px; min-height: 20px;" onfocus="this.style.background='#fff'; this.style.borderColor='var(--primary-color)'" onblur="this.style.background='transparent'; this.style.borderColor='var(--border-color)'">${job.linkedin_url || ''}</div></div>
                         </div>
 
                         <div style="border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
@@ -1897,6 +1911,8 @@
             const durEl = document.getElementById(`edit-duration-${btnId}`);
             jobData.duration = durEl ? durEl.innerText.trim() : "";
             jobData.apply_url = document.getElementById(`edit-apply-${btnId}`).innerText.trim();
+            const liEl = document.getElementById(`edit-linkedin-${btnId}`);
+            jobData.linkedin_url = liEl ? liEl.innerText.trim() : "";
 
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Posting...';
             btn.disabled = true;

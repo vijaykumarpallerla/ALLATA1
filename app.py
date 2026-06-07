@@ -164,6 +164,7 @@ class Job(db.Model):
     posted = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=False)
     apply_url = db.Column(db.String(500), nullable=True)
+    linkedin_url = db.Column(db.String(500), nullable=True)
     is_algorithm = db.Column(db.Boolean, default=False, nullable=False)
     ai_approved = db.Column(db.Boolean, server_default='true', nullable=False)
     admin_email = db.Column(db.String(120), nullable=True)
@@ -194,7 +195,8 @@ with app.app_context():
                 "ADD COLUMN IF NOT EXISTS admin_name VARCHAR(100), "
                 "ADD COLUMN IF NOT EXISTS admin_picture TEXT, "
                 "ADD COLUMN IF NOT EXISTS duration VARCHAR(100) DEFAULT 'Not Specified', "
-                "ADD COLUMN IF NOT EXISTS raw_jd_text TEXT"
+                "ADD COLUMN IF NOT EXISTS raw_jd_text TEXT, "
+                "ADD COLUMN IF NOT EXISTS linkedin_url VARCHAR(500)"
             ))
             conn.commit()
         print("[DB Migration] ai_approved and admin user columns ensured on job table.")
@@ -281,7 +283,8 @@ def sitemap():
         '/crack-2026',
         '/prompt-engineering',
         '/terms-and-conditions',
-        '/privacy-policy'
+        '/privacy-policy',
+        '/browse-jobs'
     ]
     for path in static_paths:
         pages.append({"loc": f"{base_url}{path}"})
@@ -318,7 +321,9 @@ def sitemap():
 
     # 3. Dynamic Job Detail Pages
     try:
-        jobs = db.session.query(Job).all()
+        jobs = db.session.query(Job).filter(
+            (Job.is_algorithm == False) | (Job.ai_approved == True)
+        ).all()
         for job in jobs:
             # Note: /job?jobid=X
             pages.append({"loc": f"{base_url}/job?jobid={job.id}"})
@@ -431,7 +436,8 @@ def usa_jobs_page():
             job_url = f"/job?{query_str}"
             
             jobs_html += f'''
-            <article class="job-card" onclick="window.location.href='{job_url}'" style="cursor: pointer;">
+            <a href="{job_url}" style="text-decoration: none; color: inherit; display: block;">
+            <article class="job-card" style="cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease;">
                 <div class="job-card-header">
                     <div class="job-company-info">
                         <div class="company-logo">{initials}</div>
@@ -463,6 +469,11 @@ def usa_jobs_page():
                         <span>{job.salary}</span>
                     </div>'''
                     
+            linkedin_badge = ''
+            if getattr(job, 'linkedin_url', None) and job.linkedin_url.strip():
+                clean_link = job.linkedin_url.strip().replace("'", "%27").replace('"', "%22")
+                linkedin_badge = f'<span style="font-size: 0.8rem; font-weight: 700; color: #0a66c2; z-index: 2; position: relative; cursor: pointer; text-decoration: underline;" onclick="window.open(\'{clean_link}\', \'_blank\'); event.preventDefault(); event.stopPropagation();">Verified Job</span>'
+
             jobs_html += f'''
                 </div>
                 
@@ -471,25 +482,29 @@ def usa_jobs_page():
                 </p>
                 
                 <div class="job-footer">
-                    <span class="job-posted-time">Date Posted: {job.posted}</span>'''
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <span class="job-posted-time">Date Posted: {job.posted.replace(' EST', '')}</span>
+                        {linkedin_badge}
+                    </div>'''
             
             if getattr(job, 'apply_url', None) and job.apply_url.strip():
                 if '@' in job.apply_url:
                     jobs_html += f'''
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <span style="font-size: 0.85rem; color: var(--primary-color); font-weight: 500;">Email ID Found &rarr;</span>
-                        <button type="button" class="btn btn-primary" style="display: inline-flex; align-items: center; justify-content: center;" onclick="event.stopPropagation(); window.location.href='{job_url}'">Apply Now</button>
+                        <button type="button" class="btn btn-primary" style="display: inline-flex; align-items: center; justify-content: center; pointer-events: none;">Apply Now</button>
                     </div>'''
                 else:
                     jobs_html += f'''
-                        <button type="button" class="btn btn-primary" style="display: inline-flex; align-items: center; justify-content: center;" onclick="event.stopPropagation(); window.location.href='{job_url}'">Apply Now</button>'''
+                        <button type="button" class="btn btn-primary" style="display: inline-flex; align-items: center; justify-content: center; pointer-events: none;">Apply Now</button>'''
             else:
                 jobs_html += f'''
-                    <button type="button" class="btn btn-primary" onclick="event.stopPropagation(); window.location.href='{job_url}'">Apply Now</button>'''
+                    <button type="button" class="btn btn-primary" style="pointer-events: none;">Apply Now</button>'''
                     
             jobs_html += f'''
                 </div>
             </article>
+            </a>
             '''
 
         # If there are jobs, inject them into the HTML, otherwise put the empty marker
@@ -576,7 +591,7 @@ def api_jobs():
                     job_type=job_data.get('job_type') or job_data.get('type') or 'Full-time',
                     experience=job_data.get('experience') or 'Not specified',
                     salary=job_data.get('salary') or 'Competitive',
-                    posted=job_data.get('posted') or datetime.now(timezone(timedelta(hours=-5), 'EST')).strftime("%d/%m/%Y EST"),
+                    posted=job_data.get('posted') or datetime.now(timezone(timedelta(hours=-5), 'EST')).strftime("%d/%m/%Y"),
                     description=job_data.get('description') or 'No description provided.',
                     apply_url=job_data.get('apply_url') or job_data.get('url') or '',
                     is_algorithm=False # External uploads bypass algorithm
@@ -668,9 +683,10 @@ def api_submit_job():
                 job_type=data.get('job_type', 'Full-time'),
                 experience=data.get('experience', 'Not specified'),
                 salary=data.get('salary', 'Competitive'),
-                posted=datetime.now(timezone(timedelta(hours=-5), 'EST')).strftime("%d/%m/%Y EST"),
+                posted=datetime.now(timezone(timedelta(hours=-5), 'EST')).strftime("%d/%m/%Y"),
                 description=description,
                 apply_url=data.get('apply_url', ''),
+                linkedin_url=data.get('linkedin_url', ''),
                 is_algorithm=True,
                 ai_approved=False  # ← Hide from public until Admin approves manually
             )
@@ -692,9 +708,10 @@ def api_submit_job():
                 job_type=data.get('job_type', 'Full-time'),
                 experience=data.get('experience', 'Not specified'),
                 salary=data.get('salary', 'Competitive'),
-                posted=datetime.now(timezone(timedelta(hours=-5), 'EST')).strftime("%d/%m/%Y EST"),
+                posted=datetime.now(timezone(timedelta(hours=-5), 'EST')).strftime("%d/%m/%Y"),
                 description=description,
                 apply_url=data.get('apply_url', ''),
+                linkedin_url=data.get('linkedin_url', ''),
                 is_algorithm=True,
                 ai_approved=False  # ← Hide from public
             )
@@ -714,9 +731,10 @@ def api_submit_job():
             job_type=data.get('job_type', 'Full-time'),
             experience=raw_exp,
             salary=data.get('salary', 'Competitive'),
-            posted=datetime.now(timezone(timedelta(hours=-5), 'EST')).strftime("%d/%m/%Y EST"),
+            posted=datetime.now(timezone(timedelta(hours=-5), 'EST')).strftime("%d/%m/%Y"),
             description=description,
             apply_url=data.get('apply_url', ''),
+            linkedin_url=data.get('linkedin_url', ''),
             is_algorithm=True 
         )
         db.session.add(new_job)
@@ -905,7 +923,12 @@ def job_detail():
         except Exception as e:
             pass
         
-        html = html.replace('<!-- JOB_POSTED -->', job.posted)
+        html = html.replace('<!-- JOB_POSTED -->', job.posted.replace(' EST', ''))
+        
+        linkedin_badge = ''
+        if getattr(job, 'linkedin_url', None) and job.linkedin_url.strip():
+            linkedin_badge = f'<span style="font-size: 0.9rem; font-weight: 700; color: #0a66c2; margin-top: 5px;"><a href="{job.linkedin_url.strip()}" target="_blank" style="color: inherit; text-decoration: underline;">Verified Job</a></span>'
+        html = html.replace('<!-- JOB_LINKEDIN -->', linkedin_badge)
         
         if getattr(job, 'apply_url', None) and job.apply_url.strip():
             if '@' in job.apply_url:
@@ -1158,6 +1181,7 @@ def update_admin_job(job_id):
         job.duration = raw_dur
         job.experience = data.get('experience', job.experience)
         job.apply_url = data.get('apply_url', job.apply_url)
+        job.linkedin_url = data.get('linkedin_url', job.linkedin_url)
         job.description = data.get('description', job.description)
         
         db.session.commit()
@@ -1326,9 +1350,10 @@ def post_generated_job():
             experience=str(data.get('experience', 'Not specified'))[:100],
             salary=str(data.get('salary', 'Competitive'))[:100],
             duration=str(data.get('duration', 'Not Specified'))[:100],
-            posted=datetime.now(timezone(timedelta(hours=-5), 'EST')).strftime("%d/%m/%Y EST"),
+            posted=datetime.now(timezone(timedelta(hours=-5), 'EST')).strftime("%d/%m/%Y"),
             description=data.get('description', 'No description provided.'),
             apply_url=str(data.get('apply_url', ''))[:500],
+            linkedin_url=str(data.get('linkedin_url', ''))[:500],
             is_algorithm=True, # Generated via the AI Career Guide
             ai_approved=True,   # Admin explicitly approved it
             admin_email=session.get('admin_email'),

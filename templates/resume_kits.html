@@ -238,6 +238,7 @@
                 <h4 style="color: #374151; font-weight: 700; font-size: 1.1rem; margin-bottom: 0.6rem;"><i
                         class="fas fa-info-circle" style="color: var(--logo-color-1); margin-right: 6px;"></i> Strategic
                     Overview</h4>
+                <div id="modal-r-author" style="margin-bottom: 0.8rem; font-size: 0.95rem; font-weight: 600; color: #6b7280;"></div>
                 <p id="modal-r-desc" style="color: #4b5563; font-size: 0.95rem; line-height: 1.7;"></p>
             </div>
 
@@ -250,7 +251,7 @@
 
             <div style="margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e7eb;">
                 <h4 style="color: #374151; font-weight: 700; font-size: 1.1rem; margin-bottom: 0.8rem;"><i
-                        class="fas fa-quote-left" style="color: var(--logo-color-3); margin-right: 6px;"></i> The Story That Got Me Hired</h4>
+                        class="fas fa-search" style="color: var(--logo-color-3); margin-right: 6px;"></i> Industry Research Findings</h4>
                 <div style="background: #f8fafc; border-left: 3px solid var(--logo-color-3); padding: 1.2rem; border-radius: 4px; font-size: 0.95rem; font-style: italic; color: #4b5563; line-height: 1.7;">
                     "<span id="modal-r-story"></span>"
                 </div>
@@ -310,9 +311,9 @@
                         <h3>${kit.title}</h3>
                         <p>${kit.card_description}</p>
                     </div>
-                    <button onclick="openResumeModal('${kit.id}')" class="btn btn-primary">
+                    <a href="/resume-kits/${kit.id}" onclick="event.preventDefault(); openResumeModal('${kit.id}')" class="btn btn-primary" style="text-decoration: none;">
                         <i class="fas fa-eye"></i> View Strategy &amp; Download
-                    </button>
+                    </a>
                 `;
                 grid.appendChild(article);
             });
@@ -327,6 +328,14 @@
             }
 
             document.getElementById('modal-r-title').textContent = data.title;
+            
+            let authorHtml = `Research By: <a href="${data.author_linkedin}" target="_blank" rel="noopener" style="color: var(--logo-color-3); text-decoration: underline;">${data.author_name}</a>`;
+            if (data.author_github) {
+                authorHtml += ` | <a href="${data.author_github}" target="_blank" rel="noopener" style="color: var(--logo-color-3); text-decoration: underline;"><i class="fab fa-github"></i> GitHub</a>`;
+            }
+            authorHtml += ` - Tech Researcher`;
+            
+            document.getElementById('modal-r-author').innerHTML = authorHtml;
             document.getElementById('modal-r-desc').textContent = data.description;
             document.getElementById('modal-r-phil').textContent = data.core_philosophy;
 

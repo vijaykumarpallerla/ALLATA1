@@ -201,6 +201,10 @@
             </p>
         </div>
 
+        {% if blog.author_bio_html %}
+            {{ blog.author_bio_html | safe }}
+        {% endif %}
+
         <a href="/" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Tech Insights</a>
     </main>
 
