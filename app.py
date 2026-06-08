@@ -1140,7 +1140,8 @@ def get_admin_jobs():
             "admin_name": j.admin_name,
             "admin_picture": j.admin_picture,
             "has_memory": bool(j.raw_jd_text),
-            "raw_jd_text": j.raw_jd_text
+            "raw_jd_text": j.raw_jd_text,
+            "linkedin_url": j.linkedin_url or ""
         } for j in jobs]
         return jsonify({"status": "success", "jobs": job_list, "has_more": has_more})
     except Exception as e:
