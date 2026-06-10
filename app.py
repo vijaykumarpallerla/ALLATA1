@@ -1,4 +1,4 @@
-from flask import Flask, send_file, request, jsonify, render_template, session, redirect, url_for
+from flask import Flask, send_file, request, jsonify, render_template, session, redirect, url_for, send_from_directory
 import webbrowser
 import threading
 import os
@@ -152,6 +152,9 @@ class ContactMessage(db.Model):
     body = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
 class Job(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
@@ -172,12 +175,18 @@ class Job(db.Model):
     admin_picture = db.Column(db.Text, nullable=True)
     raw_jd_text = db.Column(db.Text, nullable=True)
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
 class ResearchRequest(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(120), nullable=False)
     topic = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
     
 
@@ -1501,9 +1510,7 @@ def research_page(topic_id=None):
 
 @app.route('/ads.txt')
 def ads_txt():
-    content = "google.com, pub-6398444211176745, DIRECT, f08c47fec0942fa0"
-    from flask import Response
-    return Response(content, mimetype='text/plain')
+    return send_from_directory(app.root_path, 'ads.txt')
 
 @app.route('/BingSiteAuth.xml')
 def bing_auth():

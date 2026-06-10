@@ -9,6 +9,7 @@ database.db
 *.docx
 !static/resumes/*.docx
 *.txt
+!ads.txt
 
 # Ignore Google OAuth credentials
 allata1.json
@@ -26,6 +27,7 @@ database.db
 *.docx
 !static/resumes/*.docx
 *.txt
+!ads.txt
 
 # Ignore Google OAuth credentials
 allata1.json
