@@ -1509,7 +1509,11 @@ def research_page(topic_id=None):
     return render_template('research.html', active_topic_id=topic_id)
 
 @app.route('/ads.txt')
-def ads_txt():
+def ads_txt_lower():
+    return send_from_directory(app.root_path, 'ads.txt')
+
+@app.route('/Ads.txt')
+def ads_txt_capital():
     return send_from_directory(app.root_path, 'ads.txt')
 
 @app.route('/BingSiteAuth.xml')
