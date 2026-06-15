@@ -98,7 +98,8 @@ def track_active_users():
        "/auth/" in path or \
        "/api/admin" in path or \
        path.startswith('/static') or \
-       path == '/favicon.ico':
+       path == '/favicon.ico' or \
+       path.lower() == '/ads.txt':
         return
 
     # Use a visitor_id in session to track unique browsers/sessions
