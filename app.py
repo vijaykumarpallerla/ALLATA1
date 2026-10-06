@@ -378,63 +378,63 @@ def usa_jobs_page():
         if workmodel_query:
             work_models = [m.strip() for m in workmodel_query.split(',')]
 
-        # Fetch live jobs from the database (newest first!)
+        # Base query: Fetch live jobs from the database
         # Only show: bulk-uploaded jobs (is_algorithm=False) OR AI-approved jobs (ai_approved=True)
-        # Rejected jobs (is_algorithm=True AND ai_approved=False) are hidden from public
-        all_jobs = db.session.query(Job).filter(
+        base_query = db.session.query(Job).filter(
             (Job.is_algorithm == False) | (Job.ai_approved == True)
-        ).order_by(Job.id.desc()).all()
-        filtered_jobs = []
+        )
         
-        # Apply filters server-side
-        for job in all_jobs:
-            type_match = True
-            if job_types:
-                type_match = job.job_type in job_types
+        # 1. Job Type Filter
+        if job_types:
+            base_query = base_query.filter(Job.job_type.in_(job_types))
+            
+        # 2. Work Model Filter
+        if work_models:
+            model_conditions = None
+            if 'Remote' in work_models:
+                model_conditions = Job.location.ilike('%remote%')
+            if 'Hybrid' in work_models:
+                cond = Job.location.ilike('%hybrid%')
+                model_conditions = cond if model_conditions is None else (model_conditions | cond)
+            if 'On-site' in work_models:
+                cond = ~Job.location.ilike('%remote%') & ~Job.location.ilike('%hybrid%')
+                model_conditions = cond if model_conditions is None else (model_conditions | cond)
+            
+            if model_conditions is not None:
+                base_query = base_query.filter(model_conditions)
                 
-            model_match = True
-            if work_models:
-                loc = job.location.lower()
-                is_remote = 'remote' in loc
-                is_hybrid = 'hybrid' in loc
-                is_onsite = not is_remote and not is_hybrid
+        # 3. Search Filter (Approximating fuzzy search with SQL ilike)
+        if search_query:
+            search_terms = [w for w in search_query.split() if len(w) >= 2]
+            if not search_terms and search_query:
+                search_terms = [search_query]
+            for term in search_terms:
+                base_query = base_query.filter(
+                    (Job.title.ilike(f'%{term}%')) | 
+                    (Job.company.ilike(f'%{term}%')) | 
+                    (Job.experience.ilike(f'%{term}%'))
+                )
                 
-                model_match = False
-                if 'Remote' in work_models and is_remote: model_match = True
-                if 'Hybrid' in work_models and is_hybrid: model_match = True
-                if 'On-site' in work_models and is_onsite: model_match = True
-                
-            search_match = True
-            if search_query:
-                # Fuzzy search across title, company, and skills (experience)
-                search_match = is_fuzzy_search_match(search_query, job.title, job.company, job.experience)
-                
-            loc_match = True
-            if location_query:
-                loc_match = location_query in job.location.lower()
-                
-            if type_match and model_match and search_match and loc_match:
-                filtered_jobs.append(job)
+        # 4. Location Filter
+        if location_query:
+            base_query = base_query.filter(Job.location.ilike(f'%{location_query}%'))
 
-        # --- Pagination Logic ---
+        # --- Database Pagination Logic ---
+        current_page = request.args.get('page', 1, type=int)
+        if current_page < 1:
+            current_page = 1
+            
         per_page = 8
-        total_jobs = len(filtered_jobs)
-        total_pages = math.ceil(total_jobs / per_page)
+        
+        # Perform paginated query, ordered by newest
+        pagination = base_query.order_by(Job.id.desc()).paginate(page=current_page, per_page=per_page, error_out=False)
+        
+        paginated_jobs = pagination.items
+        total_jobs = pagination.total
+        total_pages = pagination.pages
         
         if total_pages == 0:
             total_pages = 1
-            
-        current_page = request.args.get('page', 1, type=int)
-        
-        if current_page < 1:
-            current_page = 1
-        elif current_page > total_pages:
-            current_page = total_pages
-            
-        start_idx = (current_page - 1) * per_page
-        end_idx = start_idx + per_page
-        
-        paginated_jobs = filtered_jobs[start_idx:end_idx]
 
         jobs_html = ""
         

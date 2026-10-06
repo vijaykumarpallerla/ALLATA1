@@ -37,6 +37,7 @@ Documents
 
 # Environments
 all-at-a1/
+venv
 
 # VS Code
 .vscode/
