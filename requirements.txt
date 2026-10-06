@@ -2,6 +2,8 @@ Flask==3.1.0
 Pillow==11.1.0
 flask-sqlalchemy
 psycopg2-binary
+psycopg
+psycopg-binary
 python-dotenv
 requests
 Authlib
