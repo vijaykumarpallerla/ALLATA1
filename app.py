@@ -595,11 +595,11 @@ def api_jobs():
                 # We use .get() with safe fallback strings so the server NEVER crashes
                 # even if the scraping script misspells a key or forgets one!
                 new_job = Job(
-                    title=job_data.get('title') or 'Unknown Title',
-                    company=job_data.get('company') or 'Not Disclosed',
-                    location=job_data.get('location') or 'Location not specified',
+                    title=str(job_data.get('title') or 'Unknown Title')[:200],
+                    company=str(job_data.get('company') or 'Not Disclosed')[:200],
+                    location=str(job_data.get('location') or 'Location not specified')[:200],
                     job_type=job_data.get('job_type') or job_data.get('type') or 'Full-time',
-                    experience=job_data.get('experience') or 'Not specified',
+                    experience=str(job_data.get('experience') or 'Not specified')[:100],
                     salary=job_data.get('salary') or 'Competitive',
                     posted=job_data.get('posted') or datetime.now(timezone(timedelta(hours=-5), 'EST')).strftime("%d/%m/%Y"),
                     description=job_data.get('description') or 'No description provided.',
